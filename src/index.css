@@ -160,10 +160,16 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .filter-btn { padding:4px 11px; border-radius:20px; border:1px solid var(--p5x-border); background:#0e0a1a; color:var(--p5x-muted); font-family:'Exo 2',sans-serif; font-size:0.7rem; cursor:pointer; transition:all .15s; white-space:nowrap; }
 .filter-btn:hover { border-color:var(--persona); color:var(--persona3); }
 .filter-btn.active { background:linear-gradient(135deg,var(--persona2),#3d0a88); border-color:var(--persona); color:#fff; box-shadow:0 0 8px #b060ff44; }
-.char-select-wrap { position:relative; margin-bottom:10px; }
-.char-select-wrap select { width:100%; padding:9px 32px 9px 12px; background:#0a0618; border:1px solid var(--persona2); border-radius:10px; color:var(--persona3); font-family:'Exo 2',sans-serif; font-size:0.88rem; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23b060ff' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
-.char-select-wrap select:focus { outline:none; border-color:var(--persona); }
-.char-select-wrap select option { background:#0d0a1a; color:var(--p5x-text); }
+.char-grid-wrap { margin-bottom:10px; }
+.char-grid-label { font-size:0.65rem; color:var(--p5x-muted); margin-bottom:6px; font-family:'Cinzel Decorative',serif; letter-spacing:1px; }
+.char-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.char-card { display:flex; flex-direction:column; align-items:center; gap:4px; padding:7px 5px; border-radius:10px; border:1px solid var(--p5x-border); background:#0a0618; cursor:pointer; transition:all .15s; width:66px; }
+.char-card:hover { border-color:var(--persona); background:#160828; }
+.char-card.selected { border-color:var(--persona); background:linear-gradient(135deg,#1a0a3a,#0e0a1a); box-shadow:0 0 10px #b060ff44; }
+.char-avatar { width:46px; height:46px; border-radius:50%; border:2px solid; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.65rem; letter-spacing:-0.5px; overflow:hidden; }
+.char-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.char-card-name { font-size:0.58rem; color:var(--p5x-text); text-align:center; line-height:1.2; word-break:break-word; }
+.char-card-stars { font-size:0.5rem; letter-spacing:-1px; }
 .char-info { display:none; }
 .char-info.active { display:block; animation:fadeIn .3s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }

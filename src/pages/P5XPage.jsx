@@ -38,6 +38,7 @@ const CHARACTERS = [
 ]
 
 const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Navigator:'📡'}
+const ELEM_COLORS = {Fire:'#ff4422',Ice:'#44aaff',Electric:'#ffee00',Wind:'#44ffaa',Nuclear:'#ff8800',Curse:'#aa44ff',Bless:'#ffcc44',Physical:'#ff8866','-':'#888888'}
 const ROLE_COLORS = {Sweeper:'#40c8ff', Assassin:'#ff6030', Medic:'#40ff80', Guardian:'#8080ff', Saboteur:'#ffcc40', Strategist:'#b060ff', Navigator:'#40ffcc'}
 const DPS_ROLES = ['Sweeper','Assassin','Saboteur']
 const SUPPORT_ROLES = ['Strategist','Navigator','Guardian']
@@ -183,28 +184,45 @@ export default function P5XPage() {
             ))}
           </div>
 
-          <div className="char-select-wrap">
-            <select value={charName} onChange={e => setCharName(e.target.value)}>
-              <option value="">— เลือกตัวละคร / Select Character —</option>
-              {grouped5.length > 0 && (
-                <optgroup label="★5 Characters">
-                  {grouped5.map(c => (
-                    <option key={c.name} value={c.name}>
-                      {ROLE_ICONS[c.role]||'?'} {c.name} ({c.codename}) — {c.role} · {c.element}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-              {grouped4.length > 0 && (
-                <optgroup label="★4 Characters">
-                  {grouped4.map(c => (
-                    <option key={c.name} value={c.name}>
-                      {ROLE_ICONS[c.role]||'?'} {c.name} ({c.codename}) — {c.role} · {c.element}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
+          <div className="char-grid-wrap">
+            {grouped5.length > 0 && <div className="char-grid-label">⭐⭐⭐⭐⭐ 5-Star</div>}
+            <div className="char-grid">
+              {grouped5.map(c => {
+                const ec = ELEM_COLORS[c.element] || '#888'
+                const isActive = charName === c.name
+                return (
+                  <div key={c.name} className={'char-card' + (isActive ? ' selected' : '')}
+                    onClick={() => setCharName(isActive ? '' : c.name)}>
+                    <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
+                      {c.portrait
+                        ? <img src={c.portrait} alt={c.codename} />
+                        : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
+                    </div>
+                    <div className="char-card-name">{c.codename}</div>
+                    <div className="char-card-stars" style={{ color: '#ffcc44' }}>★★★★★</div>
+                  </div>
+                )
+              })}
+            </div>
+            {grouped4.length > 0 && <div className="char-grid-label" style={{ marginTop: 8 }}>⭐⭐⭐⭐ 4-Star</div>}
+            <div className="char-grid">
+              {grouped4.map(c => {
+                const ec = ELEM_COLORS[c.element] || '#888'
+                const isActive = charName === c.name
+                return (
+                  <div key={c.name} className={'char-card' + (isActive ? ' selected' : '')}
+                    onClick={() => setCharName(isActive ? '' : c.name)}>
+                    <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
+                      {c.portrait
+                        ? <img src={c.portrait} alt={c.codename} />
+                        : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
+                    </div>
+                    <div className="char-card-name">{c.codename}</div>
+                    <div className="char-card-stars" style={{ color: '#ccaa22' }}>★★★★</div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
 
           {currentChar && (

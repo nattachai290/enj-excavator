@@ -175,6 +175,20 @@ export default function ENJPage() {
           <div className="total-boost">💫 {totalBoost.toFixed(2)}%</div>
         </div>
 
+        {/* Save/Load buttons */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+          <button className="btn-calc"
+            style={{ background: 'linear-gradient(135deg,#0d3b1f,#1a6b35)', color: 'var(--green)', flex: 1 }}
+            onClick={() => setShowExport(true)}>
+            📤 Save (Export)
+          </button>
+          <button className="btn-calc"
+            style={{ background: 'linear-gradient(135deg,#0d1a3b,#1a3565)', color: 'var(--blue)', flex: 1 }}
+            onClick={() => setShowImport(true)}>
+            📥 Load (Import)
+          </button>
+        </div>
+
         {/* Stats bar */}
         <div className="stats-bar">
           <div className="stat-box"><div className="val">{fmt(totalGpm)}</div><div className="lbl">💎 Gems/min</div></div>
@@ -298,20 +312,6 @@ export default function ENJPage() {
         <button className="btn-calc" onClick={() => setShowDetail(v => !v)}>
           🔍 {showDetail ? 'ซ่อนรายละเอียด' : 'แสดงรายละเอียดเต็ม'}
         </button>
-
-        {/* Export/Import buttons */}
-        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-          <button className="btn-calc"
-            style={{ background: 'linear-gradient(135deg,#0d3b1f,#1a6b35)', color: 'var(--green)', flex: 1 }}
-            onClick={() => setShowExport(true)}>
-            📤 Export JSON
-          </button>
-          <button className="btn-calc"
-            style={{ background: 'linear-gradient(135deg,#0d1a3b,#1a3565)', color: 'var(--blue)', flex: 1 }}
-            onClick={() => setShowImport(true)}>
-            📥 Import JSON
-          </button>
-        </div>
 
         {/* Detail area */}
         {showDetail && (
