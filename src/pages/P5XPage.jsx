@@ -200,9 +200,14 @@ export default function P5XPage() {
                   <div key={c.name} className={'char-card' + (isActive ? ' selected' : '')}
                     onClick={() => setCharName(isActive ? '' : c.name)}>
                     <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
-                      {ROLE_IMG[c.role]
-                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'82%', height:'82%', objectFit:'contain', mixBlendMode:'screen' }} />
-                        : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
+                      {c.portrait
+                        ? <img src={c.portrait} alt={c.codename} className="portrait" />
+                        : <span style={{ color: ec, fontSize:'0.7rem', fontWeight:700 }}>{c.codename.slice(0,3)}</span>}
+                      {ROLE_IMG[c.role] && (
+                        <div className="char-role-badge">
+                          <img src={ROLE_IMG[c.role]} alt={c.role} />
+                        </div>
+                      )}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
                     <div className="char-card-stars" style={{ color: '#ffcc44' }}>★★★★★</div>
@@ -219,9 +224,14 @@ export default function P5XPage() {
                   <div key={c.name} className={'char-card' + (isActive ? ' selected' : '')}
                     onClick={() => setCharName(isActive ? '' : c.name)}>
                     <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
-                      {ROLE_IMG[c.role]
-                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'82%', height:'82%', objectFit:'contain', mixBlendMode:'screen' }} />
-                        : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
+                      {c.portrait
+                        ? <img src={c.portrait} alt={c.codename} className="portrait" />
+                        : <span style={{ color: ec, fontSize:'0.7rem', fontWeight:700 }}>{c.codename.slice(0,3)}</span>}
+                      {ROLE_IMG[c.role] && (
+                        <div className="char-role-badge">
+                          <img src={ROLE_IMG[c.role]} alt={c.role} />
+                        </div>
+                      )}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
                     <div className="char-card-stars" style={{ color: '#ccaa22' }}>★★★★</div>
