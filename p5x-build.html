@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🃏 P5X Build Optimizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── CSS VARIABLES ── */
+:root{
+  --gem:#00e87a;--gem2:#00a855;--gold:#a8ff6e;--dark:#070510;
+  --card:#0e0a1a;--border:#2a1a4d;--text:#e0d4f5;--muted:#7a6a9a;
+  --green:#00ff88;--red:#ff4e6a;--orange:#aaff44;--blue:#88ccff;
+  --persona:#b060ff;--persona2:#7a30cc;--persona3:#e0aaff;
+  --fire:#ff6030;--ice:#40c8ff;--elec:#ffe040;--wind:#40ffb0;
+  --nuke:#ff40c0;--curse:#c040ff;--bless:#ffcc40;--phys:#ff8050;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--dark);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 0%,#2a0a5533 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 100%,#1a0a3344 0%,transparent 55%),
+    radial-gradient(ellipse at 50% 50%,#0d0020 0%,transparent 80%);
+}
+header{
+  text-align:center;padding:16px 16px 10px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,#0d0518 0%,transparent 100%);
+  position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,#b060ff18 0%,transparent 70%);
+  pointer-events:none;
+}
+header h1{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(0.95rem,4.5vw,1.5rem);
+  color:var(--persona3);text-shadow:0 0 24px #b060ff88;letter-spacing:2px;
+  position:relative;
+}
+header p{color:var(--muted);font-size:0.72rem;margin-top:3px;position:relative;}
+header .edit-note{
+  font-size:0.65rem;color:#7a30cc;margin-top:4px;
+  background:#1a0a2a;border-radius:6px;padding:3px 10px;display:inline-block;
+}
+
+.container{max-width:720px;margin:0 auto;padding:10px 12px 30px;}
+
+/* ── SECTION TITLES ── */
+.section-title{
+  font-family:'Cinzel Decorative',serif;font-size:0.82rem;
+  color:var(--persona);letter-spacing:1px;
+  border-left:3px solid var(--persona);padding-left:9px;
+  margin-bottom:10px;margin-top:4px;
+  text-shadow:0 0 12px #b060ff55;
+}
+
+/* ── SECTION WRAPPER ── */
+.section-box{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:12px 14px;margin-bottom:12px;
+}
+
+/* ── FILTER PILLS ── */
+.filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.filter-btn{
+  padding:4px 11px;border-radius:20px;border:1px solid var(--border);
+  background:#0e0a1a;color:var(--muted);font-family:'Exo 2',sans-serif;
+  font-size:0.7rem;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.filter-btn:hover{border-color:var(--persona);color:var(--persona3);}
+.filter-btn.active{
+  background:linear-gradient(135deg,var(--persona2),#3d0a88);
+  border-color:var(--persona);color:#fff;
+  box-shadow:0 0 8px #b060ff44;
+}
+
+/* ── CHARACTER SELECTOR ── */
+.char-select-wrap{position:relative;margin-bottom:10px;}
+.char-select-wrap select{
+  width:100%;padding:9px 12px;
+  background:#0a0618;border:1px solid var(--persona2);
+  border-radius:10px;color:var(--persona3);
+  font-family:'Exo 2',sans-serif;font-size:0.88rem;
+  cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23b060ff' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:32px;
+}
+.char-select-wrap select:focus{outline:none;border-color:var(--persona);box-shadow:0 0 0 2px #b060ff22;}
+.char-select-wrap select option{background:#0d0a1a;color:var(--text);}
+
+/* ── CHARACTER INFO CARD ── */
+.char-info{
+  display:none;animation:fadeIn .3s ease;
+}
+.char-info.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.char-header{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#160828,#0e0a1a);
+  border:1px solid var(--persona2);border-radius:11px;
+  padding:11px 14px;margin-bottom:10px;
+}
+.char-role-icon{font-size:1.6rem;line-height:1;}
+.char-title{flex:1;}
+.char-name{font-weight:700;font-size:1rem;color:#fff;}
+.char-codename{font-family:'Cinzel Decorative',serif;font-size:0.7rem;color:var(--persona);margin-top:1px;}
+.char-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.cbadge{
+  padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;
+}
+.cbadge.rarity5{background:linear-gradient(135deg,#b8860b,var(--gold));color:#0d0818;}
+.cbadge.rarity4{padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;background:linear-gradient(135deg,#7030cc,#b060ff);color:#fff;}
+.cbadge.role{background:#1a0a2a;border:1px solid var(--persona2);color:var(--persona3);}
+.cbadge.elem{border-radius:10px;font-size:0.62px;font-weight:700;}
+
+/* element colors */
+.elem-Fire{background:#ff603033;border:1px solid #ff6030;color:#ff8850;}
+.elem-Ice{background:#40c8ff22;border:1px solid #40c8ff;color:#70d8ff;}
+.elem-Electric{background:#ffe04022;border:1px solid #ffe040;color:#ffec70;}
+.elem-Wind{background:#40ffb022;border:1px solid #40ffb0;color:#70ffc0;}
+.elem-Nuclear{background:#ff40c022;border:1px solid #ff40c0;color:#ff70d0;}
+.elem-Curse{background:#c040ff22;border:1px solid #c040ff;color:#d880ff;}
+.elem-Bless{background:#ffcc4022;border:1px solid #ffcc40;color:#ffe070;}
+.elem-Physical{background:#ff805022;border:1px solid #ff8050;color:#ffaa80;}
+.elem-dash{background:#2a2a3a;border:1px solid #555;color:#999;}
+
+/* ── INFO GRID ── */
+.info-grid{display:flex;flex-direction:column;gap:8px;}
+.info-panel{background:#0a0618;border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.info-label{font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+.info-value{font-size:0.82rem;color:var(--text);}
+
+.card-set-row{display:flex;flex-direction:column;gap:5px;}
+.card-set-item{
+  display:flex;align-items:flex-start;gap:8px;
+  background:#120a22;border-left:3px solid var(--persona2);
+  border-radius:6px;padding:6px 9px;
+}
+.cs-pc{
+  font-size:0.62rem;font-weight:700;color:var(--persona);
+  background:#1a0a2a;border-radius:4px;padding:1px 6px;
+  white-space:nowrap;margin-top:1px;flex-shrink:0;
+}
+.cs-name{font-weight:700;color:var(--persona3);font-size:0.8rem;}
+.cs-bonus{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+
+.stat-prio-row{display:flex;flex-wrap:wrap;gap:5px;}
+.stat-chip{
+  padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:600;
+  background:#1a0a2a;border:1px solid var(--persona2);color:var(--persona3);
+}
+.stat-chip:first-child{background:linear-gradient(135deg,#2a0a44,#1a0a2a);border-color:var(--persona);color:#fff;}
+
+.weapon-box{
+  background:#0d0618;border-left:3px solid var(--gold);
+  border-radius:6px;padding:7px 10px;font-size:0.8rem;
+  color:var(--gold);
+}
+.note-box{
+  background:#0d0618;border-left:3px solid var(--green);
+  border-radius:6px;padding:7px 10px;font-size:0.78rem;
+  color:var(--gem);line-height:1.5;
+}
+
+/* ── STAT CALCULATOR ── */
+.stat-grid{display:flex;flex-direction:column;gap:8px;}
+.stat-row{display:flex;align-items:center;gap:8px;}
+.stat-row label{
+  font-size:0.72rem;color:var(--muted);white-space:nowrap;
+  min-width:115px;flex-shrink:0;
+}
+.stat-row input[type=number]{
+  width:80px;padding:6px 8px;
+  background:#0a0618;border:1px solid var(--border);
+  border-radius:8px;color:var(--persona3);
+  font-family:'Exo 2',sans-serif;font-size:0.88rem;text-align:center;
+  transition:border-color .15s;flex-shrink:0;
+}
+.stat-row input[type=number]:focus{
+  outline:none;border-color:var(--persona);box-shadow:0 0 0 2px #b060ff22;
+}
+.stat-row input[type=range]{
+  flex:1;accent-color:var(--persona);height:4px;
+}
+.stat-unit{font-size:0.68rem;color:var(--muted);min-width:12px;}
+
+/* ── SUMMARY ── */
+.summary-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.sum-box{
+  flex:1;min-width:80px;
+  background:#0a0618;border:1px solid var(--border);border-radius:9px;
+  padding:7px 10px;text-align:center;
+}
+.sum-val{font-family:'Cinzel Decorative',serif;font-size:0.88rem;color:var(--persona);}
+.sum-lbl{font-size:0.6rem;color:var(--muted);margin-top:2px;}
+
+/* ── BUILD SCORE ── */
+.score-wrap{
+  background:linear-gradient(135deg,#160828,#0e0a1a);
+  border:1px solid var(--persona2);border-radius:12px;
+  padding:12px 16px;margin-bottom:10px;
+  text-align:center;
+}
+.score-title{font-size:0.7rem;color:var(--muted);margin-bottom:6px;}
+.score-number{
+  font-family:'Cinzel Decorative',serif;font-size:2rem;
+  line-height:1;margin-bottom:4px;
+}
+.score-label{font-size:0.72rem;margin-bottom:10px;}
+.score-bar-outer{
+  height:12px;background:#1a0a2a;border-radius:6px;
+  border:1px solid var(--border);overflow:hidden;
+  position:relative;
+}
+.score-bar-inner{
+  height:100%;border-radius:6px;transition:width .5s ease;
+  background:linear-gradient(90deg,var(--persona2),var(--persona),#e0aaff);
+  box-shadow:0 0 8px #b060ff88;
+}
+.score-tiers{
+  display:flex;justify-content:space-between;
+  font-size:0.6rem;color:var(--muted);margin-top:3px;
+}
+.score-breakdown{
+  display:flex;flex-direction:column;gap:4px;margin-top:10px;text-align:left;
+}
+.score-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:0.7rem;
+}
+.score-item .si-label{color:var(--muted);min-width:100px;}
+.score-item .si-bar{flex:1;height:4px;background:#1a0a2a;border-radius:2px;overflow:hidden;}
+.score-item .si-fill{height:100%;border-radius:2px;background:var(--persona);transition:width .4s;}
+.score-item .si-val{color:var(--text);min-width:40px;text-align:right;}
+
+/* ── EXPORT/IMPORT BUTTONS ── */
+.btn-row{display:flex;gap:8px;margin-top:8px;}
+.btn-p5x{
+  flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Exo 2',sans-serif;font-size:0.82rem;font-weight:700;
+  letter-spacing:0.5px;transition:all .2s;
+}
+.btn-persona{
+  background:linear-gradient(135deg,var(--persona2),var(--persona));
+  color:#fff;
+}
+.btn-persona:hover{transform:translateY(-2px);box-shadow:0 4px 16px #b060ff44;}
+.btn-export{
+  background:linear-gradient(135deg,#0d3b1f,#1a6b35);color:var(--green);
+  border:1px solid #1a6b3588;
+}
+.btn-export:hover{transform:translateY(-2px);box-shadow:0 4px 12px #00ff8833;}
+.btn-import{
+  background:linear-gradient(135deg,#0d1a3b,#1a3565);color:var(--blue);
+  border:1px solid #1a356588;
+}
+.btn-import:hover{transform:translateY(-2px);box-shadow:0 4px 12px #88ccff33;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:#000b;
+  z-index:200;align-items:center;justify-content:center;padding:16px;
+}
+.modal-box{
+  background:#0e0a1a;border:1px solid var(--persona);border-radius:14px;
+  padding:16px;width:100%;max-width:500px;
+}
+.modal-title{font-family:'Cinzel Decorative',serif;color:var(--persona3);font-size:0.82rem;margin-bottom:10px;}
+.modal-box textarea{
+  width:100%;height:140px;background:#070510;border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:0.72rem;padding:8px;
+  resize:none;font-family:monospace;
+}
+.modal-btns{display:flex;gap:8px;margin-top:10px;}
+.modal-btn{
+  flex:1;padding:9px;border-radius:8px;cursor:pointer;
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:0.82rem;transition:all .15s;
+}
+.modal-btn.primary{
+  border:none;
+  background:linear-gradient(135deg,var(--persona2),var(--persona));color:#fff;
+}
+.modal-btn.secondary{
+  border:1px solid var(--border);background:#0a0618;color:var(--muted);
+}
+.copy-ok{display:none;text-align:center;color:var(--green);font-size:0.75rem;margin-top:6px;}
+.err-msg{display:none;color:var(--red);font-size:0.72rem;margin-top:4px;}
+
+/* ── CARD SET LEGEND TOOLTIP ── */
+.cs-toggle{
+  font-size:0.65rem;color:var(--persona2);cursor:pointer;
+  text-decoration:underline;margin-bottom:5px;display:inline-block;
+}
+.cs-legend{
+  display:none;background:#0a0618;border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;margin-bottom:8px;
+  font-size:0.67rem;
+}
+.cs-legend.open{display:block;}
+.csl-row{display:flex;gap:6px;padding:3px 0;border-bottom:1px solid #1a0a2a;}
+.csl-row:last-child{border-bottom:none;}
+.csl-name{min-width:70px;color:var(--persona3);font-weight:600;}
+.csl-bonuses{flex:1;color:var(--muted);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .stat-row label{min-width:100px;font-size:0.68rem;}
+  .stat-row input[type=number]{width:68px;font-size:0.8rem;}
+  .char-header{flex-wrap:wrap;}
+  .summary-grid{gap:4px;}
+  .sum-box{min-width:70px;padding:6px 7px;}
+}
+@media(max-width:360px){
+  .stat-row{flex-wrap:wrap;}
+  .stat-row input[type=range]{width:100%;margin-left:0;}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🃏 P5X Build Optimizer</h1>
+  <p>Persona 5: The Phantom X — Character Build Reference &amp; Stat Calculator</p>
+  <div class="edit-note">✏️ แก้ไข CHARACTERS และ CARD_SETS ใน &lt;script&gt; เพื่ออัพเดตข้อมูล</div>
+</header>
+
+<div class="container">
+
+<!-- ══════════════════════════════════
+     SECTION 1 : BUILD REFERENCE
+═══════════════════════════════════ -->
+<div class="section-box">
+  <div class="section-title">📖 BUILD REFERENCE</div>
+
+  <!-- Filters -->
+  <div class="filter-row" id="filter-row">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="dps">⚔️ DPS</button>
+    <button class="filter-btn" data-filter="support">🎵 Support</button>
+    <button class="filter-btn" data-filter="medic">💚 Medic</button>
+  </div>
+
+  <!-- Character Dropdown -->
+  <div class="char-select-wrap">
+    <select id="char-select" onchange="onCharSelect()">
+      <option value="">— เลือกตัวละคร / Select Character —</option>
+    </select>
+  </div>
+
+  <!-- Character Info Panel -->
+  <div class="char-info" id="char-info">
+    <!-- Header -->
+    <div class="char-header" id="char-header"></div>
+
+    <div class="info-grid">
+      <!-- Revelation Card Sets -->
+      <div class="info-panel">
+        <div class="info-label">🃏 Revelation Card Sets (แนะนำ)</div>
+        <span class="cs-toggle" onclick="toggleLegend()">📋 ดู Card Set Bonuses ทั้งหมด ▾</span>
+        <div class="cs-legend" id="cs-legend"></div>
+        <div class="card-set-row" id="card-sets-display"></div>
+      </div>
+
+      <!-- Weapon -->
+      <div class="info-panel">
+        <div class="info-label">⚔️ Recommended Weapon</div>
+        <div class="weapon-box" id="weapon-display"></div>
+      </div>
+
+      <!-- Stat Priority -->
+      <div class="info-panel">
+        <div class="info-label">📊 Stat Priority (สำคัญที่สุด → น้อยสุด)</div>
+        <div class="stat-prio-row" id="stat-prio-display"></div>
+      </div>
+
+      <!-- Playstyle Note -->
+      <div class="info-panel">
+        <div class="info-label">💡 Playstyle Note</div>
+        <div class="note-box" id="note-display"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /section-box -->
+
+
+<!-- ══════════════════════════════════
+     SECTION 2 : STAT CALCULATOR
+═══════════════════════════════════ -->
+<div class="section-box">
+  <div class="section-title">🧮 STAT CALCULATOR</div>
+
+  <div class="stat-grid">
+    <div class="stat-row">
+      <label>ATK%</label>
+      <input type="number" id="s-atk" value="0" min="0" max="300" step="0.1" oninput="syncSlider('s-atk','r-atk');calcScore()">
+      <input type="range" id="r-atk" min="0" max="150" step="0.5" value="0" oninput="syncInput('r-atk','s-atk');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>CRIT Rate%</label>
+      <input type="number" id="s-crit" value="0" min="0" max="100" step="0.1" oninput="syncSlider('s-crit','r-crit');calcScore()">
+      <input type="range" id="r-crit" min="0" max="100" step="0.5" value="0" oninput="syncInput('r-crit','s-crit');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>CRIT DMG%</label>
+      <input type="number" id="s-cdmg" value="0" min="0" max="400" step="0.1" oninput="syncSlider('s-cdmg','r-cdmg');calcScore()">
+      <input type="range" id="r-cdmg" min="0" max="250" step="1" value="0" oninput="syncInput('r-cdmg','s-cdmg');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>HP%</label>
+      <input type="number" id="s-hp" value="0" min="0" max="200" step="0.1" oninput="syncSlider('s-hp','r-hp');calcScore()">
+      <input type="range" id="r-hp" min="0" max="150" step="0.5" value="0" oninput="syncInput('r-hp','s-hp');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>DEF%</label>
+      <input type="number" id="s-def" value="0" min="0" max="200" step="0.1" oninput="syncSlider('s-def','r-def');calcScore()">
+      <input type="range" id="r-def" min="0" max="150" step="0.5" value="0" oninput="syncInput('r-def','s-def');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>Element DMG%</label>
+      <input type="number" id="s-edm" value="0" min="0" max="200" step="0.1" oninput="syncSlider('s-edm','r-edm');calcScore()">
+      <input type="range" id="r-edm" min="0" max="120" step="0.5" value="0" oninput="syncInput('r-edm','s-edm');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>Healing Bonus%</label>
+      <input type="number" id="s-heal" value="0" min="0" max="150" step="0.1" oninput="syncSlider('s-heal','r-heal');calcScore()">
+      <input type="range" id="r-heal" min="0" max="100" step="0.5" value="0" oninput="syncInput('r-heal','s-heal');calcScore()">
+      <span class="stat-unit">%</span>
+    </div>
+    <div class="stat-row">
+      <label>SPD (Speed)</label>
+      <input type="number" id="s-spd" value="0" min="0" max="500" step="1" oninput="syncSlider('s-spd','r-spd');calcScore()">
+      <input type="range" id="r-spd" min="0" max="400" step="1" value="0" oninput="syncInput('r-spd','s-spd');calcScore()">
+      <span class="stat-unit"></span>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;">
+    <div class="section-title" style="margin-bottom:8px;">📊 สถิติรวม (Effective Summary)</div>
+    <div class="summary-grid" id="summary-grid">
+      <div class="sum-box"><div class="sum-val" id="eff-atk">0%</div><div class="sum-lbl">ATK%</div></div>
+      <div class="sum-box"><div class="sum-val" id="eff-crit">0%</div><div class="sum-lbl">CRIT Rate</div></div>
+      <div class="sum-box"><div class="sum-val" id="eff-cdmg">0%</div><div class="sum-lbl">CRIT DMG</div></div>
+      <div class="sum-box"><div class="sum-val" id="eff-edm">0%</div><div class="sum-lbl">Elem DMG</div></div>
+      <div class="sum-box"><div class="sum-val" id="eff-ehp">0</div><div class="sum-lbl">Eff.HP%</div></div>
+      <div class="sum-box"><div class="sum-val" id="eff-spd">0</div><div class="sum-lbl">SPD</div></div>
+    </div>
+
+    <!-- Build Score -->
+    <div class="score-wrap" id="score-wrap">
+      <div class="score-title">🎯 Build Score (เทียบกับ Build ที่แนะนำ)</div>
+      <div class="score-number" id="score-num" style="color:var(--persona)">—</div>
+      <div class="score-label" id="score-lbl" style="color:var(--muted)">เลือกตัวละครก่อนเพื่อดู Score</div>
+      <div class="score-bar-outer">
+        <div class="score-bar-inner" id="score-bar" style="width:0%"></div>
+      </div>
+      <div class="score-tiers">
+        <span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span>
+      </div>
+      <div class="score-breakdown" id="score-breakdown"></div>
+    </div>
+
+    <!-- Export / Import -->
+    <div class="btn-row">
+      <button class="btn-p5x btn-export" onclick="exportData()">📤 Export JSON</button>
+      <button class="btn-p5x btn-import" onclick="importData()">📥 Import JSON</button>
+    </div>
+  </div>
+</div><!-- /section-box -->
+
+</div><!-- /container -->
+
+<!-- ── EXPORT MODAL ── -->
+<div class="modal-overlay" id="export-modal">
+  <div class="modal-box">
+    <div class="modal-title">📤 Export Build Data</div>
+    <textarea id="export-text" readonly></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn primary" onclick="copyExport()">📋 Copy</button>
+      <button class="modal-btn secondary" onclick="closeModal('export-modal')">ปิด</button>
+    </div>
+    <div class="copy-ok" id="copy-ok">✅ Copied to clipboard!</div>
+  </div>
+</div>
+
+<!-- ── IMPORT MODAL ── -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal-box">
+    <div class="modal-title">📥 Import Build Data</div>
+    <textarea id="import-text" placeholder="วาง JSON ที่นี่..."></textarea>
+    <div class="err-msg" id="import-err"></div>
+    <div class="modal-btns">
+      <button class="modal-btn primary" onclick="doImport()">✅ Import</button>
+      <button class="modal-btn secondary" onclick="closeModal('import-modal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+//  EDITABLE DATA — แก้ไข CHARACTERS และ CARD_SETS เพื่ออัพเดตข้อมูล
+// ══════════════════════════════════════════════════════════════════════
+
+// CARD SET DATA
+// bonus2 = 2-piece bonus, bonus4 = 4-piece bonus
+// NOTE: บางข้อมูลอาจยังไม่ครบถ้วน (marked // UNCERTAIN)
+const CARD_SETS = [
+  {name:'Courage',   bonus2:'Physical/Electric DMG +12%',          bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม'},
+  {name:'Valor',     bonus2:'Physical/Electric DMG +12%',          bonus4:'Physical/Electric DMG +12%; ศัตรูเดี่ยว: +24%'},
+  {name:'Power',     bonus2:'ATK พาร์ตี้ธาตุเดียวกัน +10%',       bonus4:'ATK พาร์ตี้ธาตุเดียวกัน +10% (ไม่สะสม)'},
+  {name:'Peace',     bonus2:'DEF +20%',                            bonus4:'Shield effectiveness +18%'},
+  {name:'Opulence',  bonus2:'HP +12%',                             bonus4:'Allies gain Life/Offense/Defense +8%'},
+  {name:'Strife',    bonus2:'Curse DMG +10%',                      bonus4:'ATK +8% ต่อศัตรู 1 ตัว (สูงสุด +40%)'},
+  {name:'Truth',     bonus2:'Nuclear DMG +10%',                    bonus4:'ATK +30% เมื่อโจมตีศัตรูที่ถูก debuff'},
+  {name:'Hindrance', bonus2:'Curse DMG +10%',                      bonus4:'Curse DMG +20% vs ศัตรูที่ถูก debuff'},
+  {name:'Victory',   bonus2:'ศัตรูรับ DMG +12% เป็น 2 เทิร์น',    bonus4:'เหมือน 2pc (UNCERTAIN)'},
+  {name:'Resolve',   bonus2:'CRIT Rate +10%',                      bonus4:'CRIT DMG +20% เมื่อ CRIT Rate >70%'},
+  {name:'Integrity', bonus2:'SPD +5%',                             bonus4:'ATK +15% หลังใช้ Support Skill'},
+  {name:'Virtue',    bonus2:'Bless DMG +10%',                      bonus4:'Bless CRIT Rate +12%'},
+  {name:'Abundance', bonus2:'Healing +15%',                        bonus4:'ทีม DMG +8% เป็น 2 เทิร์น เมื่อผู้ใส่ฮีล'},
+  {name:'Creation',  bonus2:'ATK +10%',                            bonus4:'Special conditions apply (UNCERTAIN)'},
+  {name:'Labor',     bonus2:'Physical DMG +10%',                   bonus4:'Additional Physical effects (UNCERTAIN)'},
+];
+
+// CHARACTER DATA
+// rarity: 5 or 4
+// role: Sweeper | Assassin | Medic | Strategist | Navigator | Saboteur | Guardian
+// element: Fire | Ice | Electric | Wind | Nuclear | Curse | Bless | Physical | - (none)
+// cards: array of strings, e.g. ['Courage 4pc', 'Resolve 2pc']
+// statPrio: ordered array of stats (most important first)
+// note: short playstyle description
+// UNCERTAIN comments mark data that may change with Global release updates
+const CHARACTERS = [
+  // ─── 5-Star Characters ───
+  {
+    name:'Ren Amamiya', codename:'Joker', role:'Sweeper', element:'Curse', rarity:5,
+    cards:['Strife 4pc','Courage 2pc'],
+    weapon:'Best Curse ATK weapon (Exclusive recommended)',
+    statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],
+    note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count, making multi-enemy stages his strongest moment.'
+  },
+  {
+    name:'Ann Takamaki', codename:'Panther', role:'Sweeper', element:'Fire', rarity:5,
+    cards:['Power 4pc','Courage 2pc'],
+    weapon:'Best Fire ATK weapon',
+    statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],
+    note:'Top Fire AoE DPS. Power 4pc boosts the whole party\'s ATK when stacked — pairs well with Fire sub-DPS.'
+  },
+  {
+    name:'Ryuji Sakamoto', codename:'Skull', role:'Assassin', element:'Physical', rarity:5,
+    cards:['Courage 4pc','Valor 2pc'],
+    weapon:'Best Physical ATK weapon',
+    statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'],
+    note:'High single-target DPS that becomes even more powerful at low HP. Solo-enemy Courage 4pc bonus is devastating.'
+  },
+  {
+    name:'Kasumi Yoshizawa', codename:'Violet', role:'Assassin', element:'Physical', rarity:5,
+    cards:['Courage 4pc','Resolve 2pc'],
+    weapon:'Exclusive weapon strongly recommended',
+    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],
+    note:'Top-tier Assassin. Resolve 2pc gives CRIT Rate, while 4pc synergises with her high innate CRIT Rate for massive CRIT DMG bursts.'
+  },
+  {
+    name:'Futaba Sakura', codename:'Oracle', role:'Navigator', element:'-', rarity:5,
+    cards:['Abundance 4pc','Peace 2pc'],
+    weapon:'Best Support / HP scaling weapon',
+    statPrio:['HP%','DEF%','SPD'],
+    note:'Best Navigator. Unique ability to inflict elemental weakness on any enemy regardless of element. Abundance 4pc boosts team DMG after heals.'
+  },
+  {
+    name:'Ayaka Sakai', codename:'Chord', role:'Strategist', element:'-', rarity:5,
+    cards:['Abundance 4pc','Opulence 2pc'],
+    weapon:'Best SPD/Support weapon',
+    statPrio:['HP%','SPD','ATK%'],
+    note:'Top-tier Strategist with the "Highlight" mechanic — grants team-wide buffs and ATK amplification. Abundance 4pc further helps the team sustain.'
+  },
+  {
+    name:'Tempest Riko', codename:'T.Wind', role:'Strategist', element:'-', rarity:5,
+    cards:['Opulence 4pc','Integrity 2pc'],
+    weapon:'Best SPD/ATK Support weapon',
+    statPrio:['ATK%','SPD','CRIT Rate%'],
+    note:'Elite offensive Strategist for CRIT teams. Integrity 2pc keeps her SPD high so she acts often, triggering Opulence 4pc party-wide buffs.'
+  },
+  {
+    name:'Yaoling Li', codename:'Rin', role:'Saboteur', element:'Curse', rarity:5,
+    cards:['Hindrance 4pc','Strife 2pc'],
+    weapon:'Best Curse / SPD weapon',
+    statPrio:['ATK%','SPD','DEF%'],
+    note:'Best enemy debuffer — reduces enemy DEF and applies Curse stacks. Hindrance 4pc makes her debuffs hit even harder on afflicted enemies.'
+  },
+  {
+    name:'Seiji Shiratori', codename:'Fleuret', role:'Assassin', element:'Physical', rarity:5,
+    cards:['Courage 4pc','Valor 2pc'],
+    weapon:'Exclusive weapon recommended',
+    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],
+    note:'Pure Physical single-target DPS specialist. Courage 4pc solo-enemy bonus plus Valor 2pc stacks Physical DMG for devastating burst windows.'
+  },
+  {
+    name:'Manaka Nagao', codename:'Ange', role:'Strategist', element:'-', rarity:5,
+    cards:['Opulence 4pc','Integrity 2pc'],
+    weapon:'Best SPD/Support weapon',
+    statPrio:['ATK%','SPD','HP%'],
+    note:'Provides ATK%, DMG%, and pierce buffs to allies. Integrity 2pc boosts her own ATK after support skill, enabling her to contribute even more.'
+  },
+  {
+    name:'Yusuke Kitagawa', codename:'Fox', role:'Sweeper', element:'Ice', rarity:5,
+    cards:['Truth 4pc','Courage 2pc'], // UNCERTAIN: may use Ice-specific set if added
+    weapon:'Best Ice ATK weapon',
+    statPrio:['ATK%','Ice DMG%','CRIT Rate%'],
+    note:'Ice AoE DPS. Truth 4pc punishes debuffed targets — pair with a Saboteur to apply debuffs first for maximum output.'
+  },
+  {
+    name:'Makoto Niijima', codename:'Queen', role:'Sweeper', element:'Nuclear', rarity:5,
+    cards:['Truth 4pc','Courage 2pc'],
+    weapon:'Best Nuclear ATK weapon',
+    statPrio:['ATK%','Nuclear DMG%','CRIT Rate%'],
+    note:'Nuclear AoE damage dealer. Truth 4pc\'s +30% ATK vs debuffed foes aligns perfectly with Nuclear\'s natural debuff/meltdown synergy.'
+  },
+
+  // ─── 4-Star Characters ───
+  {
+    name:'Morgana', codename:'Mona', role:'Medic', element:'Wind', rarity:4,
+    cards:['Peace 4pc','Opulence 2pc'],
+    weapon:'Best Healing / HP weapon',
+    statPrio:['HP%','Healing Bonus%','DEF%'],
+    note:'Only character who can revive allies mid-battle. Peace 4pc boosts shields; Opulence 2pc adds HP sustain. Prioritise HP% for better revive threshold.'
+  },
+  {
+    name:'Minami Miyashita', codename:'Bui', role:'Medic', element:'Bless', rarity:4,
+    cards:['Peace 4pc','Virtue 2pc'],
+    weapon:'Best Healing weapon',
+    statPrio:['HP%','Healing Bonus%','DEF%'],
+    note:'Top healer — removes all status effects from the party. Virtue 2pc adds a touch of Bless DMG so her off-turns aren\'t wasted.' // UNCERTAIN: codename may differ
+  },
+  {
+    name:'Lufel', codename:'Lufel', role:'Medic', element:'Fire', rarity:4,
+    cards:['Peace 4pc','Victory 2pc'],
+    weapon:'Best Healing / ATK scaling weapon',
+    statPrio:['HP%','Healing Bonus%','ATK%'],
+    note:'Best 4-star support unit — heals scale with ATK so she benefits from ATK% investment alongside HP%. Victory 2pc applies vulnerability debuffs.'
+  },
+  {
+    name:'Yui Yoshida', codename:'Bui', role:'Assassin', element:'Electric', rarity:4,
+    cards:['Courage 4pc','Valor 2pc'],
+    weapon:'Best Electric ATK weapon',
+    statPrio:['ATK%','CRIT Rate%','Electric DMG%'],
+    note:'Single-target Electric DPS. Courage 4pc excels when she faces solo bosses; Valor 2pc pads Electric DMG in multi-enemy scenarios.' // UNCERTAIN: codename shared with Minami
+  },
+];
+
+// ══════════════════════════════════════════════════════════════════════
+//  ROLE CONFIG
+// ══════════════════════════════════════════════════════════════════════
+const ROLE_ICONS = {
+  Sweeper:   '🌊',
+  Assassin:  '⚔️',
+  Medic:     '💚',
+  Guardian:  '🛡️',
+  Saboteur:  '🎯',
+  Strategist:'🎵',
+  Navigator: '📡',
+};
+const ROLE_COLORS = {
+  Sweeper:   '#40c8ff',
+  Assassin:  '#ff6030',
+  Medic:     '#40ff80',
+  Guardian:  '#8080ff',
+  Saboteur:  '#ffcc40',
+  Strategist:'#b060ff',
+  Navigator: '#40ffcc',
+};
+// DPS filter group
+const DPS_ROLES = ['Sweeper','Assassin','Saboteur'];
+const SUPPORT_ROLES = ['Strategist','Navigator','Guardian'];
+const MEDIC_ROLES = ['Medic'];
+
+// Stat targets for scoring (ideal values used to compute normalised score)
+// Format: { statKey: [idealValue, weight] }
+// weight controls how important this stat is for "build score"
+const STAT_TARGETS = {
+  // DPS / Sweeper / Assassin archetype
+  dps: {
+    atk:  [120, 25],  // 120% ATK is a good target
+    crit: [70,  20],  // 70% CRIT Rate
+    cdmg: [200, 20],  // 200% CRIT DMG
+    edm:  [60,  15],  // 60% Element DMG
+    hp:   [0,   0],
+    def:  [0,   0],
+    heal: [0,   0],
+    spd:  [0,   0],
+  },
+  // Support / Strategist / Navigator
+  support: {
+    atk:  [60,  10],
+    crit: [30,  5],
+    cdmg: [0,   0],
+    edm:  [0,   0],
+    hp:   [80,  20],
+    def:  [0,   0],
+    heal: [0,   0],
+    spd:  [80,  25],  // SPD very important for supports
+  },
+  // Medic
+  medic: {
+    atk:  [20,  5],
+    crit: [0,   0],
+    cdmg: [0,   0],
+    edm:  [0,   0],
+    hp:   [100, 30],
+    def:  [40,  15],
+    heal: [60,  30],
+    spd:  [30,  10],
+  },
+  // Saboteur
+  saboteur: {
+    atk:  [80,  20],
+    crit: [30,  10],
+    cdmg: [0,   0],
+    edm:  [0,   0],
+    hp:   [0,   0],
+    def:  [20,  5],
+    heal: [0,   0],
+    spd:  [70,  25],
+  },
+};
+
+function getRoleArchetype(role){
+  if(DPS_ROLES.includes(role)) return role === 'Saboteur' ? 'saboteur' : 'dps';
+  if(MEDIC_ROLES.includes(role)) return 'medic';
+  return 'support';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════════
+let currentFilter = 'all';
+let currentChar   = null;
+
+// ══════════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════════
+function init(){
+  buildLegend();
+  buildFilterButtons();
+  populateSelect();
+}
+
+function buildLegend(){
+  const leg = document.getElementById('cs-legend');
+  leg.innerHTML = CARD_SETS.map(cs=>`
+    <div class="csl-row">
+      <div class="csl-name">${cs.name}</div>
+      <div class="csl-bonuses">
+        <span style="color:#b060ff">2pc:</span> ${cs.bonus2}
+        &nbsp;|&nbsp;
+        <span style="color:#e0aaff">4pc:</span> ${cs.bonus4}
+      </div>
+    </div>`).join('');
+}
+
+function buildFilterButtons(){
+  const row = document.getElementById('filter-row');
+  row.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      currentFilter = this.dataset.filter;
+      row.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      populateSelect();
+    });
+  });
+}
+
+function populateSelect(){
+  const sel = document.getElementById('char-select');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">— เลือกตัวละคร / Select Character —</option>';
+
+  const filtered = CHARACTERS.filter(c=>{
+    if(currentFilter === 'all') return true;
+    if(currentFilter === 'dps') return DPS_ROLES.includes(c.role);
+    if(currentFilter === 'support') return SUPPORT_ROLES.includes(c.role);
+    if(currentFilter === 'medic') return MEDIC_ROLES.includes(c.role);
+    return true;
+  });
+
+  // Group by rarity
+  [5,4].forEach(r=>{
+    const group = filtered.filter(c=>c.rarity===r);
+    if(!group.length) return;
+    const og = document.createElement('optgroup');
+    og.label = `★${r} Characters`;
+    group.forEach(c=>{
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      const star = '★'.repeat(c.rarity);
+      opt.textContent = `${ROLE_ICONS[c.role]||'?'} ${c.name} (${c.codename}) — ${c.role} · ${c.element}`;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+
+  // Try to restore
+  if(prev && [...sel.options].some(o=>o.value===prev)){
+    sel.value = prev;
+  } else {
+    document.getElementById('char-info').classList.remove('active');
+    currentChar = null;
+    calcScore();
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  CHARACTER SELECT
+// ══════════════════════════════════════════════════════════════════════
+function onCharSelect(){
+  const name = document.getElementById('char-select').value;
+  if(!name){ document.getElementById('char-info').classList.remove('active'); currentChar=null; calcScore(); return; }
+  const c = CHARACTERS.find(ch=>ch.name===name);
+  if(!c) return;
+  currentChar = c;
+  renderCharInfo(c);
+  document.getElementById('char-info').classList.add('active');
+  calcScore();
+}
+
+function renderCharInfo(c){
+  // Header
+  const roleColor = ROLE_COLORS[c.role] || '#b060ff';
+  const elemClass = c.element==='-' ? 'elem-dash' : 'elem-'+c.element;
+  document.getElementById('char-header').innerHTML = `
+    <div class="char-role-icon">${ROLE_ICONS[c.role]||'❓'}</div>
+    <div class="char-title">
+      <div class="char-name">${c.name}</div>
+      <div class="char-codename">${c.codename}</div>
+      <div class="char-badges">
+        <span class="cbadge rarity${c.rarity}">${'★'.repeat(c.rarity)} ${c.rarity}-Star</span>
+        <span class="cbadge role" style="border-color:${roleColor};color:${roleColor}">${c.role}</span>
+        <span class="cbadge ${elemClass}" style="padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700">${c.element === '-' ? 'No Element' : c.element}</span>
+      </div>
+    </div>`;
+
+  // Card Sets
+  const csRow = document.getElementById('card-sets-display');
+  csRow.innerHTML = c.cards.map(cs=>{
+    const match = cs.match(/^(.+?)\s+(2|4)pc$/i);
+    if(!match) return `<div class="card-set-item"><span class="cs-pc">?pc</span><div><div class="cs-name">${cs}</div></div></div>`;
+    const setName = match[1].trim();
+    const pc = match[2];
+    const setData = CARD_SETS.find(s=>s.name.toLowerCase()===setName.toLowerCase());
+    const bonus = setData ? (pc==='4' ? setData.bonus4 : setData.bonus2) : '?';
+    return `<div class="card-set-item">
+      <span class="cs-pc">${pc}pc</span>
+      <div>
+        <div class="cs-name">${setName}</div>
+        <div class="cs-bonus">${bonus}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Weapon
+  document.getElementById('weapon-display').textContent = c.weapon;
+
+  // Stat Priority
+  const spRow = document.getElementById('stat-prio-display');
+  spRow.innerHTML = c.statPrio.map((s,i)=>`<span class="stat-chip" style="${i===0?'background:linear-gradient(135deg,#2a0a44,var(--persona2));border-color:var(--persona);color:#fff;':''}">
+    ${i===0?'①':i===1?'②':i===2?'③':i===3?'④':'⑤'} ${s}
+  </span>`).join('');
+
+  // Note
+  document.getElementById('note-display').textContent = c.note;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  SLIDER / INPUT SYNC
+// ══════════════════════════════════════════════════════════════════════
+function syncSlider(inputId, rangeId){
+  const v = parseFloat(document.getElementById(inputId).value)||0;
+  document.getElementById(rangeId).value = v;
+}
+function syncInput(rangeId, inputId){
+  const v = parseFloat(document.getElementById(rangeId).value)||0;
+  document.getElementById(inputId).value = v;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  STAT SUMMARY + BUILD SCORE
+// ══════════════════════════════════════════════════════════════════════
+function getStats(){
+  return {
+    atk:  parseFloat(document.getElementById('s-atk').value)||0,
+    crit: parseFloat(document.getElementById('s-crit').value)||0,
+    cdmg: parseFloat(document.getElementById('s-cdmg').value)||0,
+    hp:   parseFloat(document.getElementById('s-hp').value)||0,
+    def:  parseFloat(document.getElementById('s-def').value)||0,
+    edm:  parseFloat(document.getElementById('s-edm').value)||0,
+    heal: parseFloat(document.getElementById('s-heal').value)||0,
+    spd:  parseFloat(document.getElementById('s-spd').value)||0,
+  };
+}
+
+function calcScore(){
+  const st = getStats();
+
+  // Effective HP = (1 + HP%/100) * (1 + DEF%/100) * 100 (normalised)
+  const effHp = ((1 + st.hp/100) * (1 + st.def/100) * 100 - 100).toFixed(1);
+
+  // Update summary
+  document.getElementById('eff-atk').textContent  = st.atk.toFixed(1) + '%';
+  document.getElementById('eff-crit').textContent = Math.min(st.crit,100).toFixed(1) + '%';
+  document.getElementById('eff-cdmg').textContent = st.cdmg.toFixed(1) + '%';
+  document.getElementById('eff-edm').textContent  = st.edm.toFixed(1) + '%';
+  document.getElementById('eff-ehp').textContent  = '+' + effHp + '%';
+  document.getElementById('eff-spd').textContent  = Math.round(st.spd);
+
+  if(!currentChar){
+    document.getElementById('score-num').textContent = '—';
+    document.getElementById('score-lbl').textContent = 'เลือกตัวละครก่อนเพื่อดู Score';
+    document.getElementById('score-bar').style.width = '0%';
+    document.getElementById('score-breakdown').innerHTML = '';
+    return;
+  }
+
+  const arch = getRoleArchetype(currentChar.role);
+  const targets = STAT_TARGETS[arch];
+
+  // Also check if character has specific stat priorities that override defaults
+  const prio = currentChar.statPrio;
+  // Boost weight for stats that appear in char's prio list
+  const prioBoost = 1.4;
+
+  const statMap = {
+    'ATK%': 'atk', 'CRIT Rate%': 'crit', 'CRIT DMG%': 'cdmg',
+    'HP%': 'hp', 'DEF%': 'def', 'Healing Bonus%': 'heal', 'SPD': 'spd',
+  };
+  // Element DMG% maps to edm
+  const prioKeys = prio.map(p=>{
+    if(p.includes('DMG%') && !p.includes('CRIT')) return 'edm';
+    return statMap[p] || null;
+  }).filter(Boolean);
+
+  let totalWeight = 0;
+  let earnedScore = 0;
+  const breakdown = [];
+
+  const statKeys = ['atk','crit','cdmg','edm','hp','def','heal','spd'];
+  const statLabels = {
+    atk:'ATK%', crit:'CRIT Rate%', cdmg:'CRIT DMG%', edm:'Elem DMG%',
+    hp:'HP%', def:'DEF%', heal:'Healing%', spd:'SPD'
+  };
+
+  statKeys.forEach(key=>{
+    let [ideal, weight] = targets[key];
+    if(weight === 0) return;
+    // Boost weight if in char's prio list
+    if(prioKeys.includes(key)) weight = Math.round(weight * prioBoost);
+
+    totalWeight += weight;
+    const val = st[key];
+    const ratio = ideal > 0 ? Math.min(val / ideal, 1.0) : 0;
+    const points = ratio * weight;
+    earnedScore += points;
+
+    breakdown.push({
+      label: statLabels[key],
+      val: key==='spd' ? Math.round(val) : val.toFixed(1)+'%',
+      ratio,
+      ideal: key==='spd' ? Math.round(ideal) : ideal+'%',
+      points,
+      weight
+    });
+  });
+
+  const scorePct = totalWeight > 0 ? (earnedScore / totalWeight * 100) : 0;
+  const scoreInt = Math.round(scorePct);
+
+  let grade, gradeColor;
+  if(scoreInt >= 90){ grade='S+'; gradeColor='#e0aaff'; }
+  else if(scoreInt >= 80){ grade='S'; gradeColor='var(--persona)'; }
+  else if(scoreInt >= 65){ grade='A'; gradeColor='var(--gem)'; }
+  else if(scoreInt >= 50){ grade='B'; gradeColor='var(--blue)'; }
+  else if(scoreInt >= 35){ grade='C'; gradeColor='var(--orange)'; }
+  else if(scoreInt >= 20){ grade='D'; gradeColor='var(--muted)'; }
+  else { grade='F'; gradeColor='var(--red)'; }
+
+  document.getElementById('score-num').textContent = scoreInt + '%';
+  document.getElementById('score-num').style.color = gradeColor;
+  document.getElementById('score-lbl').textContent = `เกรด ${grade} — ${getGradeNote(grade)}`;
+  document.getElementById('score-lbl').style.color = gradeColor;
+  document.getElementById('score-bar').style.width = scoreInt + '%';
+
+  // Breakdown bars
+  const bdEl = document.getElementById('score-breakdown');
+  bdEl.innerHTML = breakdown.map(b=>`
+    <div class="score-item">
+      <span class="si-label">${b.label}</span>
+      <div class="si-bar"><div class="si-fill" style="width:${b.ratio*100}%;background:${b.ratio>=0.8?'var(--gem)':b.ratio>=0.5?'var(--persona)':'var(--muted)'}"></div></div>
+      <span class="si-val">${b.val} / ${b.ideal}</span>
+    </div>`).join('');
+}
+
+function getGradeNote(grade){
+  const notes = {
+    'S+':'Build สมบูรณ์แบบ!',
+    'S': 'ยอดเยี่ยม ใกล้ Optimal มาก',
+    'A': 'ดีมาก มีที่ปรับปรุงเล็กน้อย',
+    'B': 'พอใช้ได้ แต่ควรเสริม stats หลัก',
+    'C': 'ปานกลาง stats ยังขาดอีกมาก',
+    'D': 'ต้องปรับปรุงเยอะ',
+    'F': 'Stats ยังไม่ตรง role เลย',
+  };
+  return notes[grade] || '';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TOGGLE LEGEND
+// ══════════════════════════════════════════════════════════════════════
+function toggleLegend(){
+  document.getElementById('cs-legend').classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  EXPORT / IMPORT
+// ══════════════════════════════════════════════════════════════════════
+function exportData(){
+  const data = {
+    version: 1,
+    character: currentChar ? currentChar.name : null,
+    stats: getStats(),
+  };
+  document.getElementById('export-text').value = JSON.stringify(data, null, 2);
+  document.getElementById('copy-ok').style.display = 'none';
+  document.getElementById('export-modal').style.display = 'flex';
+}
+
+function copyExport(){
+  const ta = document.getElementById('export-text');
+  ta.select(); ta.setSelectionRange(0,99999);
+  navigator.clipboard.writeText(ta.value).catch(()=>{});
+  document.execCommand('copy');
+  const ok = document.getElementById('copy-ok');
+  ok.style.display = 'block';
+  setTimeout(()=>ok.style.display='none', 2500);
+}
+
+function importData(){
+  document.getElementById('import-text').value = '';
+  document.getElementById('import-err').style.display = 'none';
+  document.getElementById('import-modal').style.display = 'flex';
+}
+
+function doImport(){
+  const txt = document.getElementById('import-text').value.trim();
+  const errEl = document.getElementById('import-err');
+  try {
+    const d = JSON.parse(txt);
+    if(!d.stats) throw new Error('ข้อมูลไม่ถูกต้อง: ไม่พบ stats');
+    const s = d.stats;
+    const setField = (id, val)=>{
+      document.getElementById(id).value = val||0;
+    };
+    setField('s-atk',  s.atk);  syncSlider('s-atk','r-atk');
+    setField('s-crit', s.crit); syncSlider('s-crit','r-crit');
+    setField('s-cdmg', s.cdmg); syncSlider('s-cdmg','r-cdmg');
+    setField('s-hp',   s.hp);   syncSlider('s-hp','r-hp');
+    setField('s-def',  s.def);  syncSlider('s-def','r-def');
+    setField('s-edm',  s.edm);  syncSlider('s-edm','r-edm');
+    setField('s-heal', s.heal); syncSlider('s-heal','r-heal');
+    setField('s-spd',  s.spd);  syncSlider('s-spd','r-spd');
+
+    if(d.character){
+      const sel = document.getElementById('char-select');
+      const opt = [...sel.options].find(o=>o.value===d.character);
+      if(opt){
+        // reset filter to all so char is visible
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+        populateSelect();
+        sel.value = d.character;
+        onCharSelect();
+      }
+    }
+    calcScore();
+    closeModal('import-modal');
+  } catch(e){
+    errEl.textContent = '❌ JSON ไม่ถูกต้อง: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function closeModal(id){
+  document.getElementById(id).style.display = 'none';
+}
+
+// Close modal on overlay click
+['export-modal','import-modal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', function(e){
+    if(e.target === this) closeModal(id);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
