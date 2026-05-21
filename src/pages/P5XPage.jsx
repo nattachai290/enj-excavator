@@ -23,7 +23,7 @@ const CHARACTERS = [
   {name:'Ann Takamaki',    codename:'Panther', role:'Sweeper',    element:'Fire',     rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                           statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],      note:'Top Fire AoE DPS. Power 4pc boosts party ATK when stacked with Fire sub-DPS.'},
   {name:'Ryuji Sakamoto',  codename:'Skull',   role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Physical ATK weapon',                       statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'],  note:'High single-target DPS. Gets even stronger at low HP. Solo-enemy Courage 4pc is devastating.'},
   {name:'Kasumi Yoshizawa',codename:'Violet',  role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Exclusive weapon strongly recommended',           statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                  note:'Top-tier Assassin. Resolve 2pc gives CRIT Rate synergy for massive CRIT DMG bursts.'},
-  {name:'Futaba Sakura',   codename:'Oracle',  role:'Navigator',  element:'-',        rarity:5, cards:['Abundance 4pc','Peace 2pc'],    weapon:'Best Support / HP scaling weapon',               statPrio:['HP%','DEF%','SPD'],                               note:'Best Navigator. Unique ability to inflict elemental weakness on any enemy.'},
+  {name:'Futaba Sakura',   codename:'Oracle',  role:'Elucidator', element:'-',        rarity:5, cards:['Abundance 4pc','Peace 2pc'],    weapon:'Best Support / HP scaling weapon',               statPrio:['HP%','DEF%','SPD'],                               note:'Best Navigator. Unique ability to inflict elemental weakness on any enemy.'},
   {name:'Ayaka Sakai',     codename:'Chord',   role:'Strategist', element:'-',        rarity:5, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best SPD/Support weapon',                        statPrio:['HP%','SPD','ATK%'],                               note:'Top-tier Strategist — Highlight mechanic grants team-wide buffs and ATK amplification.'},
   {name:'Tempest Riko',    codename:'T.Wind',  role:'Strategist', element:'-',        rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best SPD/ATK Support weapon',                    statPrio:['ATK%','SPD','CRIT Rate%'],                        note:'Elite offensive Strategist for CRIT teams. Integrity 2pc keeps SPD high for frequent actions.'},
   {name:'Yaoling Li',      codename:'Rin',     role:'Saboteur',   element:'Curse',    rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / SPD weapon',                        statPrio:['ATK%','SPD','DEF%'],                              note:'Best enemy debuffer — reduces enemy DEF. Hindrance 4pc amplifies debuffed targets.'},
@@ -37,12 +37,9 @@ const CHARACTERS = [
   {name:'Yui Yoshida',     codename:'Yui',     role:'Assassin',   element:'Electric', rarity:4, cards:['Courage 4pc','Valor 2pc'],     weapon:'Best Electric ATK weapon',                       statPrio:['ATK%','CRIT Rate%','Electric DMG%'],              note:'Single-target Electric DPS. Courage 4pc excels vs solo bosses.'},
 ]
 
-const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Navigator:'📡'}
+const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Elucidator:'📡', Virtuoso:'✨'}
 const ELEM_COLORS = {Fire:'#ff4422',Ice:'#44aaff',Electric:'#ffee00',Wind:'#44ffaa',Nuclear:'#ff8800',Curse:'#aa44ff',Bless:'#ffcc44',Physical:'#ff8866','-':'#888888'}
-const ROLE_COLORS = {Sweeper:'#40c8ff', Assassin:'#ff6030', Medic:'#40ff80', Guardian:'#8080ff', Saboteur:'#ffcc40', Strategist:'#b060ff', Navigator:'#40ffcc'}
-const DPS_ROLES = ['Sweeper','Assassin','Saboteur']
-const SUPPORT_ROLES = ['Strategist','Navigator','Guardian']
-const MEDIC_ROLES = ['Medic']
+const ROLE_COLORS = {Sweeper:'#40c8ff', Assassin:'#ff6030', Medic:'#40ff80', Guardian:'#8080ff', Saboteur:'#ffcc40', Strategist:'#b060ff', Elucidator:'#40ffcc', Virtuoso:'#ff88ff'}
 
 const STAT_TARGETS = {
   dps:      {atk:[120,25], crit:[70,20], cdmg:[200,20], edm:[60,15], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0]},
@@ -53,8 +50,8 @@ const STAT_TARGETS = {
 
 function getRoleArchetype(role) {
   if (role === 'Saboteur') return 'saboteur'
-  if (DPS_ROLES.includes(role)) return 'dps'
-  if (MEDIC_ROLES.includes(role)) return 'medic'
+  if (role === 'Medic') return 'medic'
+  if (role === 'Sweeper' || role === 'Assassin') return 'dps'
   return 'support'
 }
 
@@ -175,10 +172,12 @@ export default function P5XPage() {
               ['all','All'],
               ['Sweeper','🌊 Sweeper'],
               ['Assassin','⚔️ Assassin'],
+              ['Guardian','🛡️ Guardian'],
               ['Strategist','🎵 Strategist'],
               ['Saboteur','🎯 Saboteur'],
-              ['Navigator','📡 Navigator'],
+              ['Elucidator','📡 Elucidator'],
               ['Medic','💚 Medic'],
+              ['Virtuoso','✨ Virtuoso'],
             ].map(([f,label]) => (
               <button key={f} className={'filter-btn' + (filter===f?' active':'')} onClick={() => { setFilter(f); setCharName('') }}>
                 {label}
