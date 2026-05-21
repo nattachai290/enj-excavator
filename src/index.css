@@ -161,13 +161,13 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
   .p5x-header h1 { font-size:2rem; }
   .p5x-header p { font-size:0.9rem; }
   .section-title { font-size:1rem; }
-  .char-card { width:106px; }
-  .char-avatar { width:80px; height:80px; }
-  .char-card-name { font-size:0.74rem; }
-  .char-card-stars { font-size:0.62rem; }
-  .char-role-badge { width:28px; height:28px; }
-  .char-role-badge img { width:20px; height:20px; }
-  .char-header-portrait { width:88px; height:88px; }
+  .char-card { width:180px; }
+  .char-avatar { width:136px; height:136px; }
+  .char-card-name { font-size:0.9rem; }
+  .char-card-stars { font-size:0.75rem; }
+  .char-role-badge { width:36px; height:36px; }
+  .char-role-badge img { width:26px; height:26px; }
+  .char-header-portrait { width:110px; height:110px; }
   .filter-btn { font-size:0.8rem; padding:5px 14px; }
   .filter-role-icon { width:18px; height:18px; }
   .section-box { padding:16px 20px; }
@@ -186,16 +186,16 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .filter-btn.active { background:linear-gradient(135deg,#3a0a99,#6611cc); border-color:var(--persona); color:#fff; box-shadow:0 0 12px #d040ff55; }
 .char-grid-wrap { margin-bottom:10px; }
 .char-grid-label { font-size:0.65rem; color:var(--p5x-muted); margin-bottom:6px; font-family:'Cinzel Decorative',serif; letter-spacing:1px; }
-.char-grid { display:flex; flex-wrap:wrap; gap:7px; }
-.char-card { display:flex; flex-direction:column; align-items:center; gap:4px; padding:7px 5px; border-radius:12px; border:1px solid var(--p5x-border); background:#0c0c22; cursor:pointer; transition:all .2s; width:70px; position:relative; }
+.char-grid { display:flex; flex-wrap:wrap; gap:10px; }
+.char-card { display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 8px; border-radius:14px; border:1px solid var(--p5x-border); background:#0c0c22; cursor:pointer; transition:all .2s; width:130px; position:relative; }
 .char-card:hover { border-color:var(--persona); background:#1a0a3a; transform:translateY(-2px); box-shadow:0 4px 16px #d040ff33; }
 .char-card.selected { border-color:var(--persona); background:linear-gradient(160deg,#220a44,#0f0f2a); box-shadow:0 0 16px #d040ff66, inset 0 0 8px #d040ff22; }
-.char-avatar { width:50px; height:50px; border-radius:50%; border:2px solid; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.65rem; letter-spacing:-0.5px; overflow:hidden; position:relative; }
+.char-avatar { width:94px; height:94px; border-radius:50%; border:2px solid; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; letter-spacing:-0.5px; overflow:hidden; position:relative; }
 .char-avatar img.portrait { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-.char-role-badge { position:absolute; bottom:-2px; right:-2px; width:20px; height:20px; border-radius:50%; background:#0c0c22; border:1px solid var(--p5x-border); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-.char-role-badge img { width:14px; height:14px; object-fit:contain; mix-blend-mode:screen; }
-.char-card-name { font-size:0.6rem; color:var(--p5x-text); text-align:center; line-height:1.2; word-break:break-word; font-weight:600; }
-.char-card-stars { font-size:0.5rem; letter-spacing:-1px; }
+.char-role-badge { position:absolute; bottom:-3px; right:-3px; width:28px; height:28px; border-radius:50%; background:#0c0c22; border:1px solid var(--p5x-border); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.char-role-badge img { width:20px; height:20px; object-fit:contain; mix-blend-mode:screen; }
+.char-card-name { font-size:0.82rem; color:var(--p5x-text); text-align:center; line-height:1.2; word-break:break-word; font-weight:600; }
+.char-card-stars { font-size:0.68rem; letter-spacing:-1px; }
 .char-info { display:none; }
 .char-info.active { display:block; animation:fadeIn .3s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
@@ -210,6 +210,7 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .cbadge { padding:2px 8px; border-radius:10px; font-size:0.62rem; font-weight:700; }
 .cbadge.rarity5 { background:linear-gradient(135deg,#b8860b,var(--gold)); color:#0d0818; }
 .cbadge.rarity4 { background:linear-gradient(135deg,#7030cc,#b060ff); color:#fff; }
+.cbadge.rarity3 { background:linear-gradient(135deg,#335588,#5588cc); color:#fff; }
 .cbadge.role { background:#1a0a2a; border:1px solid var(--persona2); color:var(--persona3); }
 .elem-Fire{background:#ff603033;border:1px solid #ff6030;color:#ff8850;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
 .elem-Ice{background:#40c8ff22;border:1px solid #40c8ff;color:#70d8ff;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}

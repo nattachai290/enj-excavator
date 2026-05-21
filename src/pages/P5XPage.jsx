@@ -19,22 +19,49 @@ const CARD_SETS = [
 ]
 
 const CHARACTERS = [
+  // ─── 5-Star ─────────────────────────────────────────────────────────────
   {name:'Ren Amamiya',     codename:'Joker',   role:'Sweeper',    element:'Curse',    rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],    note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.'},
   {name:'Ann Takamaki',    codename:'Panther', role:'Sweeper',    element:'Fire',     rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                           statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],      note:'Top Fire AoE DPS. Power 4pc boosts party ATK when stacked with Fire sub-DPS.'},
   {name:'Ryuji Sakamoto',  codename:'Skull',   role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Physical ATK weapon',                       statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'],  note:'High single-target DPS. Gets even stronger at low HP. Solo-enemy Courage 4pc is devastating.'},
   {name:'Kasumi Yoshizawa',codename:'Violet',  role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Exclusive weapon strongly recommended',           statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                  note:'Top-tier Assassin. Resolve 2pc gives CRIT Rate synergy for massive CRIT DMG bursts.'},
   {name:'Futaba Sakura',   codename:'Oracle',  role:'Elucidator', element:'-',        rarity:5, cards:['Abundance 4pc','Peace 2pc'],    weapon:'Best Support / HP scaling weapon',               statPrio:['HP%','DEF%','SPD'],                               note:'Best Navigator. Unique ability to inflict elemental weakness on any enemy.'},
   {name:'Ayaka Sakai',     codename:'Chord',   role:'Strategist', element:'-',        rarity:5, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best SPD/Support weapon',                        statPrio:['HP%','SPD','ATK%'],                               note:'Top-tier Strategist — Highlight mechanic grants team-wide buffs and ATK amplification.'},
-  {name:'Tempest Riko',    codename:'T.Wind',  role:'Strategist', element:'-',        rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best SPD/ATK Support weapon',                    statPrio:['ATK%','SPD','CRIT Rate%'],                        note:'Elite offensive Strategist for CRIT teams. Integrity 2pc keeps SPD high for frequent actions.'},
+  {name:'Tempest Riko',    codename:'Wind',    role:'Strategist', element:'-',        rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best SPD/ATK Support weapon',                    statPrio:['ATK%','SPD','CRIT Rate%'],                        note:'Elite offensive Strategist for CRIT teams. Integrity 2pc keeps SPD high for frequent actions.'},
   {name:'Yaoling Li',      codename:'Rin',     role:'Saboteur',   element:'Curse',    rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / SPD weapon',                        statPrio:['ATK%','SPD','DEF%'],                              note:'Best enemy debuffer — reduces enemy DEF. Hindrance 4pc amplifies debuffed targets.'},
-  {name:'Seiji Shiratori',  codename:'Fleuret', role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Exclusive weapon recommended',                   statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                  note:'Pure Physical single-target DPS. Courage 4pc solo-enemy bonus is core to his kit.'},
+  {name:'Seiji Shiratori', codename:'Fleuret', role:'Assassin',   element:'Physical', rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Exclusive weapon recommended',                   statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                  note:'Pure Physical single-target DPS. Courage 4pc solo-enemy bonus is core to his kit.'},
   {name:'Manaka Nagao',    codename:'Ange',    role:'Strategist', element:'-',        rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best SPD/Support weapon',                        statPrio:['ATK%','SPD','HP%'],                               note:'Provides ATK%, DMG%, and pierce buffs to allies. Integrity 2pc enables more support actions.'},
   {name:'Yusuke Kitagawa', codename:'Fox',     role:'Sweeper',    element:'Ice',      rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                            statPrio:['ATK%','Ice DMG%','CRIT Rate%'],                   note:'Ice AoE DPS. Truth 4pc punishes debuffed targets — pair with Saboteur for maximum output.'},
   {name:'Makoto Niijima',  codename:'Queen',   role:'Sweeper',    element:'Nuclear',  rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Nuclear ATK weapon',                        statPrio:['ATK%','Nuclear DMG%','CRIT Rate%'],               note:'Nuclear AoE damage. Truth 4pc synergises with Nuclear\'s natural debuff/meltdown mechanic.'},
+  {name:'Goro Akechi',     codename:'Crow',    role:'Assassin',   element:'Bless',    rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Bless ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Bless DMG%'],    note:'High-powered Bless single-target DPS. CRIT-focused kit synergises with Resolve 2pc.'},
+  {name:'Makoto',          codename:'Makoto',  role:'Guardian',   element:'Physical', rarity:5, cards:['Peace 4pc','Opulence 2pc'],    weapon:'Best DEF/HP tanking weapon',                     statPrio:['DEF%','HP%','SPD'],                               note:'Frontline Guardian. Shields party and redirects damage. Peace 4pc maximises shielding.'},
+  {name:'Luce',            codename:'Luce',    role:'Elucidator', element:'-',        rarity:5, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Support weapon',                            statPrio:['HP%','SPD','DEF%'],                              note:'Support Navigator. Provides intel buffs and elemental resonance to the team.'},
+  {name:'Turbo',           codename:'Turbo',   role:'Sweeper',    element:'Electric', rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Electric ATK weapon',                       statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Electric DMG%'], note:'Fast Electric Sweeper. High hit-count attacks make Courage 4pc very effective.'},
+  {name:'Matoi',           codename:'Matoi',   role:'Guardian',   element:'Wind',     rarity:5, cards:['Peace 4pc','Opulence 2pc'],    weapon:'Best HP/DEF tanking weapon',                     statPrio:['HP%','DEF%','SPD'],                               note:'Wind-element Guardian. Provides party-wide damage mitigation and taunts.'},
+  {name:'Howler',          codename:'Howler',  role:'Sweeper',    element:'Fire',     rarity:5, cards:['Power 4pc','Strife 2pc'],       weapon:'Best Fire ATK weapon',                           statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],      note:'Aggressive Fire Sweeper with strong AoE coverage. Power 4pc amplifies team damage.'},
+  {name:'J&C',             codename:'J&C',     role:'Saboteur',   element:'Curse',    rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / debuff weapon',                     statPrio:['ATK%','SPD','DEF%'],                              note:'Dual-persona Saboteur. Curses and debilitates enemies, synergises with Curse DPS.'},
+  {name:'Noir',            codename:'Noir',    role:'Strategist', element:'-',        rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best SPD/Support weapon',                        statPrio:['ATK%','SPD','HP%'],                               note:'Elegant Strategist. Buffs party ATK and applies pierce, enabling high team damage output.'},
+  {name:'Cherish',         codename:'Cherish', role:'Guardian',   element:'Bless',    rarity:5, cards:['Peace 4pc','Virtue 2pc'],      weapon:'Best HP/Shield weapon',                          statPrio:['HP%','DEF%','Healing Bonus%'],                    note:'Bless Guardian specialising in shields and party protection. Virtue 2pc enhances Bless synergy.'},
+  {name:'Messa',           codename:'Messa',   role:'Guardian',   element:'Nuclear',  rarity:5, cards:['Peace 4pc','Opulence 2pc'],    weapon:'Best Nuclear tank weapon',                       statPrio:['HP%','DEF%','SPD'],                               note:'Nuclear Guardian. Tanks damage while inflicting Nuclear weakness for DPS follow-ups.'},
+  {name:'Phoebe',          codename:'Phoebe',  role:'Sweeper',    element:'Ice',      rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                            statPrio:['ATK%','Ice DMG%','CRIT Rate%','CRIT DMG%'],       note:'Ice Sweeper with crowd-control. Truth 4pc rewards pairing with a Saboteur.'},
+  {name:'Marian',          codename:'Marian',  role:'Assassin',   element:'Fire',     rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Fire ATK weapon',                           statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],      note:'Fire Assassin with precise single-target burst. Valor 2pc sustains high Physical output.'},
+  // ─── 4-Star ─────────────────────────────────────────────────────────────
   {name:'Morgana',         codename:'Mona',    role:'Medic',      element:'Wind',     rarity:4, cards:['Peace 4pc','Opulence 2pc'],    weapon:'Best Healing / HP weapon',                       statPrio:['HP%','Healing Bonus%','DEF%'],                    note:'Only character who can revive allies mid-battle. Prioritise HP% for better revive threshold.'},
   {name:'Minami Miyashita',codename:'Bui',     role:'Medic',      element:'Bless',    rarity:4, cards:['Peace 4pc','Virtue 2pc'],      weapon:'Best Healing weapon',                            statPrio:['HP%','Healing Bonus%','DEF%'],                    note:'Top healer — removes all status effects from the party.'},
   {name:'Lufel',           codename:'Lufel',   role:'Medic',      element:'Fire',     rarity:4, cards:['Peace 4pc','Victory 2pc'],     weapon:'Best Healing / ATK scaling weapon',              statPrio:['HP%','Healing Bonus%','ATK%'],                    note:'Best 4-star support. Heals scale with ATK so ATK% investment is worthwhile alongside HP%.'},
   {name:'Yui Yoshida',     codename:'Yui',     role:'Assassin',   element:'Electric', rarity:4, cards:['Courage 4pc','Valor 2pc'],     weapon:'Best Electric ATK weapon',                       statPrio:['ATK%','CRIT Rate%','Electric DMG%'],              note:'Single-target Electric DPS. Courage 4pc excels vs solo bosses.'},
+  {name:'Vino',            codename:'Vino',    role:'Saboteur',   element:'Curse',    rarity:4, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse debuff weapon',                       statPrio:['ATK%','SPD','DEF%'],                              note:'4★ Saboteur. Applies Curse debuffs to boost Curse DPS team output.'},
+  {name:'Riddle',          codename:'Riddle',  role:'Strategist', element:'-',        rarity:4, cards:['Integrity 4pc','Opulence 2pc'], weapon:'Best SPD support weapon',                        statPrio:['ATK%','SPD','HP%'],                               note:'Speedster Strategist. Integrity 4pc sustains high action frequency.'},
+  {name:'Cattle',          codename:'Cattle',  role:'Medic',      element:'Wind',     rarity:4, cards:['Abundance 4pc','Peace 2pc'],    weapon:'Best Healing weapon',                            statPrio:['HP%','Healing Bonus%','DEF%'],                    note:'Steady 4★ Healer. Provides consistent HP recovery for the party.'},
+  {name:'Leon',            codename:'Leon',    role:'Guardian',   element:'Physical', rarity:4, cards:['Peace 4pc','Valor 2pc'],        weapon:'Best DEF weapon',                                statPrio:['HP%','DEF%','SPD'],                               note:'4★ Guardian. Reliable frontline tank, good for early-game progression.'},
+  {name:'Closer',          codename:'Closer',  role:'Assassin',   element:'Physical', rarity:4, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Physical weapon',                           statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                  note:'4★ Physical Assassin. Focuses on finishing weakened enemies.'},
+  {name:'Mont',            codename:'Mont',    role:'Guardian',   element:'Ice',      rarity:4, cards:['Peace 4pc','Opulence 2pc'],    weapon:'Best HP/DEF weapon',                             statPrio:['HP%','DEF%','SPD'],                               note:'4★ Ice Guardian. Ice-element tank with party mitigation.'},
+  {name:'Soy',             codename:'Soy',     role:'Medic',      element:'Bless',    rarity:4, cards:['Abundance 4pc','Virtue 2pc'],   weapon:'Best Healing weapon',                            statPrio:['HP%','Healing Bonus%','DEF%'],                    note:'4★ Medic. Bless-element healer with team sustain capabilities.'},
+  {name:'Yuki',            codename:'Yuki',    role:'Assassin',   element:'Electric', rarity:4, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Electric weapon',                           statPrio:['ATK%','CRIT Rate%','Electric DMG%'],              note:'4★ Electric Assassin. Solid single-target damage for Electric teams.'},
+  {name:'Key',             codename:'Key',     role:'Saboteur',   element:'-',        rarity:4, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best debuff weapon',                             statPrio:['ATK%','SPD','DEF%'],                              note:'4★ Saboteur. Applies debuffs to reduce enemy resistances.'},
+  {name:'Moko',            codename:'Moko',    role:'Elucidator', element:'-',        rarity:4, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Support weapon',                            statPrio:['HP%','SPD','DEF%'],                              note:'4★ Elucidator. Provides intel support and team utility.'},
+  {name:'Sepia',           codename:'Sepia',   role:'Strategist', element:'-',        rarity:4, cards:['Integrity 4pc','Opulence 2pc'], weapon:'Best SPD support weapon',                        statPrio:['ATK%','SPD','HP%'],                               note:'4★ Strategist. Speed-based support that boosts team action frequency.'},
+  {name:'Puppet',          codename:'Puppet',  role:'Elucidator', element:'-',        rarity:4, cards:['Abundance 4pc','Peace 2pc'],    weapon:'Best Support weapon',                            statPrio:['HP%','SPD','DEF%'],                              note:'4★ Elucidator. Navigator support with unique debuff mechanics.'},
+  {name:'Okyann',          codename:'Okyann',  role:'Elucidator', element:'-',        rarity:4, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Support weapon',                            statPrio:['HP%','SPD','DEF%'],                              note:'4★ Elucidator. Provides elemental resonance and damage amplification.'},
 ]
 
 const BASE = 'https://lufel.net/apps/guides/data/assets/make-party/'
@@ -65,6 +92,31 @@ const PORTRAITS = {
   'Minami Miyashita': P + '미나미.webp',
   'Lufel':            P + '루펠.webp',
   'Yui Yoshida':      P + '유이.webp',
+  'Goro Akechi':      P + '아케치.webp',
+  'Makoto':           P + '마코토.webp',
+  'Luce':             P + '루체.webp',
+  'Turbo':            P + '터보.webp',
+  'Matoi':            P + '마토이.webp',
+  'Howler':           P + '하울러.webp',
+  'J&C':              P + '제이앤씨.webp',
+  'Noir':             P + '누아르.webp',
+  'Cherish':          P + '체리쉬.webp',
+  'Messa':            P + '메사.webp',
+  'Phoebe':           P + '포이비.webp',
+  'Marian':           P + '마리안.webp',
+  'Vino':             P + '비노.webp',
+  'Riddle':           P + '리들.webp',
+  'Cattle':           P + '캐틀.webp',
+  'Leon':             P + '레온.webp',
+  'Closer':           P + '클로저.webp',
+  'Mont':             P + '몽.webp',
+  'Soy':              P + '소이.webp',
+  'Yuki':             P + '유키.webp',
+  'Key':              P + '키.webp',
+  'Moko':             P + '모코.webp',
+  'Sepia':            P + '세피아.webp',
+  'Puppet':           P + '퍼핏.webp',
+  'Okyann':           P + '오키얀.webp',
 }
 const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Elucidator:'📡', Virtuoso:'✨'}
 const ELEM_COLORS = {Fire:'#ff4422',Ice:'#44aaff',Electric:'#ffee00',Wind:'#44ffaa',Nuclear:'#ff8800',Curse:'#aa44ff',Bless:'#ffcc44',Physical:'#ff8866','-':'#888888'}
@@ -104,6 +156,7 @@ export default function P5XPage() {
 
   const grouped5 = filtered.filter(c => c.rarity === 5)
   const grouped4 = filtered.filter(c => c.rarity === 4)
+  const grouped3 = filtered.filter(c => c.rarity <= 3)
 
   function setStat(key, val) {
     setStats(prev => ({ ...prev, [key]: Number(val) || 0 }))
@@ -230,7 +283,7 @@ export default function P5XPage() {
                       )}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
-                    <div className="char-card-stars" style={{ color: '#ffcc44' }}>★★★★★</div>
+                    <div className="char-card-stars" style={{ color: '#ffcc44' }}>{'★'.repeat(c.rarity)}</div>
                   </div>
                 )
               })}
@@ -255,7 +308,32 @@ export default function P5XPage() {
                       )}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
-                    <div className="char-card-stars" style={{ color: '#ccaa22' }}>★★★★</div>
+                    <div className="char-card-stars" style={{ color: '#ccaa22' }}>{'★'.repeat(c.rarity)}</div>
+                  </div>
+                )
+              })}
+            </div>
+            {grouped3.length > 0 && <div className="char-grid-label" style={{ marginTop: 8 }}>⭐⭐⭐ 3-Star</div>}
+            <div className="char-grid">
+              {grouped3.map(c => {
+                const ec = ELEM_COLORS[c.element] || '#888'
+                const isActive = charName === c.name
+                return (
+                  <div key={c.name} className={'char-card' + (isActive ? ' selected' : '')}
+                    onClick={() => setCharName(isActive ? '' : c.name)}>
+                    <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
+                      {PORTRAITS[c.name]
+                        ? <img src={PORTRAITS[c.name]} alt={c.codename} className="portrait" onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex' }} />
+                        : null}
+                      <span style={{ color: ec, fontSize:'0.7rem', fontWeight:700, display: PORTRAITS[c.name] ? 'none' : 'flex' }}>{c.codename.slice(0,3)}</span>
+                      {ROLE_IMG[c.role] && (
+                        <div className="char-role-badge">
+                          <img src={ROLE_IMG[c.role]} alt={c.role} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="char-card-name">{c.codename}</div>
+                    <div className="char-card-stars" style={{ color: '#aa8811' }}>{'★'.repeat(c.rarity)}</div>
                   </div>
                 )
               })}
