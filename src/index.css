@@ -8,7 +8,7 @@
   --p5x-text:#e0d4f5; --p5x-muted:#7a6a9a;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Exo 2', sans-serif; }
+body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
 
 /* ── NAVBAR ── */
 .navbar {
