@@ -201,7 +201,7 @@ export default function P5XPage() {
                     onClick={() => setCharName(isActive ? '' : c.name)}>
                     <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
                       {ROLE_IMG[c.role]
-                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'70%', height:'70%', objectFit:'contain', filter:'brightness(0) invert(1)' }} />
+                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'82%', height:'82%', objectFit:'contain', mixBlendMode:'screen' }} />
                         : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
@@ -220,7 +220,7 @@ export default function P5XPage() {
                     onClick={() => setCharName(isActive ? '' : c.name)}>
                     <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
                       {ROLE_IMG[c.role]
-                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'70%', height:'70%', objectFit:'contain', filter:'brightness(0) invert(1)' }} />
+                        ? <img src={ROLE_IMG[c.role]} alt={c.role} style={{ width:'82%', height:'82%', objectFit:'contain', mixBlendMode:'screen' }} />
                         : <span style={{ color: ec }}>{c.codename.slice(0,3)}</span>}
                     </div>
                     <div className="char-card-name">{c.codename}</div>
