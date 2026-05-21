@@ -70,9 +70,9 @@ const ROLE_IMG = {
   Guardian:   BASE + 'pasted-1772094066423.png',
   Medic:      BASE + 'pasted-1772094075911.png',
   Elucidator: BASE + 'pasted-1772094090247.png',
-  Virtuoso:   import.meta.env.BASE_URL + 'roles/virtuoso.svg',
+  Virtuoso:   import.meta.env.BASE_URL + 'p5x/roles/virtuoso.svg',
 }
-const BASE_PORTRAITS = import.meta.env.BASE_URL + 'portraits/'
+const BASE_PORTRAITS = import.meta.env.BASE_URL + 'p5x/portraits/'
 const PORTRAITS = {
   'Ren Amamiya':      BASE_PORTRAITS + 'joker.webp',
   'Ann Takamaki':     BASE_PORTRAITS + 'panther.webp',
