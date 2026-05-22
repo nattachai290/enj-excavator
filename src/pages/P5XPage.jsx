@@ -512,7 +512,7 @@ export default function P5XPage() {
                                     style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
                                 )}
                                 {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
-                                {sk.isBuff && <span className="skill-buff-tag">▲ BUFF</span>}
+                                {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" />}
                               </div>
                               <div className="skill-name">{sk.name}</div>
                               <div className="skill-desc">{lang === 'th' && sk.descTh ? sk.descTh : sk.desc}</div>
