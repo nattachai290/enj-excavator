@@ -278,6 +278,17 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
   70%      { box-shadow:0 0 16px #ff8866,0 0 28px #ff886677; }
 }
 
+/* PSYCHOKINESIS — pink-purple ripple pulse */
+.elem-border-Psychokinesis .char-avatar { border-color:#dd44ff; animation:ring-psy 2s ease-in-out infinite; }
+.elem-border-Psychokinesis.char-avatar-wrap::before {
+  background:conic-gradient(#dd44ff,#ff44cc,#aa44ff,#ff88ff,#dd44ff);
+  opacity:1; animation:elem-spin 3s linear infinite;
+}
+@keyframes ring-psy {
+  0%,100% { box-shadow:0 0 8px #dd44ff88,0 0 18px #dd44ff44; }
+  50%     { box-shadow:0 0 16px #ff44cccc,0 0 30px #dd44ff66; }
+}
+
 /* ALMIGHTY — rainbow spinning ring (bypasses all elements) */
 .elem-border-Almighty .char-avatar { border-color:#ffffff; animation:ring-almighty 2s ease-in-out infinite; }
 .elem-border-Almighty.char-avatar-wrap::before {
@@ -327,6 +338,7 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .elem-Bless{background:#ffcc4022;border:1px solid #ffcc40;color:#ffe070;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
 .elem-Physical{background:#ff805022;border:1px solid #ff8050;color:#ffaa80;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
 .elem-Almighty{background:linear-gradient(135deg,#ff443322,#aa44ff22);border:1px solid #ffffff88;color:#ffffff;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
+.elem-Psychokinesis{background:#dd44ff22;border:1px solid #dd44ff;color:#ee88ff;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
 .elem-dash{background:#2a2a3a;border:1px solid #555;color:#999;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;}
 .info-grid { display:flex; flex-direction:column; gap:8px; }
 .info-panel { background:#0a0618; border:1px solid var(--p5x-border); border-radius:10px; padding:10px 12px; }
