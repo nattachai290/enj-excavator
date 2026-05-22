@@ -50,10 +50,10 @@ const CHARACTERS = [
   {name:'Wind (Tempest)',     codename:'wind-tempest',   role:'Strategist', element:'Wind',           rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best Wind SPD/Support weapon',                  statPrio:['ATK%','SPD','CRIT Rate%'],                       note:'Wind Strategist variant. Tempest-themed alternate version with enhanced Wind mechanics.'},
   {name:'Moko (Seaside)',     codename:'moko-seaside',   role:'Medic',      element:'Psychokinesis',  rarity:5, cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Psy Healing weapon',                       statPrio:['HP%','SPD','DEF%'],                              note:'Psychokinesis Medic variant. Seaside-themed alternate version of Moko.'},
   // ─── 4-Star ─────────────────────────────────────────────────────────────
-  {name:'Morgana',            codename:'Mona',           role:'Medic',      element:'Wind',           rarity:4, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Healing / HP weapon',                      statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'Only character who can revive allies mid-battle. Prioritise HP% for better revive threshold.'},
-  {name:'Minami Miyashita',   codename:'Bui',            role:'Assassin',   element:'Electric',       rarity:4, cards:['Peace 4pc','Virtue 2pc'],       weapon:'Best Electric ATK weapon',                      statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'Electric Assassin. High output damage with precise targeting.'},
+  {name:'Morgana',            codename:'Mona',           role:'Medic',      element:'Wind',           rarity:5, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Healing / HP weapon',                      statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'Only character who can revive allies mid-battle. Prioritise HP% for better revive threshold.'},
+  {name:'Minami Miyashita',   codename:'Bui',            role:'Assassin',   element:'Electric',       rarity:5, cards:['Peace 4pc','Virtue 2pc'],       weapon:'Best Electric ATK weapon',                      statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'Electric Assassin. High output damage with precise targeting.'},
   {name:'Vino',               codename:'Vino',           role:'Saboteur',   element:'Nuclear',        rarity:4, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Nuclear debuff weapon',                    statPrio:['ATK%','SPD','DEF%'],                             note:'4★ Nuclear Saboteur. Applies Nuclear debuffs to boost team output.'},
-  {name:'Riddle',             codename:'Riddle',         role:'Strategist', element:'Psychokinesis',  rarity:4, cards:['Integrity 4pc','Opulence 2pc'], weapon:'Best Psy support weapon',                       statPrio:['ATK%','SPD','HP%'],                              note:'4★ Psy Strategist. Integrity 4pc sustains high action frequency.'},
+  {name:'Riddle',             codename:'Riddle',         role:'Strategist', element:'Psychokinesis',  rarity:5, cards:['Integrity 4pc','Opulence 2pc'], weapon:'Best Psy support weapon',                       statPrio:['ATK%','SPD','HP%'],                              note:'4★ Psy Strategist. Integrity 4pc sustains high action frequency.'},
   {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Abundance 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.'},
   {name:'Leon',               codename:'Leon',           role:'Strategist', element:'Nuclear',        rarity:4, cards:['Peace 4pc','Valor 2pc'],         weapon:'Best Nuclear support weapon',                   statPrio:['HP%','DEF%','SPD'],                              note:'4★ Nuclear Strategist. Reliable frontline support, good for early-game progression.'},
   {name:'Closer',             codename:'Closer',         role:'Sweeper',    element:'Electric',       rarity:4, cards:['Courage 4pc','Valor 2pc'],       weapon:'Best Electric weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'4★ Electric Sweeper. Focuses on finishing weakened enemies.'},
@@ -139,6 +139,7 @@ const PORTRAITS = {
   'Wind (Tempest)':   BASE_PORTRAITS + 'wind-tempest.webp',
   'Moko (Seaside)':   BASE_PORTRAITS + 'moko-seaside.webp',
 }
+const RAINBOW_CHARS = new Set(['Violet','Oracle','Chord','Wind','Fleuret','Ange','Queen','Crow','Luce','Matoi','J&C','Noir','Messa','makoto','closer-tropical','rin-firecracker','mont-frostgale','wind-tempest','moko-seaside'])
 const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Elucidator:'📡', Virtuoso:'✨'}
 const ELEM_COLORS = {Fire:'#ff4422',Ice:'#44aaff',Electric:'#ffee00',Wind:'#44ffaa',Nuclear:'#ff8800',Curse:'#aa44ff',Bless:'#ffcc44',Physical:'#ff8866',Almighty:'#ffffff',Psychokinesis:'#dd44ff','-':'#888888'}
 const ROLE_COLORS = {Sweeper:'#40c8ff', Assassin:'#ff6030', Medic:'#40ff80', Guardian:'#8080ff', Saboteur:'#ffcc40', Strategist:'#b060ff', Elucidator:'#40ffcc', Virtuoso:'#ff88ff'}
@@ -179,7 +180,8 @@ export default function P5XPage() {
     (elemFilter === 'all' || c.element === elemFilter || c.element2 === elemFilter)
   )
 
-  const grouped5 = filtered.filter(c => c.rarity === 5)
+  const grouped5rainbow = filtered.filter(c => c.rarity === 5 && RAINBOW_CHARS.has(c.codename))
+  const grouped5gold    = filtered.filter(c => c.rarity === 5 && !RAINBOW_CHARS.has(c.codename))
   const grouped4 = filtered.filter(c => c.rarity === 4)
   const grouped3 = filtered.filter(c => c.rarity <= 3)
 
@@ -251,7 +253,8 @@ export default function P5XPage() {
   function CharCard({ c }) {
     const ec = ELEM_COLORS[c.element] || '#888'
     const isActive = charName === c.name
-    const starColor = c.rarity === 5 ? '#ffcc44' : c.rarity === 4 ? '#ccaa22' : '#aa8811'
+    const isRainbow = RAINBOW_CHARS.has(c.codename)
+    const starColor = c.rarity === 4 ? '#ccaa22' : c.rarity <= 3 ? '#aa8811' : '#ffcc44'
     const elemKey = c.element === '-' ? 'none' : c.element
     return (
       <div className={'char-card' + (isActive ? ' selected' : '')}
@@ -279,7 +282,10 @@ export default function P5XPage() {
           )}
         </div>
         <div className="char-card-name">{c.codename}</div>
-        <div className="char-card-stars" style={{ color: starColor }}>{'★'.repeat(c.rarity)}</div>
+        {isRainbow
+          ? <div className="char-card-stars stars-rainbow">★★★★★</div>
+          : <div className="char-card-stars" style={{ color: starColor }}>{'★'.repeat(c.rarity)}</div>
+        }
       </div>
     )
   }
@@ -349,9 +355,13 @@ export default function P5XPage() {
           </div>
 
           <div className="char-grid-wrap">
-            {grouped5.length > 0 && <div className="char-grid-label">⭐⭐⭐⭐⭐ 5-Star</div>}
+            {grouped5rainbow.length > 0 && <div className="char-grid-label label-rainbow">★★★★★ 5-Star</div>}
             <div className="char-grid">
-              {grouped5.map(c => <CharCard key={c.name} c={c} />)}
+              {grouped5rainbow.map(c => <CharCard key={c.name} c={c} />)}
+            </div>
+            {grouped5gold.length > 0 && <div className="char-grid-label" style={{ marginTop:8, color:'#ffcc44' }}>★★★★★ 5-Star</div>}
+            <div className="char-grid">
+              {grouped5gold.map(c => <CharCard key={c.name} c={c} />)}
             </div>
             {grouped4.length > 0 && <div className="char-grid-label" style={{ marginTop:8 }}>⭐⭐⭐⭐ 4-Star</div>}
             <div className="char-grid">

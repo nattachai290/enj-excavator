@@ -369,6 +369,14 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .char-elem-badge img { width:16px; height:16px; object-fit:contain; mix-blend-mode:screen; }
 .char-card-name { font-size:0.82rem; color:var(--p5x-text); text-align:center; line-height:1.2; word-break:break-word; font-weight:600; }
 .char-card-stars { font-size:0.68rem; letter-spacing:-1px; }
+.stars-rainbow {
+  background:linear-gradient(to right,#ff6644,#ffaa00,#ffee00,#44ff88,#44aaff,#cc44ff,#ff44cc);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.label-rainbow {
+  background:linear-gradient(to right,#ff6644,#ffaa00,#ffee00,#44ff88,#44aaff,#cc44ff,#ff44cc);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
 .char-info { display:none; }
 .char-info.active { display:block; animation:fadeIn .3s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
