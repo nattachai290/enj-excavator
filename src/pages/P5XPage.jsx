@@ -480,7 +480,10 @@ export default function P5XPage() {
                   <div className="char-name">{currentChar.name}</div>
                   <div className="char-codename" style={{ color: currentEc }}>{currentChar.realName || currentChar.codename}</div>
                   <div className="char-badges">
-                    <span className={`cbadge rarity${currentChar.rarity}`}>{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
+                    {RAINBOW_CHARS.has(currentChar.codename)
+                      ? <span className="cbadge stars-rainbow">{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
+                      : <span className={`cbadge rarity${currentChar.rarity}`}>{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
+                    }
                     <span className="cbadge role" style={{ borderColor: ROLE_COLORS[currentChar.role], color: ROLE_COLORS[currentChar.role] }}>{currentChar.role}</span>
                     <span className={`elem-${currentChar.element === '-' ? 'dash' : currentChar.element}`}>
                       {currentChar.element === '-' ? 'No Element' : currentChar.element}
