@@ -613,85 +613,85 @@ export default function P5XPage() {
               <p>เลือกตัวละครเพื่อดูข้อมูล</p>
             </div>
           )}
-        </div>{/* /char-detail-sticky */}
 
-        {/* STAT CALCULATOR */}
-        <div className="section-box">
-          <div className="section-title">🧮 STAT CALCULATOR</div>
+          {/* STAT CALCULATOR — inside sticky panel to prevent overlap */}
+          <div style={{ borderTop: '1px solid var(--p5x-border)', marginTop: 12, paddingTop: 12 }}>
+            <div className="section-title">🧮 STAT CALCULATOR</div>
 
-          {lv80all && (
-            <div className="asc-selector">
-              <span className="asc-label">Ascension LV80</span>
-              <div className="asc-btns">
-                {lv80all.map((_, i) => (
-                  <button key={i} className={'asc-btn' + (ascension === i ? ' active' : '')} onClick={() => setAscension(i)}>A{i}</button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="p5x-stat-grid">
-            <StatRow label="ATK%"           statKey="atk"  max={300} maxRange={150} />
-            <StatRow label="CRIT Rate%"     statKey="crit" max={100} maxRange={100} />
-            <StatRow label="CRIT DMG%"      statKey="cdmg" max={400} maxRange={250} />
-            <StatRow label="HP%"            statKey="hp"   max={200} maxRange={150} />
-            <StatRow label="DEF%"           statKey="def"  max={200} maxRange={150} />
-            <StatRow label="Element DMG%"   statKey="edm"  max={200} maxRange={120} />
-            <StatRow label="Healing Bonus%" statKey="heal" max={150} maxRange={100} />
-            <StatRow label="SPD (Speed)"    statKey="spd"  max={500} maxRange={400} unit="" />
-          </div>
-
-          <div style={{ marginTop: 12 }}>
-            <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
-            {lv80 && (
-              <div className="final-stats-row">
-                <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
-                <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
-                <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
-                <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
-              </div>
-            )}
-            <div className="summary-grid">
-              <div className="sum-box"><div className="sum-val">{stats.atk.toFixed(1)}%</div><div className="sum-lbl">ATK%</div></div>
-              <div className="sum-box"><div className="sum-val">{Math.min(stats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
-              <div className="sum-box"><div className="sum-val">{stats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
-              <div className="sum-box"><div className="sum-val">{stats.edm.toFixed(1)}%</div><div className="sum-lbl">Elem DMG</div></div>
-              <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP%</div></div>
-              <div className="sum-box"><div className="sum-val">{Math.round(stats.spd)}</div><div className="sum-lbl">SPD</div></div>
-            </div>
-
-            <div className="score-wrap">
-              <div className="score-title">🎯 Build Score (เทียบกับ Build ที่แนะนำ)</div>
-              {scoreData ? <>
-                <div className="score-number" style={{ color: scoreData.gradeColor }}>{scoreData.scorePct}%</div>
-                <div className="score-label" style={{ color: scoreData.gradeColor }}>เกรด {scoreData.grade} — {scoreData.gradeNote}</div>
-                <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: scoreData.scorePct + '%' }} /></div>
-                <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
-                <div className="score-breakdown">
-                  {scoreData.breakdown.map((b, i) => (
-                    <div key={i} className="score-item">
-                      <span className="si-label">{b.label}</span>
-                      <div className="si-bar">
-                        <div className="si-fill" style={{ width: b.ratio * 100 + '%', background: b.ratio >= 0.8 ? 'var(--gem)' : b.ratio >= 0.5 ? 'var(--persona)' : 'var(--p5x-muted)' }} />
-                      </div>
-                      <span className="si-val">{b.val} / {b.ideal}</span>
-                    </div>
+            {lv80all && (
+              <div className="asc-selector">
+                <span className="asc-label">Ascension LV80</span>
+                <div className="asc-btns">
+                  {lv80all.map((_, i) => (
+                    <button key={i} className={'asc-btn' + (ascension === i ? ' active' : '')} onClick={() => setAscension(i)}>A{i}</button>
                   ))}
                 </div>
-              </> : <>
-                <div className="score-number" style={{ color: 'var(--persona)' }}>—</div>
-                <div className="score-label" style={{ color: 'var(--p5x-muted)' }}>เลือกตัวละครก่อนเพื่อดู Score</div>
-                <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: '0%' }} /></div>
-                <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
-              </>}
+              </div>
+            )}
+
+            <div className="p5x-stat-grid">
+              <StatRow label="ATK%"           statKey="atk"  max={300} maxRange={150} />
+              <StatRow label="CRIT Rate%"     statKey="crit" max={100} maxRange={100} />
+              <StatRow label="CRIT DMG%"      statKey="cdmg" max={400} maxRange={250} />
+              <StatRow label="HP%"            statKey="hp"   max={200} maxRange={150} />
+              <StatRow label="DEF%"           statKey="def"  max={200} maxRange={150} />
+              <StatRow label="Element DMG%"   statKey="edm"  max={200} maxRange={120} />
+              <StatRow label="Healing Bonus%" statKey="heal" max={150} maxRange={100} />
+              <StatRow label="SPD (Speed)"    statKey="spd"  max={500} maxRange={400} unit="" />
             </div>
 
-            <div className="p5x-btn-row">
-              <button className="btn-p5x btn-p5x-export" onClick={() => setShowExport(true)}>📤 Export JSON</button>
-              <button className="btn-p5x btn-p5x-import" onClick={() => setShowImport(true)}>📥 Import JSON</button>
+            <div style={{ marginTop: 12 }}>
+              <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
+              {lv80 && (
+                <div className="final-stats-row">
+                  <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
+                  <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
+                  <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
+                  <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
+                </div>
+              )}
+              <div className="summary-grid">
+                <div className="sum-box"><div className="sum-val">{stats.atk.toFixed(1)}%</div><div className="sum-lbl">ATK%</div></div>
+                <div className="sum-box"><div className="sum-val">{Math.min(stats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
+                <div className="sum-box"><div className="sum-val">{stats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
+                <div className="sum-box"><div className="sum-val">{stats.edm.toFixed(1)}%</div><div className="sum-lbl">Elem DMG</div></div>
+                <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP%</div></div>
+                <div className="sum-box"><div className="sum-val">{Math.round(stats.spd)}</div><div className="sum-lbl">SPD</div></div>
+              </div>
+
+              <div className="score-wrap">
+                <div className="score-title">🎯 Build Score (เทียบกับ Build ที่แนะนำ)</div>
+                {scoreData ? <>
+                  <div className="score-number" style={{ color: scoreData.gradeColor }}>{scoreData.scorePct}%</div>
+                  <div className="score-label" style={{ color: scoreData.gradeColor }}>เกรด {scoreData.grade} — {scoreData.gradeNote}</div>
+                  <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: scoreData.scorePct + '%' }} /></div>
+                  <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
+                  <div className="score-breakdown">
+                    {scoreData.breakdown.map((b, i) => (
+                      <div key={i} className="score-item">
+                        <span className="si-label">{b.label}</span>
+                        <div className="si-bar">
+                          <div className="si-fill" style={{ width: b.ratio * 100 + '%', background: b.ratio >= 0.8 ? 'var(--gem)' : b.ratio >= 0.5 ? 'var(--persona)' : 'var(--p5x-muted)' }} />
+                        </div>
+                        <span className="si-val">{b.val} / {b.ideal}</span>
+                      </div>
+                    ))}
+                  </div>
+                </> : <>
+                  <div className="score-number" style={{ color: 'var(--persona)' }}>—</div>
+                  <div className="score-label" style={{ color: 'var(--p5x-muted)' }}>เลือกตัวละครก่อนเพื่อดู Score</div>
+                  <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: '0%' }} /></div>
+                  <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
+                </>}
+              </div>
+
+              <div className="p5x-btn-row">
+                <button className="btn-p5x btn-p5x-export" onClick={() => setShowExport(true)}>📤 Export JSON</button>
+                <button className="btn-p5x btn-p5x-import" onClick={() => setShowImport(true)}>📥 Import JSON</button>
+              </div>
             </div>
           </div>
-        </div>{/* /section-box stat calc */}
+        </div>{/* /char-detail-sticky */}
         </div>{/* /p5x-right */}
       </div>{/* /p5x-container */}
 
