@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ElementRing from '../components/ElementRing'
 
 const CARD_SETS = [
   {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม'},
@@ -105,7 +106,7 @@ const PORTRAITS = {
   'Seiji Shiratori':  BASE_PORTRAITS + 'fleuret.webp',
   'Manaka Nagao':     BASE_PORTRAITS + 'ange.webp',
   'Yusuke Kitagawa':  BASE_PORTRAITS + 'fox.webp',
-  'Makoto Niijima':   BASE_PORTRAITS + 'makoto.webp',
+  'Makoto Niijima':   BASE_PORTRAITS + 'queen.webp',
   'Goro Akechi':      BASE_PORTRAITS + 'crow.webp',
   'Luce':             BASE_PORTRAITS + 'luce.webp',
   'Turbo':            BASE_PORTRAITS + 'turbo.webp',
@@ -255,11 +256,11 @@ export default function P5XPage() {
     const isActive = charName === c.name
     const isRainbow = RAINBOW_CHARS.has(c.codename)
     const starColor = c.rarity === 4 ? '#ccaa22' : c.rarity <= 3 ? '#aa8811' : '#ffcc44'
-    const elemKey = c.element === '-' ? 'none' : c.element
     return (
       <div className={'char-card' + (isActive ? ' selected' : '')}
         onClick={() => setCharName(isActive ? '' : c.name)}>
-        <div className={`char-avatar-wrap elem-border-${elemKey}`}>
+        <div className="char-avatar-wrap">
+          <ElementRing element={c.element} />
           {ELEM_IMG[c.element] && (
             <div className={`char-elem-badge${c.element2 ? ' has-elem2' : ''}`}>
               <img src={ELEM_IMG[c.element]} alt={c.element}
@@ -272,7 +273,7 @@ export default function P5XPage() {
                 style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[c.element2] || '#888'})` }} />
             </div>
           )}
-          <div className="char-avatar" style={{ background: ec + '22' }}>
+          <div className="char-avatar" style={{ background: ec + '22', borderColor: ec }}>
             {PORTRAITS[c.name]
               ? <img src={PORTRAITS[c.name]} alt={c.codename} className="portrait"
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex' }} />
