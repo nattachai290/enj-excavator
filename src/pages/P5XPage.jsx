@@ -45,7 +45,7 @@ const CHARACTERS = [
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
   {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     realName:'Makoto Yuki', affiliation:'S.E.E.S.', persona:'Orpheus',
-    weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'null', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
+    weakRes:{ Fire:'res', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'wk', Bless:'normal', Physical:'normal', Almighty:'null', Psychokinesis:'normal' },
     skills:[
       {name:'Melody of Flames',  type:'Skill',    element:'Fire', sp:20,
         desc:"Deal Fire damage to 1 foe equal to 59.8%/66.0%/63.5%/69.6% of Attack (3 hits). Also, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times.\nAlso, when spending Moon Phase to use Scarlet Hades, increase skill multiplier by 32.5%/35.8%/34.5%/37.8% for 2 turns.",
@@ -56,7 +56,7 @@ const CHARACTERS = [
       {name:'Scarlet Hades',     type:'Skill',    element:'Fire', sp:24,
         desc:"Can be activated with 2 or more Moon Phase stacks. Spend all Moon Phase stacks, and deal Fire damage to 1 foe equal to 91.5%/100.8%/97.1%/106.5% of Makoto's Attack (1 hit per stack spent). Afterwards, spend all Full Moon stacks, and deal Fire damage to 1 foe equal to 150.7%/166.2%/160.0%/175.5% of Makoto's Attack (1 hit per stack spent).\nWhen this skill is activated with 4 Moon Phase stacks, increase Makoto's pierce rate by 11.7%/12.9%/12.4%/13.6%, and increase damage by 24.4%/26.9%/25.9%/28.4%.",
         descTh:"เปิดใช้ได้เมื่อมี Moon Phase stack 2 ขึ้นไป ใช้ Moon Phase stack ทั้งหมด และสร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 91.5%/100.8%/97.1%/106.5% ของ Attack ของ Makoto (1 ครั้งต่อ stack ที่ใช้) จากนั้นใช้ Full Moon stack ทั้งหมด และสร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 150.7%/166.2%/160.0%/175.5% ของ Attack ของ Makoto (1 ครั้งต่อ stack ที่ใช้)\nหากใช้สกิลนี้ด้วย Moon Phase stack 4 อัน เพิ่มอัตรา pierce ของ Makoto 11.7%/12.9%/12.4%/13.6% และเพิ่มความเสียหาย 24.4%/26.9%/25.9%/28.4%"},
-      {name:'Ardhanari',         type:'Ultimate', element:'Fire', sp:0,
+      {name:'Ardhanari',         type:'Skill',    element:'Fire', sp:0,
         desc:"Can be activated when Theurgy Gauge is at 100. Deal Fire damage to 1 foe equal to 147.5%/162.6%/156.5%/171.6% of Makoto's Attack (4 hits).\nAlso, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times.",
         descTh:"เปิดใช้ได้เมื่อ Theurgy Gauge อยู่ที่ 100 สร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 147.5%/162.6%/156.5%/171.6% ของ Attack ของ Makoto (4 ครั้ง)\nนอกจากนี้ รับ Full Moon 1 stack เอฟเฟกต์นี้คงอยู่ 2 เทิร์น สะสมสูงสุด 4 ครั้ง"},
       {name:'Cadenza',           type:'Skill',    element:'-',    sp:0,  isBuff:true,
@@ -73,13 +73,27 @@ const CHARACTERS = [
         descTh:"เมื่อได้รับเอฟเฟกต์ buff, การฟื้นฟู หรือ shield จากพันธมิตร (ยกเว้นเอฟเฟกต์ที่มีผลต่อศัตรูด้วย) เพิ่ม CRIT DMG 7.2% เป็นเวลา 2 เทิร์น สะสมได้สูงสุด 3 ครั้ง"},
     ],
     awareness:[
-      {stage:0, name:'Pathfinder',            desc:'Dual Theurgy: Cadenza & Ardhanari. At battle start, fill Theurgy Gauge to 35 if below. When receiving ally buff/heal/shield, gain 1 Moon Phase stack (max 1/turn, lasts 2 turns, max 4). Moon Phase: pierce rate +4%/8%/12% (at Lv.1/50/70).', descTh:'Dual Theurgy: Cadenza & Ardhanari เมื่อเริ่มต้นการต่อสู้ เติม Theurgy Gauge เป็น 35 หากต่ำกว่า เมื่อได้รับ buff/ฮีล/shield จากพันธมิตร รับ Moon Phase 1 stack (สูงสุด 1 ครั้ง/เทิร์น คงอยู่ 2 เทิร์น สูงสุด 4) Moon Phase: อัตรา pierce +4%/8%/12% (ที่ Lv.1/50/70)'},
-      {stage:1, name:'Result of Coincidence', desc:'Melody of Flames: deals 1 more Fire hit. Nocturne of Battle: also increase party pierce rate by 10% for 2 turns. Scarlet Hades (4 stacks): Makoto CRIT Rate +16%.', descTh:'Melody of Flames: โจมตีธาตุไฟเพิ่มอีก 1 ครั้ง Nocturne of Battle: เพิ่มอัตรา pierce ของปาร์ตี้ 10% เป็นเวลา 2 เทิร์น Scarlet Hades (4 stack): CRIT Rate ของ Makoto +16%'},
-      {stage:2, name:'Immovable Soul',        desc:'When Makoto has 4 Moon Phase stacks on his action turn, auto-activate Nocturne of Battle once (cooldown: 1 turn).', descTh:'เมื่อ Makoto มี Moon Phase stack 4 อันในเทิร์นของตน จะเปิดใช้ Nocturne of Battle อัตโนมัติ 1 ครั้ง (cooldown: 1 เทิร์น)'},
-      {stage:3, name:'Under the Full Moon',   desc:'Increase skill level of Scarlet Hades and Combat Tactics by 3.', descTh:'เพิ่มระดับสกิล Scarlet Hades และ Combat Tactics ขึ้น 3'},
-      {stage:4, name:'Thorny Path',           desc:'Cadenza: party damage +10% more for 2 turns. Ardhanari: deals 2 more Fire hits.', descTh:'Cadenza: ความเสียหายของปาร์ตี้ +10% เพิ่มเติมเป็นเวลา 2 เทิร์น Ardhanari: โจมตีธาตุไฟเพิ่มอีก 2 ครั้ง'},
-      {stage:5, name:'Soul Flames',           desc:'Increase skill level of Melody of Flames and Nocturne of Battle by 3.', descTh:'เพิ่มระดับสกิล Melody of Flames และ Nocturne of Battle ขึ้น 3'},
-      {stage:6, name:'Burn My Dread',         desc:'Activating a Theurgy also triggers the other Theurgy\'s effects. Scarlet Hades Full Moon stack damage +35%. First fatal hit: survive at 1 HP (KO\'d at turn end unless HP restored above 25%).', descTh:'การเปิดใช้ Theurgy จะทริกเกอร์เอฟเฟกต์ของ Theurgy อีกตัวด้วย ความเสียหาย Full Moon stack ของ Scarlet Hades +35% ครั้งแรกที่โดนโจมตีถึงตาย: รอดด้วย HP 1 (KO เมื่อสิ้นสุดเทิร์น หาก HP ไม่ถูกฟื้นฟูเกิน 25%)'},
+      {stage:0, name:'Pathfinder',
+        desc:'Makoto has 2 Theurgy: Cadenza and Ardhanari. At the start of battle, if Makoto\'s Theurgy Gauge is below 35, fill up to 35.\nWhen receiving buff, healing, or shield skill effects from an ally (excluding effects that also target foes), gain 1 Moon Phase stack (up to 1 stack per turn). This effect lasts for 2 turns, and stacks up to 4 times.\nWith Moon Phase, increase pierce rate by 4%/8%/12% (effect changes at Lv. 1/50/70, respectively).',
+        descTh:'Makoto มี Theurgy 2 แบบ: Cadenza และ Ardhanari เมื่อเริ่มต้นการต่อสู้ หาก Theurgy Gauge ของ Makoto ต่ำกว่า 35 ให้เติมจนถึง 35\nเมื่อได้รับเอฟเฟกต์ buff, การฟื้นฟู หรือ shield จากพันธมิตร (ยกเว้นเอฟเฟกต์ที่มีผลต่อศัตรูด้วย) รับ Moon Phase 1 stack (สูงสุด 1 stack ต่อเทิร์น) เอฟเฟกต์นี้คงอยู่ 2 เทิร์น สะสมสูงสุด 4 ครั้ง\nเมื่อมี Moon Phase เพิ่มอัตรา pierce 4%/8%/12% (เปลี่ยนที่ Lv. 1/50/70)'},
+      {stage:1, name:'Result of Coincidence',
+        desc:'Additional effects are added to the following skills.\nMelody of Flames: This skill deals 1 more hit of Fire damage.\nNocturne of Battle: Increase party\'s pierce rate by 10% for 2 turns.\nScarlet Hades: When this skill is activated with 4 Moon Phase stacks, increase Makoto\'s critical rate by 16%.',
+        descTh:'เพิ่มเอฟเฟกต์ให้กับสกิลต่อไปนี้\nMelody of Flames: สกิลนี้โจมตีธาตุไฟเพิ่มอีก 1 ครั้ง\nNocturne of Battle: เพิ่มอัตรา pierce ของปาร์ตี้ 10% เป็นเวลา 2 เทิร์น\nScarlet Hades: เมื่อใช้สกิลนี้ด้วย Moon Phase stack 4 อัน เพิ่ม CRIT Rate ของ Makoto 16%'},
+      {stage:2, name:'Immovable Soul',
+        desc:'When Makoto has 4 Moon Phase stacks on his action, automatically activate Nocturne of Battle 1 time.\nCooldown time: 1 turn.',
+        descTh:'เมื่อ Makoto มี Moon Phase stack 4 อันในเทิร์นของตน จะเปิดใช้ Nocturne of Battle อัตโนมัติ 1 ครั้ง\nCooldown: 1 เทิร์น'},
+      {stage:3, name:'Under the Full Moon',
+        desc:'Increase the skill levels of Scarlet Hades and Combat Tactics by 3.',
+        descTh:'เพิ่มระดับสกิล Scarlet Hades และ Combat Tactics ขึ้น 3'},
+      {stage:4, name:'Thorny Path',
+        desc:'Additional effects are added to the following Theurgy.\nCadenza: Increase party\'s damage by 10% more for 2 turns.\nArdhanari: This skill deals 2 more hits of Fire damage.',
+        descTh:'เพิ่มเอฟเฟกต์ให้กับ Theurgy ต่อไปนี้\nCadenza: เพิ่มความเสียหายของปาร์ตี้ 10% เพิ่มเติมเป็นเวลา 2 เทิร์น\nArdhanari: สกิลนี้โจมตีธาตุไฟเพิ่มอีก 2 ครั้ง'},
+      {stage:5, name:'Soul Flames',
+        desc:'Increase the skill levels of Melody of Flames and Nocturne of Battle by 3.',
+        descTh:'เพิ่มระดับสกิล Melody of Flames และ Nocturne of Battle ขึ้น 3'},
+      {stage:6, name:'Burn My Dread',
+        desc:'When Makoto activates a Theurgy, the effects of the other Theurgy are activated at the same time.\nIncrease skill damage dealt by spending Full Moon stacks with Scarlet Hades by 35%.\nThe first time that Makoto takes fatal damage, he enters a special near-death state and survives with 1 HP, and will be KO\'d at the end of the turn. If Makoto\'s HP is restored above 25%, this state is removed.',
+        descTh:'เมื่อ Makoto เปิดใช้ Theurgy เอฟเฟกต์ของ Theurgy อีกตัวจะถูกเปิดใช้พร้อมกัน\nเพิ่มความเสียหายจากการใช้ Full Moon stack ด้วย Scarlet Hades 35%\nครั้งแรกที่ Makoto โดนโจมตีถึงตาย จะเข้าสู่สภาวะใกล้ตายพิเศษและรอดด้วย HP 1 และจะถูก KO เมื่อสิ้นสุดเทิร์น หาก HP ของ Makoto ถูกฟื้นฟูเกิน 25% สภาวะนี้จะถูกยกเลิก'},
     ],
     baseStats:     {hp:292, atk:105, def:52, spd:98},
     baseStatsLv80: [
@@ -464,7 +478,7 @@ export default function P5XPage() {
                 </div>
                 <div className="char-title">
                   <div className="char-name">{currentChar.name}</div>
-                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.codename}</div>
+                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.realName || currentChar.codename}</div>
                   <div className="char-badges">
                     <span className={`cbadge rarity${currentChar.rarity}`}>{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
                     <span className="cbadge role" style={{ borderColor: ROLE_COLORS[currentChar.role], color: ROLE_COLORS[currentChar.role] }}>{currentChar.role}</span>
@@ -472,15 +486,30 @@ export default function P5XPage() {
                       {currentChar.element === '-' ? 'No Element' : currentChar.element}
                     </span>
                   </div>
-                  {(currentChar.realName || currentChar.affiliation || currentChar.persona) && (
+                  {(currentChar.affiliation || currentChar.persona) && (
                     <div className="char-lore-row">
-                      {currentChar.realName && <span className="char-real-name">{currentChar.realName}</span>}
                       {currentChar.affiliation && <span className="char-affil">{currentChar.affiliation}</span>}
-                      {currentChar.persona && <span className="char-persona-label">⚡ {currentChar.persona}</span>}
+                      {currentChar.persona && <span className="char-persona-label">⚡ Persona: {currentChar.persona}</span>}
                     </div>
                   )}
                 </div>
               </div>
+
+              {currentChar.weakRes && (
+                <div className="elem-affinity-bar">
+                  {Object.entries(currentChar.weakRes).map(([elem, val]) => (
+                    <div key={elem} className={`ea-cell ea-${val}`}>
+                      <img src={ELEM_IMG[elem]} alt={elem} className="ea-icon"
+                        style={{ filter: val === 'null' ? 'grayscale(0.5) opacity(0.6)' : `drop-shadow(0 0 2px ${ELEM_COLORS[elem]||'#888'})` }} />
+                      {val !== 'normal' && (
+                        <span className="ea-label">
+                          {val === 'wk' ? 'Wk' : val === 'res' ? 'Res' : val === 'null' ? 'Null' : 'Abs'}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="char-tab-bar">
                 <button className={'char-tab-btn' + (charTab === 'build' ? ' active' : '')} onClick={() => setCharTab('build')}>🃏 Build</button>
@@ -502,17 +531,23 @@ export default function P5XPage() {
                           {(currentChar.skills || []).map((sk, i) => (
                             <div key={i} className="skill-card">
                               <div className="skill-card-header">
-                                <span className={`skill-type skill-type-${sk.type.toLowerCase()}`}>{sk.type}</span>
-                                {SKILL_TYPE_IMG[sk.type] && (
-                                  <img src={SKILL_TYPE_IMG[sk.type]} alt={sk.type} className="skill-type-icon"
-                                    onError={e => e.target.style.display='none'} />
-                                )}
-                                {sk.element && sk.element !== '-' && ELEM_IMG[sk.element] && (
-                                  <img src={ELEM_IMG[sk.element]} alt={sk.element} className="skill-elem-icon"
-                                    style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
-                                )}
-                                {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
-                                {sk.isBuff && <span className="skill-buff-tag">▲ BUFF</span>}
+                                <div className="skill-header-left">
+                                  <span className={`skill-type ${sk.isBuff ? 'skill-type-support' : `skill-type-${sk.type.toLowerCase()}`}`}>
+                                    {sk.isBuff ? 'SUPPORT' : sk.type}
+                                  </span>
+                                  {SKILL_TYPE_IMG[sk.type] && (
+                                    <img src={SKILL_TYPE_IMG[sk.type]} alt={sk.type} className="skill-type-icon"
+                                      onError={e => e.target.style.display='none'} />
+                                  )}
+                                  {sk.element && sk.element !== '-' && ELEM_IMG[sk.element] && (
+                                    <img src={ELEM_IMG[sk.element]} alt={sk.element} className="skill-elem-icon"
+                                      style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
+                                  )}
+                                </div>
+                                <div className="skill-header-right">
+                                  {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
+                                  {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" onError={e => e.target.style.display='none'} />}
+                                </div>
                               </div>
                               <div className="skill-name">{sk.name}</div>
                               <div className="skill-desc">{lang === 'th' && sk.descTh ? sk.descTh : sk.desc}</div>
@@ -587,24 +622,6 @@ export default function P5XPage() {
                   </div>
 
                   {/* ELEMENT AFFINITIES */}
-                  {currentChar.weakRes && (
-                    <div className="kit-block">
-                      <div className="kit-block-title">Element Affinities</div>
-                      <div className="elem-affinity-row">
-                        {Object.entries(currentChar.weakRes).map(([elem, val]) => (
-                          <div key={elem} className={`ea-cell ea-${val}`}>
-                            <img src={ELEM_IMG[elem]} alt={elem} className="ea-icon"
-                              style={{ filter: val === 'null' ? 'grayscale(1) opacity(0.35)' : `drop-shadow(0 0 2px ${ELEM_COLORS[elem]||'#888'})` }} />
-                            {val !== 'normal' && (
-                              <span className="ea-label">
-                                {val === 'wk' ? 'Wk' : val === 'res' ? 'Res' : val === 'null' ? 'Null' : 'Abs'}
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 
