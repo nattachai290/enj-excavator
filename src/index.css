@@ -414,3 +414,42 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
   .stat-val-locked{width:58px;font-size:0.78rem;}
   .sum-box{min-width:70px;padding:6px 7px;}
 }
+
+/* ── DAMAGE CALCULATOR ── */
+.dmg-calc { display:flex; flex-direction:column; gap:10px; }
+.dmg-notice { font-size:0.63rem; color:#ffcc44; background:#1a1400; border:1px solid #ffcc4444; border-radius:6px; padding:5px 9px; line-height:1.5; }
+.dmg-section { background:#080808; border:1px solid var(--p5x-border); border-radius:10px; padding:10px 12px; }
+.dmg-result-section { border-color:var(--persona); box-shadow:0 0 12px #d040ff22; }
+.dmg-section-title { font-size:0.65rem; font-weight:700; color:var(--p5x-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.dmg-auto-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; }
+.dmg-auto-row { display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; padding:2px 0; border-bottom:1px solid #1a1a1a; }
+.dmg-auto-row:last-child,.dmg-auto-row:nth-last-child(2) { border-bottom:none; }
+.dmg-auto-row span:first-child { color:var(--p5x-muted); }
+.dmg-auto-val { color:var(--persona3); font-weight:600; font-family:'Cinzel Decorative',serif; font-size:0.65rem; }
+.dmg-field-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; align-items:center; }
+.dmg-field-wide { grid-column:span 2; }
+.dmg-field { display:flex; align-items:center; gap:5px; }
+.dmg-field label { font-size:0.65rem; color:var(--p5x-muted); white-space:nowrap; min-width:90px; flex-shrink:0; }
+.dmg-input { width:72px; padding:4px 6px; background:#0d0d0d; border:1px solid var(--p5x-border); border-radius:6px; color:var(--persona3); font-family:'Exo 2',sans-serif; font-size:0.82rem; text-align:center; flex-shrink:0; }
+.dmg-input:focus { outline:none; border-color:var(--persona); }
+.dmg-unit { font-size:0.62rem; color:var(--p5x-muted); flex-shrink:0; }
+.dmg-select { flex:1; padding:4px 6px; background:#0d0d0d; border:1px solid var(--p5x-border); border-radius:6px; color:var(--p5x-text); font-family:'Exo 2',sans-serif; font-size:0.72rem; }
+.dmg-check-row { gap:8px; }
+.dmg-checkbox { width:16px; height:16px; accent-color:var(--persona); cursor:pointer; }
+.dmg-weakness-btns { display:flex; gap:5px; }
+.dmg-weakness-btn { padding:3px 10px; border-radius:6px; border:1px solid var(--p5x-border); background:none; color:var(--p5x-muted); font-size:0.65rem; font-family:'Exo 2',sans-serif; cursor:pointer; transition:all .12s; }
+.dmg-weakness-btn.dmg-wk-res.active { background:#002244; border-color:#4488ff; color:#88ccff; }
+.dmg-weakness-btn.dmg-wk-normal.active { background:#111; border-color:#888; color:#ccc; }
+.dmg-weakness-btn.dmg-wk-weak.active { background:#440000; border-color:#ff4422; color:#ff8866; }
+.dmg-formula-rows { display:flex; flex-direction:column; gap:3px; margin-bottom:10px; }
+.dmg-fr { display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; padding:3px 6px; border-radius:4px; background:#0d0d0d; }
+.dmg-fr-label { color:var(--p5x-muted); }
+.dmg-fr-val { color:var(--persona3); font-weight:600; font-family:'Cinzel Decorative',serif; font-size:0.63rem; }
+.dmg-output { display:flex; align-items:center; justify-content:center; gap:12px; padding:10px 0 4px; }
+.dmg-output-row { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.dmg-label-min { font-size:0.6rem; color:var(--p5x-muted); }
+.dmg-label-max { font-size:0.6rem; color:var(--persona); }
+.dmg-val-min { font-size:1.3rem; font-weight:700; color:#fff; font-family:'Cinzel Decorative',serif; }
+.dmg-val-max { font-size:1.3rem; font-weight:700; color:var(--persona3); font-family:'Cinzel Decorative',serif; }
+.dmg-output-sep { font-size:1.5rem; color:var(--p5x-muted); line-height:1; }
+.dmg-avg { text-align:center; font-size:0.68rem; color:var(--p5x-muted); margin-top:2px; }
