@@ -852,7 +852,39 @@ const CHARACTERS = [
       {hp:2713, atk:889, def:497, spd:98},
       {hp:2743, atk:898, def:503, spd:98},
     ],
-    hiddenAbility: 'ATK% +21.8%', weapons:[],
+    hiddenAbility: 'ATK% +21.8%',
+    weapons: [
+      {
+        name: "Babel's Verdict", rarity: 5, img: 'p5x/weapon/babel-verdict.png',
+        hp: 2259, atk: 740, def: 414,
+        bonusStats: {atk:30},
+        abilityName: "Babel's Verdict",
+        ability: [
+          'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
+          'Increase damage of Sonnet of Fate by 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0%.',
+          'After gaining a Verse, 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% chance to gain Verse of Zenith.\nVerse of Zenith has all the effects of Verse of Hate, Verse of Healing, and Verse of Passion.',
+        ],
+        abilityTh: [
+          'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
+          'เพิ่มความเสียหายของ Sonnet of Fate 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0%',
+          'หลังจากได้รับ Verse มีโอกาส 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% รับ Verse of Zenith\nVerse of Zenith มีเอฟเฟกต์ทั้งหมดของ Verse of Hate, Verse of Healing และ Verse of Passion',
+        ],
+      },
+      {
+        name: 'Scarlet Scepter', rarity: 4, img: 'p5x/weapon/scarlet-scepter.png',
+        hp: 1808, atk: 592, def: 331,
+        bonusStats: {atk:12},
+        abilityName: 'Scarlet Scepter',
+        ability: [
+          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          'When gaining Verse of Hate, Verse of Healing, or Verse of Passion, increase damage by 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% based on the number of current Verses for 1 turn.',
+        ],
+        abilityTh: [
+          'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
+          'เมื่อได้รับ Verse of Hate, Verse of Healing หรือ Verse of Passion เพิ่มความเสียหาย 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% ตามจำนวน Verse ปัจจุบัน เป็นเวลา 1 เทิร์น',
+        ],
+      },
+    ],
   },
   {name:'Puppet',             codename:'Puppet',         role:'Elucidator', element:'-',              rarity:4, cards:['Abundance 4pc','Peace 2pc'],      weapon:'Best Support weapon',                           statPrio:['HP%','SPD','DEF%'],                              note:'4★ Elucidator. Navigator support with unique debuff mechanics.'},
   {name:'Okyann',             codename:'Okyann',         role:'Elucidator', element:'-',              rarity:4, cards:['Abundance 4pc','Opulence 2pc'],   weapon:'Best Support weapon',                           statPrio:['HP%','SPD','DEF%'],                              note:'4★ Elucidator. Provides elemental resonance and damage amplification.'},
