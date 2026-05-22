@@ -108,6 +108,30 @@ const CHARACTERS = [
       {hp:3590, atk:1174, def:724, spd:105},
     ],
     hiddenAbility: 'Ailment Accur. +34.9%',
+    weapons: [
+      {
+        name: 'Cerberus Claws', rarity: 5, img: 'p5x/weapon/cerberus-claws.png',
+        hp: 2141, atk: 700, def: 432,
+        bonusStats: {},
+        abilityName: 'Cerberus Claws',
+        ability: [
+          'Increase ailment accuracy by 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%.',
+          'When an ally uses a Fire, Ice, Electric or Wind skill or activates a Resonance, increase Runa\'s ailment accuracy by 23.0%/28.0%/28.0%/33.0%/33.0%/38.0%/38.0% for 2 turns. This effect does not stack.',
+          'When using Woof Woof Blaze and activating the effect of Big Welcome, decrease the target\'s Defense by 16.6%/21.6%/21.6%/26.6%/26.6%/31.6%/31.6% more for 3 turns.',
+          'When the effect of Furrocious Follow-Up is activated, decrease the target\'s Defense by 33.3%/43.3%/43.3%/53.3%/53.3%/63.3%/63.3% more for 3 turns. These 2 debuffs do not stack.',
+        ],
+      },
+      {
+        name: 'Hunting Hound Claws', rarity: 4, img: 'p5x/weapon/hunting-hound-claws.png',
+        hp: 1712, atk: 560, def: 346,
+        bonusStats: {atk: 12},
+        abilityName: 'Hunting Hound Claws',
+        ability: [
+          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          'When Big Welcome or Furrocious Follow-Up is active, increase Runa\'s ailment accuracy by 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%.',
+        ],
+      },
+    ],
   },
   {name:'J&C',                codename:'J&C',            role:'Virtuoso',   element:'Almighty',       rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Almighty / debuff weapon',                 statPrio:['ATK%','SPD','DEF%'],                             note:'Dual-persona Virtuoso. Almighty element bypasses resistances. Unique performance mechanics alternate between two fighting styles.'},
   {name:'Noir',               codename:'Noir',           role:'Sweeper',    element:'Psychokinesis',  rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best Psychokinesis ATK weapon',                 statPrio:['ATK%','SPD','HP%'],                              note:'Psychokinesis Sweeper. Unique psy mechanics enabling high team damage output.'},
