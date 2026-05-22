@@ -579,7 +579,37 @@ const CHARACTERS = [
       {hp:2975, atk:833, def:503, spd:95},
       {hp:3007, atk:842, def:508, spd:95},
     ],
-    hiddenAbility: 'HP% +21.8%', weapons:[],
+    hiddenAbility: 'HP% +21.8%',
+    weapons: [
+      {
+        name: 'Fallen Angel Wing', rarity: 5, img: 'p5x/weapon/fallen-angel-wing.png',
+        hp: 2478, atk: 694, def: 418,
+        bonusStats: {heal:22},
+        abilityName: 'Fallen Angel Wing',
+        ability: [
+          'Increase healing effect by 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%.',
+          'For each Starfire stack on allies, increase healing received by 4.5%/5.9%/5.9%/7.3%/7.3%/8.7%/8.7%, and increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',
+        ],
+        abilityTh: [
+          'เพิ่มประสิทธิภาพการฟื้นฟู 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%',
+          'ต่อ Starfire stack ที่พันธมิตรมี เพิ่มการรับการฟื้นฟู 4.5%/5.9%/5.9%/7.3%/7.3%/8.7%/8.7% และเพิ่ม Attack 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%',
+        ],
+      },
+      {
+        name: 'Lava Flame', rarity: 4, img: 'p5x/weapon/lava-flame.png',
+        hp: 1982, atk: 555, def: 335,
+        bonusStats: {atk:12},
+        abilityName: 'Lava Flame',
+        ability: [
+          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          'If Starfire is active, increase healing effect by 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% per stack of Starfire.',
+        ],
+        abilityTh: [
+          'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
+          'หาก Starfire ทำงานอยู่ เพิ่มประสิทธิภาพการฟื้นฟู 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% ต่อ Starfire stack',
+        ],
+      },
+    ],
   },
   {name:'Leon',               codename:'Leon',           role:'Strategist', element:'Nuclear',        rarity:4, cards:['Peace 4pc','Valor 2pc'],         weapon:'Best Nuclear support weapon',                   statPrio:['HP%','DEF%','SPD'],                              note:'4★ Nuclear Strategist. Reliable frontline support, good for early-game progression.'},
   {name:'Closer',             codename:'Closer',         role:'Sweeper',    element:'Electric',       rarity:4, cards:['Courage 4pc','Valor 2pc'],       weapon:'Best Electric weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'4★ Electric Sweeper. Focuses on finishing weakened enemies.'},
