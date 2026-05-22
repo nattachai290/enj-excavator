@@ -201,6 +201,29 @@ const CHARACTERS = [
       {hp:3756, atk:1330, def:657, spd:95},
     ],
     hiddenAbility: 'ATK +29%',
+    weapons: [
+      {
+        name: "New Year's Light", rarity: 5, img: 'p5x/weapon/new-years-light.png',
+        hp: 2240, atk: 793, def: 392,
+        bonusStats: {atk:30, crit:16},
+        abilityName: "New Year's Light",
+        ability: [
+          'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
+          'When Flaming Sword Dance is active, increase critical rate by 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0%.',
+          'When a Fire Technical is activated, increase that damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',
+        ],
+      },
+      {
+        name: 'Cleansing Blade', rarity: 4, img: 'p5x/weapon/cleansing-blade.png',
+        hp: 1792, atk: 634, def: 314,
+        bonusStats: {atk:12},
+        abilityName: 'Cleansing Blade',
+        ability: [
+          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          'When using Yanhua Slash, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',
+        ],
+      },
+    ],
   },
   {name:'Mont (Frostgale)',   codename:'mont-frostgale', role:'Assassin',   element:'Wind',           element2:'Ice', rarity:5, cards:['Courage 4pc','Valor 2pc'], weapon:'Best Wind/Ice ATK weapon',               statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Dual-element Wind/Ice Assassin variant. Unique frostgale mechanics merge both elements.'},
   {name:'Wind (Tempest)',     codename:'wind-tempest',   role:'Strategist', element:'Wind',           rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best Wind SPD/Support weapon',                  statPrio:['ATK%','SPD','CRIT Rate%'],                       note:'Wind Strategist variant. Tempest-themed alternate version with enhanced Wind mechanics.'},
