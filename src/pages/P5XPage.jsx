@@ -477,8 +477,8 @@ export default function P5XPage() {
                     : <span>{ROLE_ICONS[currentChar.role]||'❓'}</span>}
                 </div>
                 <div className="char-title">
-                  <div className="char-name">{currentChar.name}</div>
-                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.realName || currentChar.codename}</div>
+                  <div className="char-name">{currentChar.realName || currentChar.name}</div>
+                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.realName ? currentChar.name : currentChar.codename}</div>
                   <div className="char-badges">
                     {RAINBOW_CHARS.has(currentChar.codename)
                       ? <span className="cbadge stars-rainbow">{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
