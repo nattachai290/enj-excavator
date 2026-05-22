@@ -344,7 +344,8 @@ export default function P5XPage() {
       </header>
 
       <div className="p5x-container">
-        {/* BUILD REFERENCE */}
+        {/* LEFT: filters + char grid */}
+        <div className="p5x-left">
         <div className="section-box">
           <div className="section-title">📖 BUILD REFERENCE</div>
 
@@ -404,9 +405,14 @@ export default function P5XPage() {
               {grouped3.map(c => <CharCard key={c.name} c={c} />)}
             </div>
           </div>
+        </div>{/* /section-box */}
+        </div>{/* /p5x-left */}
 
-          {currentChar && (
-            <div className="char-info active">
+        {/* RIGHT: sticky detail + stat calc */}
+        <div className="p5x-right">
+        <div className="char-detail-sticky">
+          {currentChar ? (
+            <div className="char-info">
               <div className="char-header">
                 <div className="char-header-portrait">
                   {PORTRAITS[currentChar.name]
@@ -569,8 +575,13 @@ export default function P5XPage() {
                 </div>
               </div>}
             </div>
+          ) : (
+            <div className="char-empty-state">
+              <div className="char-empty-icon">🃏</div>
+              <p>เลือกตัวละครเพื่อดูข้อมูล</p>
+            </div>
           )}
-        </div>
+        </div>{/* /char-detail-sticky */}
 
         {/* STAT CALCULATOR */}
         <div className="section-box">
@@ -628,8 +639,9 @@ export default function P5XPage() {
               <button className="btn-p5x btn-p5x-import" onClick={() => setShowImport(true)}>📥 Import JSON</button>
             </div>
           </div>
-        </div>
-      </div>
+        </div>{/* /section-box stat calc */}
+        </div>{/* /p5x-right */}
+      </div>{/* /p5x-container */}
 
       {/* Export Modal */}
       {showExport && (
