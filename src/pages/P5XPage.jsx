@@ -48,11 +48,11 @@ const CHARACTERS = [
     weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'null', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
       {name:'Melody of Flames',  type:'Skill',    element:'Fire', sp:20, desc:"Deal Fire damage to 1 foe equal to 59.8%/66.0%/63.5%/69.6% of Attack (3 hits). Also, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times.\nAlso, when spending Moon Phase to use Scarlet Hades, increase skill multiplier by 32.5%/35.8%/34.5%/37.8% for 2 turns."},
-      {name:'Nocturne of Battle',type:'Skill',    element:'-',    sp:20, desc:"Increase party's critical damage by 23.4%/25.8%/24.9%/27.3%, and increase Makoto's Attack by 19.5%/21.5%/20.7%/22.7% for 2 turns.\nAlso, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times."},
+      {name:'Nocturne of Battle',type:'Skill',    element:'-',    sp:20, isBuff:true, desc:"Increase party's critical damage by 23.4%/25.8%/24.9%/27.3%, and increase Makoto's Attack by 19.5%/21.5%/20.7%/22.7% for 2 turns.\nAlso, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times."},
       {name:'Scarlet Hades',     type:'Skill',    element:'Fire', sp:24, desc:"Can be activated with 2 or more Moon Phase stacks. Spend all Moon Phase stacks, and deal Fire damage to 1 foe equal to 91.5%/100.8%/97.1%/106.5% of Makoto's Attack (1 hit per stack spent). Afterwards, spend all Full Moon stacks, and deal Fire damage to 1 foe equal to 150.7%/166.2%/160.0%/175.5% of Makoto's Attack (1 hit per stack spent).\nWhen this skill is activated with 4 Moon Phase stacks, increase Makoto's pierce rate by 11.7%/12.9%/12.4%/13.6%, and increase damage by 24.4%/26.9%/25.9%/28.4%."},
       {name:'Ardhanari',         type:'Ultimate', element:'Fire', sp:0,  desc:"Can be activated when Theurgy Gauge is at 100. Deal Fire damage to 1 foe equal to 147.5%/162.6%/156.5%/171.6% of Makoto's Attack (4 hits).\nAlso, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times."},
-      {name:'Cadenza',           type:'Ultimate', element:'-',    sp:0,  desc:"Can be activated when Theurgy Gauge is at 100. Increase party's Attack by 24.4%/26.9%/25.9%/28.4%, and increase damage by 19.5%/21.5%/20.7%/22.7% for 2 turns. Also, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times."},
-      {name:'Assist',            type:'Normal',   element:'-',    sp:0,  desc:"Increase 1 ally's Attack by 20% for 1 turn."},
+      {name:'Cadenza',           type:'Skill',    element:'-',    sp:0,  isBuff:true, desc:"Can be activated when Theurgy Gauge is at 100. Increase party's Attack by 24.4%/26.9%/25.9%/28.4%, and increase damage by 19.5%/21.5%/20.7%/22.7% for 2 turns. Also, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times."},
+      {name:'Assist',            type:'Normal',   element:'-',    sp:0,  isBuff:true, desc:"Increase 1 ally's Attack by 20% for 1 turn."},
       {name:'On-Site Leader',    type:'Passive',  element:'-',    sp:0,  desc:"After activating a Theurgy, increase party's Attack by 40.0% for 2 turns. Increase Attack of SEES members by 30.0% more."},
       {name:'Entrusted Hope',    type:'Passive',  element:'-',    sp:0,  desc:"When receiving buff, healing, or shield skill effects from an ally (excluding effects that also target foes), increase critical damage by 7.2% for 2 turns. Stacks up to 3 times."},
     ],
@@ -485,6 +485,7 @@ export default function P5XPage() {
                                     style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
                                 )}
                                 {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
+                                {sk.isBuff && <span className="skill-buff-tag">▲ BUFF</span>}
                               </div>
                               <div className="skill-name">{sk.name}</div>
                               <div className="skill-desc">{sk.desc}</div>
