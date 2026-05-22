@@ -45,7 +45,7 @@ const CHARACTERS = [
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
   {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     realName:'Makoto Yuki', affiliation:'S.E.E.S.', persona:'Orpheus',
-    weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'null', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
+    weakRes:{ Fire:'res', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'wk', Bless:'normal', Physical:'normal', Almighty:'null', Psychokinesis:'normal' },
     skills:[
       {name:'Melody of Flames',  type:'Skill',    element:'Fire', sp:20,
         desc:"Deal Fire damage to 1 foe equal to 59.8%/66.0%/63.5%/69.6% of Attack (3 hits). Also, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times.\nAlso, when spending Moon Phase to use Scarlet Hades, increase skill multiplier by 32.5%/35.8%/34.5%/37.8% for 2 turns.",
@@ -495,6 +495,22 @@ export default function P5XPage() {
                 </div>
               </div>
 
+              {currentChar.weakRes && (
+                <div className="elem-affinity-bar">
+                  {Object.entries(currentChar.weakRes).map(([elem, val]) => (
+                    <div key={elem} className={`ea-cell ea-${val}`}>
+                      <img src={ELEM_IMG[elem]} alt={elem} className="ea-icon"
+                        style={{ filter: val === 'null' ? 'grayscale(0.5) opacity(0.6)' : `drop-shadow(0 0 2px ${ELEM_COLORS[elem]||'#888'})` }} />
+                      {val !== 'normal' && (
+                        <span className="ea-label">
+                          {val === 'wk' ? 'Wk' : val === 'res' ? 'Res' : val === 'null' ? 'Null' : 'Abs'}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="char-tab-bar">
                 <button className={'char-tab-btn' + (charTab === 'build' ? ' active' : '')} onClick={() => setCharTab('build')}>🃏 Build</button>
                 <button className={'char-tab-btn' + (charTab === 'kit'   ? ' active' : '')} onClick={() => setCharTab('kit')}>⚔️ Kit</button>
@@ -606,24 +622,6 @@ export default function P5XPage() {
                   </div>
 
                   {/* ELEMENT AFFINITIES */}
-                  {currentChar.weakRes && (
-                    <div className="kit-block">
-                      <div className="kit-block-title">Element Affinities</div>
-                      <div className="elem-affinity-row">
-                        {Object.entries(currentChar.weakRes).map(([elem, val]) => (
-                          <div key={elem} className={`ea-cell ea-${val}`}>
-                            <img src={ELEM_IMG[elem]} alt={elem} className="ea-icon"
-                              style={{ filter: val === 'null' ? 'grayscale(1) opacity(0.35)' : `drop-shadow(0 0 2px ${ELEM_COLORS[elem]||'#888'})` }} />
-                            {val !== 'normal' && (
-                              <span className="ea-label">
-                                {val === 'wk' ? 'Wk' : val === 'res' ? 'Res' : val === 'null' ? 'Null' : 'Abs'}
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 
