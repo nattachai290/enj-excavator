@@ -558,6 +558,15 @@ export default function P5XPage() {
                     }
                   </div>
 
+                  {/* HIDDEN ABILITY LV7 */}
+                  <div className="kit-block">
+                    <div className="kit-block-title">Hidden Ability <span className="ha-lv">LV 7</span></div>
+                    {!currentChar.hiddenAbility
+                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
+                      : <div className="hidden-ability-box">{currentChar.hiddenAbility}</div>
+                    }
+                  </div>
+
                   {/* AWARENESS */}
                   <div className="kit-block">
                     <div className="kit-block-title">Awareness</div>
@@ -574,15 +583,6 @@ export default function P5XPage() {
                             </div>
                           ))}
                         </div>
-                    }
-                  </div>
-
-                  {/* HIDDEN ABILITY LV7 */}
-                  <div className="kit-block">
-                    <div className="kit-block-title">Hidden Ability <span className="ha-lv">LV 7</span></div>
-                    {!currentChar.hiddenAbility
-                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
-                      : <div className="hidden-ability-box">{currentChar.hiddenAbility}</div>
                     }
                   </div>
 
