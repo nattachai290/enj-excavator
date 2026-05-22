@@ -56,7 +56,7 @@ const CHARACTERS = [
       {name:'Scarlet Hades',     type:'Skill',    element:'Fire', sp:24,
         desc:"Can be activated with 2 or more Moon Phase stacks. Spend all Moon Phase stacks, and deal Fire damage to 1 foe equal to 91.5%/100.8%/97.1%/106.5% of Makoto's Attack (1 hit per stack spent). Afterwards, spend all Full Moon stacks, and deal Fire damage to 1 foe equal to 150.7%/166.2%/160.0%/175.5% of Makoto's Attack (1 hit per stack spent).\nWhen this skill is activated with 4 Moon Phase stacks, increase Makoto's pierce rate by 11.7%/12.9%/12.4%/13.6%, and increase damage by 24.4%/26.9%/25.9%/28.4%.",
         descTh:"เปิดใช้ได้เมื่อมี Moon Phase stack 2 ขึ้นไป ใช้ Moon Phase stack ทั้งหมด และสร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 91.5%/100.8%/97.1%/106.5% ของ Attack ของ Makoto (1 ครั้งต่อ stack ที่ใช้) จากนั้นใช้ Full Moon stack ทั้งหมด และสร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 150.7%/166.2%/160.0%/175.5% ของ Attack ของ Makoto (1 ครั้งต่อ stack ที่ใช้)\nหากใช้สกิลนี้ด้วย Moon Phase stack 4 อัน เพิ่มอัตรา pierce ของ Makoto 11.7%/12.9%/12.4%/13.6% และเพิ่มความเสียหาย 24.4%/26.9%/25.9%/28.4%"},
-      {name:'Ardhanari',         type:'Ultimate', element:'Fire', sp:0,
+      {name:'Ardhanari',         type:'Skill',    element:'Fire', sp:0,
         desc:"Can be activated when Theurgy Gauge is at 100. Deal Fire damage to 1 foe equal to 147.5%/162.6%/156.5%/171.6% of Makoto's Attack (4 hits).\nAlso, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times.",
         descTh:"เปิดใช้ได้เมื่อ Theurgy Gauge อยู่ที่ 100 สร้างความเสียหายธาตุไฟให้ศัตรู 1 ตัว เท่ากับ 147.5%/162.6%/156.5%/171.6% ของ Attack ของ Makoto (4 ครั้ง)\nนอกจากนี้ รับ Full Moon 1 stack เอฟเฟกต์นี้คงอยู่ 2 เทิร์น สะสมสูงสุด 4 ครั้ง"},
       {name:'Cadenza',           type:'Skill',    element:'-',    sp:0,  isBuff:true,
@@ -502,7 +502,9 @@ export default function P5XPage() {
                           {(currentChar.skills || []).map((sk, i) => (
                             <div key={i} className="skill-card">
                               <div className="skill-card-header">
-                                <span className={`skill-type skill-type-${sk.type.toLowerCase()}`}>{sk.type}</span>
+                                <span className={`skill-type ${sk.isBuff ? 'skill-type-support' : `skill-type-${sk.type.toLowerCase()}`}`}>
+                                  {sk.isBuff ? 'SUPPORT' : sk.type}
+                                </span>
                                 {SKILL_TYPE_IMG[sk.type] && (
                                   <img src={SKILL_TYPE_IMG[sk.type]} alt={sk.type} className="skill-type-icon"
                                     onError={e => e.target.style.display='none'} />
@@ -511,8 +513,10 @@ export default function P5XPage() {
                                   <img src={ELEM_IMG[sk.element]} alt={sk.element} className="skill-elem-icon"
                                     style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
                                 )}
-                                {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
-                                {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" />}
+                                <div className="skill-header-right">
+                                  {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
+                                  {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" />}
+                                </div>
                               </div>
                               <div className="skill-name">{sk.name}</div>
                               <div className="skill-desc">{lang === 'th' && sk.descTh ? sk.descTh : sk.desc}</div>
