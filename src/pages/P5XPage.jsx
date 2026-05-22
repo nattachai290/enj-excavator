@@ -41,7 +41,7 @@ const CHARACTERS = [
   {name:'Noir',               codename:'Noir',           role:'Sweeper',    element:'Psychokinesis',  rarity:5, cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best Psychokinesis ATK weapon',                 statPrio:['ATK%','SPD','HP%'],                              note:'Psychokinesis Sweeper. Unique psy mechanics enabling high team damage output.'},
   {name:'Cherish',            codename:'Cherish',        role:'Guardian',   element:'Ice',            rarity:5, cards:['Peace 4pc','Virtue 2pc'],       weapon:'Best HP/Shield weapon',                         statPrio:['HP%','DEF%','Healing Bonus%'],                   note:'Ice Guardian specialising in shields and party protection.'},
   {name:'Messa',              codename:'Messa',          role:'Assassin',   element:'Physical',       rarity:5, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Physical Assassin weapon',                 statPrio:['HP%','DEF%','SPD'],                              note:'Physical Assassin. Tanks damage while inflicting Physical weakness for DPS follow-ups.'},
-  {name:'Phoebe',             codename:'Phoebe',         role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                           statPrio:['ATK%','Ice DMG%','CRIT Rate%','CRIT DMG%'],      note:'Ice Sweeper with crowd-control. Truth 4pc rewards pairing with a Saboteur.'},
+  {name:'Phoebe',             codename:'Phoebe',         role:'Elucidator', element:'-',              rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                           statPrio:['ATK%','Ice DMG%','CRIT Rate%','CRIT DMG%'],      note:'Ice Sweeper with crowd-control. Truth 4pc rewards pairing with a Saboteur.'},
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
   {name:'Makoto (Alt)',       codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. High single-target burst damage.'},
   {name:'Closer (Tropical)',  codename:'closer-tropical',role:'Sweeper',    element:'Bless',          rarity:5, cards:['Courage 4pc','Virtue 2pc'],     weapon:'Best Bless ATK weapon',                         statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Sweeper variant. Tropical-themed alternate version of Closer.'},
@@ -132,6 +132,12 @@ const PORTRAITS = {
   'Sepia':            BASE_PORTRAITS + 'sepia.webp',
   'Puppet':           BASE_PORTRAITS + 'puppet.webp',
   'Okyann':           BASE_PORTRAITS + 'okyann.webp',
+  'Makoto (Alt)':     BASE_PORTRAITS + 'makoto.webp',
+  'Closer (Tropical)':BASE_PORTRAITS + 'closer-tropical.webp',
+  'Rin (Firecracker)':BASE_PORTRAITS + 'rin-firecracker.webp',
+  'Mont (Frostgale)': BASE_PORTRAITS + 'mont-frostgale.webp',
+  'Wind (Tempest)':   BASE_PORTRAITS + 'wind-tempest.webp',
+  'Moko (Seaside)':   BASE_PORTRAITS + 'moko-seaside.webp',
 }
 const ROLE_ICONS = {Sweeper:'🌊', Assassin:'⚔️', Medic:'💚', Guardian:'🛡️', Saboteur:'🎯', Strategist:'🎵', Elucidator:'📡', Virtuoso:'✨'}
 const ELEM_COLORS = {Fire:'#ff4422',Ice:'#44aaff',Electric:'#ffee00',Wind:'#44ffaa',Nuclear:'#ff8800',Curse:'#aa44ff',Bless:'#ffcc44',Physical:'#ff8866',Almighty:'#ffffff',Psychokinesis:'#dd44ff','-':'#888888'}
