@@ -64,8 +64,16 @@ const CHARACTERS = [
       {stage:5, name:'Soul Flames',            desc:'Increase skill level of Melody of Flames and Nocturne of Battle by 3.'},
       {stage:6, name:'Burn My Dread',          desc:'Activating a Theurgy also triggers the other Theurgy\'s effects. Scarlet Hades Full Moon stack damage +35%. First fatal hit: survive at 1 HP (KO\'d at turn end unless HP restored above 25%).'},
     ],
-    baseStats:     {hp:292,  atk:105,  def:52,  spd:98},
-    baseStatsLv80: {hp:3270, atk:1190, def:593, spd:98},
+    baseStats:     {hp:292, atk:105, def:52, spd:98},
+    baseStatsLv80: [
+      {hp:3270, atk:1190, def:593, spd:98},
+      {hp:3329, atk:1212, def:604, spd:98},
+      {hp:3388, atk:1233, def:615, spd:98},
+      {hp:3447, atk:1254, def:625, spd:98},
+      {hp:3505, atk:1276, def:636, spd:98},
+      {hp:3564, atk:1297, def:647, spd:98},
+      {hp:3623, atk:1319, def:657, spd:98},
+    ],
     hiddenAbility: 'ATK +29%',
   },
   {name:'Closer (Tropical)',  codename:'closer-tropical',role:'Sweeper',    element:'Bless',          rarity:5, cards:['Courage 4pc','Virtue 2pc'],     weapon:'Best Bless ATK weapon',                         statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Sweeper variant. Tropical-themed alternate version of Closer.'},
@@ -197,8 +205,16 @@ export default function P5XPage() {
   const [importError, setImportError] = useState('')
   const [copyOk, setCopyOk] = useState(false)
   const [charTab, setCharTab] = useState('build')
+  const [ascension, setAscension] = useState(6)
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
+
+  const lv80arr = currentChar?.baseStatsLv80
+  const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
+  const lv80 = lv80all ? lv80all[Math.min(ascension, lv80all.length - 1)] : null
+  const finalAtk = lv80 ? Math.round(lv80.atk * (1 + stats.atk / 100)) : null
+  const finalHp  = lv80 ? Math.round(lv80.hp  * (1 + stats.hp  / 100)) : null
+  const finalDef = lv80 ? Math.round(lv80.def * (1 + stats.def / 100)) : null
 
   const filtered = CHARACTERS.filter(c =>
     (filter === 'all' || c.role === filter) &&
@@ -468,20 +484,31 @@ export default function P5XPage() {
                     <div className="kit-block-title">Base Stats</div>
                     {(!currentChar.baseStats && !currentChar.baseStatsLv80)
                       ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
-                      : <table className="stats-table">
-                          <thead>
-                            <tr><th>Stat</th><th>Base</th><th>LV 80</th></tr>
-                          </thead>
-                          <tbody>
-                            {[['HP','hp'],['ATK','atk'],['DEF','def'],['SPD','spd']].map(([label, key]) => (
-                              <tr key={key}>
-                                <td>{label}</td>
-                                <td>{currentChar.baseStats?.[key] ?? '—'}</td>
-                                <td className="stat-lv80">{currentChar.baseStatsLv80?.[key] ?? '—'}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      : (() => {
+                          const rows = Array.isArray(currentChar.baseStatsLv80) ? currentChar.baseStatsLv80 : currentChar.baseStatsLv80 ? [currentChar.baseStatsLv80] : []
+                          return (
+                            <div className="stats-table-wrap">
+                              <table className="stats-table">
+                                <thead>
+                                  <tr>
+                                    <th>Stat</th>
+                                    <th>Base</th>
+                                    {rows.map((_, i) => <th key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>A{i}</th>)}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {[['HP','hp'],['ATK','atk'],['DEF','def'],['SPD','spd']].map(([label, key]) => (
+                                    <tr key={key}>
+                                      <td>{label}</td>
+                                      <td>{currentChar.baseStats?.[key] ?? '—'}</td>
+                                      {rows.map((r, i) => <td key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>{r[key] ?? '—'}</td>)}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )
+                        })()
                     }
                   </div>
 
@@ -586,6 +613,18 @@ export default function P5XPage() {
         {/* STAT CALCULATOR */}
         <div className="section-box">
           <div className="section-title">🧮 STAT CALCULATOR</div>
+
+          {lv80all && (
+            <div className="asc-selector">
+              <span className="asc-label">Ascension LV80</span>
+              <div className="asc-btns">
+                {lv80all.map((_, i) => (
+                  <button key={i} className={'asc-btn' + (ascension === i ? ' active' : '')} onClick={() => setAscension(i)}>A{i}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="p5x-stat-grid">
             <StatRow label="ATK%"           statKey="atk"  max={300} maxRange={150} />
             <StatRow label="CRIT Rate%"     statKey="crit" max={100} maxRange={100} />
@@ -599,6 +638,14 @@ export default function P5XPage() {
 
           <div style={{ marginTop: 12 }}>
             <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
+            {lv80 && (
+              <div className="final-stats-row">
+                <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
+              </div>
+            )}
             <div className="summary-grid">
               <div className="sum-box"><div className="sum-val">{stats.atk.toFixed(1)}%</div><div className="sum-lbl">ATK%</div></div>
               <div className="sum-box"><div className="sum-val">{Math.min(stats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
