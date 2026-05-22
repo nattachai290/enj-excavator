@@ -464,7 +464,7 @@ export default function P5XPage() {
                 </div>
                 <div className="char-title">
                   <div className="char-name">{currentChar.name}</div>
-                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.codename}</div>
+                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.realName || currentChar.codename}</div>
                   <div className="char-badges">
                     <span className={`cbadge rarity${currentChar.rarity}`}>{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
                     <span className="cbadge role" style={{ borderColor: ROLE_COLORS[currentChar.role], color: ROLE_COLORS[currentChar.role] }}>{currentChar.role}</span>
@@ -472,11 +472,10 @@ export default function P5XPage() {
                       {currentChar.element === '-' ? 'No Element' : currentChar.element}
                     </span>
                   </div>
-                  {(currentChar.realName || currentChar.affiliation || currentChar.persona) && (
+                  {(currentChar.affiliation || currentChar.persona) && (
                     <div className="char-lore-row">
-                      {currentChar.realName && <span className="char-real-name">{currentChar.realName}</span>}
                       {currentChar.affiliation && <span className="char-affil">{currentChar.affiliation}</span>}
-                      {currentChar.persona && <span className="char-persona-label">⚡ {currentChar.persona}</span>}
+                      {currentChar.persona && <span className="char-persona-label">⚡ Persona: {currentChar.persona}</span>}
                     </div>
                   )}
                 </div>
