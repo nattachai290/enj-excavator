@@ -179,7 +179,7 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
   .filter-role-icon { width:20px; height:20px; }
   .section-box { padding:16px 20px; }
   .p5x-stat-row label { font-size:0.82rem; min-width:140px; }
-  .p5x-stat-row input[type=number] { width:90px; font-size:0.95rem; }
+  .stat-val-locked { width:80px; font-size:0.92rem; }
   .sum-val { font-size:1rem; }
   .score-number { font-size:2.8rem; }
 }
@@ -364,6 +364,10 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .wstat-label { font-size:0.58rem; font-weight:700; color:var(--p5x-muted); text-transform:uppercase; background:#1a1a1a; border-radius:3px; padding:1px 4px; }
 .weapon-ability-name { font-size:0.72rem; font-weight:700; color:var(--persona3); margin-bottom:4px; }
 .weapon-ability-line { font-size:0.72rem; color:var(--p5x-text); line-height:1.55; opacity:0.88; margin-bottom:2px; }
+.weapon-card.weapon-selected { outline:2px solid var(--persona); outline-offset:1px; }
+.weapon-card.rarity5.weapon-selected { outline-color:#f0c040; }
+.weapon-card.rarity4.weapon-selected { outline-color:#b060ff; }
+.weapon-selected-badge { display:inline-block; margin-top:6px; font-size:0.62rem; font-weight:700; color:#0a0a0a; background:var(--persona3); border-radius:4px; padding:1px 7px; }
 .note-box { background:#0d0d0d; border-left:3px solid var(--green); border-radius:6px; padding:7px 10px; font-size:0.78rem; color:var(--gem); line-height:1.5; }
 .cs-toggle { font-size:0.65rem; color:var(--persona2); cursor:pointer; text-decoration:underline; margin-bottom:5px; display:inline-block; }
 .cs-legend { display:none; background:#080808; border:1px solid var(--p5x-border); border-radius:8px; padding:8px 10px; margin-bottom:8px; font-size:0.67rem; }
@@ -375,10 +379,9 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .p5x-stat-grid { display:flex; flex-direction:column; gap:8px; }
 .p5x-stat-row { display:flex; align-items:center; gap:8px; }
 .p5x-stat-row label { font-size:0.72rem; color:var(--p5x-muted); white-space:nowrap; min-width:115px; flex-shrink:0; }
-.p5x-stat-row input[type=number] { width:80px; padding:6px 8px; background:#080808; border:1px solid var(--p5x-border); border-radius:8px; color:var(--persona3); font-family:'Exo 2',sans-serif; font-size:0.88rem; text-align:center; flex-shrink:0; }
-.p5x-stat-row input[type=number]:focus { outline:none; border-color:var(--persona); }
-.p5x-stat-row input[type=range] { flex:1; accent-color:var(--persona); height:4px; }
-.stat-unit { font-size:0.68rem; color:var(--p5x-muted); min-width:12px; }
+.stat-val-locked { width:68px; padding:5px 8px; background:#080808; border:1px solid var(--p5x-border); border-radius:8px; color:var(--persona3); font-family:'Exo 2',sans-serif; font-size:0.88rem; text-align:center; flex-shrink:0; }
+.stat-bar-track { flex:1; height:6px; background:#1a1a1a; border-radius:3px; overflow:hidden; }
+.stat-bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--persona2),var(--persona)); transition:width .3s ease; }
 .summary-grid { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
 .sum-box { flex:1; min-width:80px; background:#080808; border:1px solid var(--p5x-border); border-radius:9px; padding:7px 10px; text-align:center; }
 .sum-val { font-family:'Cinzel Decorative',serif; font-size:0.88rem; color:var(--persona); }
@@ -408,6 +411,6 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 @media(max-width:400px) {
   .cnt-btn{width:27px;height:27px;} .cnt-val{height:27px;min-width:32px;}
   .p5x-stat-row label{min-width:100px;font-size:0.68rem;}
-  .p5x-stat-row input[type=number]{width:68px;font-size:0.8rem;}
+  .stat-val-locked{width:58px;font-size:0.78rem;}
   .sum-box{min-width:70px;padding:6px 7px;}
 }

@@ -1,21 +1,36 @@
 import { useState } from 'react'
 
 const CARD_SETS = [
-  {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม'},
-  {name:'Valor',     bonus2:'Physical/Electric DMG +12%',        bonus4:'Physical/Electric DMG +12%; ศัตรูเดี่ยว: +24%'},
-  {name:'Power',     bonus2:'ATK พาร์ตี้ธาตุเดียวกัน +10%',     bonus4:'ATK พาร์ตี้ธาตุเดียวกัน +10% (ไม่สะสม)'},
-  {name:'Peace',     bonus2:'DEF +20%',                          bonus4:'Shield effectiveness +18%'},
-  {name:'Opulence',  bonus2:'HP +12%',                           bonus4:'Allies gain Life/Offense/Defense +8%'},
-  {name:'Strife',    bonus2:'Curse DMG +10%',                    bonus4:'ATK +8% ต่อศัตรู 1 ตัว (สูงสุด +40%)'},
-  {name:'Truth',     bonus2:'Nuclear DMG +10%',                  bonus4:'ATK +30% เมื่อโจมตีศัตรูที่ถูก debuff'},
-  {name:'Hindrance', bonus2:'Curse DMG +10%',                    bonus4:'Curse DMG +20% vs ศัตรูที่ถูก debuff'},
-  {name:'Victory',   bonus2:'ศัตรูรับ DMG +12% เป็น 2 เทิร์น',  bonus4:'เหมือน 2pc'},
-  {name:'Resolve',   bonus2:'CRIT Rate +10%',                    bonus4:'CRIT DMG +20% เมื่อ CRIT Rate >70%'},
-  {name:'Integrity', bonus2:'SPD +5%',                           bonus4:'ATK +15% หลังใช้ Support Skill'},
-  {name:'Virtue',    bonus2:'Bless DMG +10%',                    bonus4:'Bless CRIT Rate +12%'},
-  {name:'Abundance', bonus2:'Healing +15%',                      bonus4:'ทีม DMG +8% เป็น 2 เทิร์น เมื่อผู้ใส่ฮีล'},
-  {name:'Creation',  bonus2:'ATK +10%',                          bonus4:'Special conditions apply'},
-  {name:'Labor',     bonus2:'Physical DMG +10%',                 bonus4:'Additional Physical effects'},
+  {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม',
+    stats2:{edm:12}, stats4:{edm:24}},
+  {name:'Valor',     bonus2:'Physical/Electric DMG +12%',        bonus4:'Physical/Electric DMG +12%; ศัตรูเดี่ยว: +24%',
+    stats2:{edm:12}, stats4:{edm:12}},
+  {name:'Power',     bonus2:'ATK พาร์ตี้ธาตุเดียวกัน +10%',     bonus4:'ATK พาร์ตี้ธาตุเดียวกัน +10% (ไม่สะสม)',
+    stats2:{atk:10}, stats4:{atk:10}},
+  {name:'Peace',     bonus2:'DEF +20%',                          bonus4:'Shield effectiveness +18%',
+    stats2:{def:20}, stats4:{}},
+  {name:'Opulence',  bonus2:'HP +12%',                           bonus4:'Allies gain Life/Offense/Defense +8%',
+    stats2:{hp:12}, stats4:{hp:8,atk:8,def:8}},
+  {name:'Strife',    bonus2:'Curse DMG +10%',                    bonus4:'ATK +8% ต่อศัตรู 1 ตัว (สูงสุด +40%)',
+    stats2:{edm:10}, stats4:{atk:8}},
+  {name:'Truth',     bonus2:'Nuclear DMG +10%',                  bonus4:'ATK +30% เมื่อโจมตีศัตรูที่ถูก debuff',
+    stats2:{edm:10}, stats4:{atk:30}},
+  {name:'Hindrance', bonus2:'Curse DMG +10%',                    bonus4:'Curse DMG +20% vs ศัตรูที่ถูก debuff',
+    stats2:{edm:10}, stats4:{edm:20}},
+  {name:'Victory',   bonus2:'ศัตรูรับ DMG +12% เป็น 2 เทิร์น',  bonus4:'เหมือน 2pc',
+    stats2:{}, stats4:{}},
+  {name:'Resolve',   bonus2:'CRIT Rate +10%',                    bonus4:'CRIT DMG +20% เมื่อ CRIT Rate >70%',
+    stats2:{crit:10}, stats4:{cdmg:20}},
+  {name:'Integrity', bonus2:'SPD +5%',                           bonus4:'ATK +15% หลังใช้ Support Skill',
+    stats2:{spd:5}, stats4:{atk:15}},
+  {name:'Virtue',    bonus2:'Bless DMG +10%',                    bonus4:'Bless CRIT Rate +12%',
+    stats2:{edm:10}, stats4:{crit:12}},
+  {name:'Abundance', bonus2:'Healing +15%',                      bonus4:'ทีม DMG +8% เป็น 2 เทิร์น เมื่อผู้ใส่ฮีล',
+    stats2:{heal:15}, stats4:{}},
+  {name:'Creation',  bonus2:'ATK +10%',                          bonus4:'Special conditions apply',
+    stats2:{atk:10}, stats4:{}},
+  {name:'Labor',     bonus2:'Physical DMG +10%',                 bonus4:'Additional Physical effects',
+    stats2:{edm:10}, stats4:{}},
 ]
 
 const CHARACTERS = [
@@ -110,6 +125,7 @@ const CHARACTERS = [
       {
         name: 'Deus Xiphos', rarity: 5, img: 'p5x/weapon/deus-xiphos.png',
         hp: 2160, atk: 786, def: 392,
+        bonusStats: {atk:30},
         abilityName: 'Hour of Reversal',
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
@@ -120,6 +136,7 @@ const CHARACTERS = [
       {
         name: 'Translucent Blade', rarity: 4, img: 'p5x/weapon/translucent-blade.png',
         hp: 1729, atk: 629, def: 314,
+        bonusStats: {atk:12},
         abilityName: 'Silent Resolve',
         ability: [
           'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
@@ -247,12 +264,32 @@ function getRoleArchetype(role) {
 const statMap = {'ATK%':'atk','CRIT Rate%':'crit','CRIT DMG%':'cdmg','HP%':'hp','DEF%':'def','Healing Bonus%':'heal','SPD':'spd'}
 const statLabels = {atk:'ATK%',crit:'CRIT Rate%',cdmg:'CRIT DMG%',edm:'Elem DMG%',hp:'HP%',def:'DEF%',heal:'Healing%',spd:'SPD'}
 
+function computeStats(char, weaponIdx) {
+  const s = {atk:0, crit:0, cdmg:0, hp:0, def:0, edm:0, heal:0, spd:0}
+  if (!char) return s
+  char.cards.forEach(cardStr => {
+    const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
+    if (!m) return
+    const setName = m[1].trim()
+    const pc = parseInt(m[2])
+    const setData = CARD_SETS.find(cs => cs.name.toLowerCase() === setName.toLowerCase())
+    if (!setData) return
+    if (setData.stats2) Object.entries(setData.stats2).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
+    if (pc >= 4 && setData.stats4) Object.entries(setData.stats4).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
+  })
+  const wIdx = weaponIdx ?? 0
+  if (char.weapons?.[wIdx]?.bonusStats) {
+    Object.entries(char.weapons[wIdx].bonusStats).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
+  }
+  return s
+}
+
 export default function P5XPage() {
   const [filter, setFilter] = useState('all')
   const [elemFilter, setElemFilter] = useState('all')
   const [charName, setCharName] = useState('')
   const [legendOpen, setLegendOpen] = useState(false)
-  const [stats, setStats] = useState({atk:0,crit:0,cdmg:0,hp:0,def:0,edm:0,heal:0,spd:0})
+  const [selectedWeaponIdx, setSelectedWeaponIdx] = useState(null)
   const [showExport, setShowExport] = useState(false)
   const [showImport, setShowImport] = useState(false)
   const [importText, setImportText] = useState('')
@@ -264,6 +301,7 @@ export default function P5XPage() {
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
+  const stats = computeStats(currentChar, selectedWeaponIdx)
 
   const lv80arr = currentChar?.baseStatsLv80
   const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
@@ -281,10 +319,6 @@ export default function P5XPage() {
   const grouped5gold    = filtered.filter(c => c.rarity === 5 && !RAINBOW_CHARS.has(c.codename))
   const grouped4 = filtered.filter(c => c.rarity === 4)
   const grouped3 = filtered.filter(c => c.rarity <= 3)
-
-  function setStat(key, val) {
-    setStats(prev => ({ ...prev, [key]: Number(val) || 0 }))
-  }
 
   // Effective HP
   const effHp = ((1 + stats.hp / 100) * (1 + stats.def / 100) * 100 - 100).toFixed(1)
@@ -336,9 +370,6 @@ export default function P5XPage() {
   function doImport() {
     try {
       const d = JSON.parse(importText)
-      if (!d.stats) throw new Error('ไม่พบ stats')
-      const s = d.stats
-      setStats({ atk:s.atk||0, crit:s.crit||0, cdmg:s.cdmg||0, hp:s.hp||0, def:s.def||0, edm:s.edm||0, heal:s.heal||0, spd:s.spd||0 })
       if (d.character) setCharName(d.character)
       setShowImport(false)
       setImportError('')
@@ -361,7 +392,7 @@ export default function P5XPage() {
       : `0 0 10px ${ec}66, 0 0 20px ${ec}22`
     return (
       <div className={'char-card' + (isActive ? ' selected' : '')}
-        onClick={() => setCharName(isActive ? '' : c.name)}>
+        onClick={() => { setCharName(isActive ? '' : c.name); setSelectedWeaponIdx(null) }}>
         <div className="char-avatar-wrap">
           {ELEM_IMG[c.element] && (
             <div className={`char-elem-badge${c.element2 ? ' has-elem2' : ''}`}>
@@ -400,15 +431,16 @@ export default function P5XPage() {
     )
   }
 
-  function StatRow({ label, statKey, max, maxRange, unit = '%' }) {
+  function StatRow({ label, statKey, maxRange, unit = '%' }) {
+    const val = stats[statKey] || 0
+    const pct = Math.min(val / maxRange, 1) * 100
     return (
       <div className="p5x-stat-row">
         <label>{label}</label>
-        <input type="number" value={stats[statKey]} min="0" max={max} step={unit === '' ? 1 : 0.1}
-          onChange={e => setStat(statKey, e.target.value)} />
-        <input type="range" min="0" max={maxRange} step={unit === '' ? 1 : 0.5} value={stats[statKey]}
-          onChange={e => setStat(statKey, e.target.value)} />
-        <span className="stat-unit">{unit}</span>
+        <span className="stat-val-locked">{unit === '' ? Math.round(val) : val.toFixed(1)}{unit}</span>
+        <div className="stat-bar-track">
+          <div className="stat-bar-fill" style={{ width: pct + '%' }} />
+        </div>
       </div>
     )
   }
@@ -691,8 +723,12 @@ export default function P5XPage() {
                   <div className="info-label">⚔️ Recommended Weapon</div>
                   {currentChar.weapons ? (
                     <div className="weapon-list">
-                      {currentChar.weapons.map((w, wi) => (
-                        <div key={wi} className={`weapon-card rarity${w.rarity}`}>
+                      {currentChar.weapons.map((w, wi) => {
+                        const isWSelected = (selectedWeaponIdx ?? 0) === wi
+                        return (
+                        <div key={wi} className={`weapon-card rarity${w.rarity}${isWSelected ? ' weapon-selected' : ''}`}
+                          onClick={() => setSelectedWeaponIdx(wi)}
+                          style={{ cursor:'pointer' }}>
                           <div className="weapon-card-top">
                             <img src={import.meta.env.BASE_URL + w.img} alt={w.name} className="weapon-img" onError={e => e.target.style.display='none'} />
                             <div className="weapon-card-info">
@@ -709,8 +745,10 @@ export default function P5XPage() {
                           {w.ability.map((line, li) => (
                             <div key={li} className="weapon-ability-line">{line}</div>
                           ))}
+                          {isWSelected && <div className="weapon-selected-badge">✓ Selected</div>}
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   ) : (
                     <div className="weapon-box">{currentChar.weapon}</div>
