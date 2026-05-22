@@ -43,7 +43,7 @@ const CHARACTERS = [
   {name:'Messa',              codename:'Messa',          role:'Assassin',   element:'Physical',       rarity:5, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Physical Assassin weapon',                 statPrio:['HP%','DEF%','SPD'],                              note:'Physical Assassin. Tanks damage while inflicting Physical weakness for DPS follow-ups.'},
   {name:'Phoebe',             codename:'Phoebe',         role:'Elucidator', element:'-',              rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                           statPrio:['ATK%','Ice DMG%','CRIT Rate%','CRIT DMG%'],      note:'Ice Sweeper with crowd-control. Truth 4pc rewards pairing with a Saboteur.'},
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
-  {name:'Makoto (Alt)',       codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
+  {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     realName:'Makoto Yuki', affiliation:'S.E.E.S.', persona:'Orpheus',
     weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'null', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -165,7 +165,7 @@ const PORTRAITS = {
   'Sepia':            BASE_PORTRAITS + 'sepia.webp',
   'Puppet':           BASE_PORTRAITS + 'puppet.webp',
   'Okyann':           BASE_PORTRAITS + 'okyann.webp',
-  'Makoto (Alt)':     BASE_PORTRAITS + 'makoto.webp',
+  'Makoto':           BASE_PORTRAITS + 'makoto.webp',
   'Closer (Tropical)':BASE_PORTRAITS + 'closer-tropical.webp',
   'Rin (Firecracker)':BASE_PORTRAITS + 'rin-firecracker.webp',
   'Mont (Frostgale)': BASE_PORTRAITS + 'mont-frostgale.webp',
