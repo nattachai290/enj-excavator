@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import ElementRing from '../components/ElementRing'
 
 const CARD_SETS = [
   {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม'},
@@ -46,14 +45,14 @@ const CHARACTERS = [
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
   {name:'Makoto (Alt)',       codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     skills:[
-      {name:'Melody of Flames',  type:'Skill',    element:'Fire',   sp:20, desc:'Deal Fire DMG to 1 foe (59.8% ATK × 3 hits). Gain 2 Moon Phase stacks (lasts 2 turns, max 4). When spending Moon Phase for Scarlet Hades, increase skill multiplier by 32.5% for 2 turns.'},
-      {name:'Nocturne of Battle',type:'Skill',    element:'Buff',   sp:20, desc:'Increase party CRIT DMG by 23.4% and Makoto ATK by 19.5% for 2 turns. Gain 2 Moon Phase stacks (lasts 2 turns, max 4).'},
-      {name:'Scarlet Hades',     type:'Skill',    element:'Fire',   sp:24, desc:'Requires 2+ Moon Phase stacks. Spend all Moon Phase → Fire DMG (91.5% ATK/stack). Then spend all Full Moon → Fire DMG (150.7% ATK/stack). At 4 stacks: pierce rate +11.7%, damage +24.4%.'},
-      {name:'Ardhanari',         type:'Ultimate', element:'Fire',   sp:0,  desc:'Theurgy (100 gauge). Fire DMG to 1 foe (147.5% ATK × 4 hits). Gain 1 Full Moon stack (lasts 2 turns, max 4).'},
-      {name:'Cadenza',           type:'Ultimate', element:'Buff',   sp:0,  desc:'Theurgy (100 gauge). Increase party ATK by 24.4% and damage by 19.5% for 2 turns. Gain 1 Full Moon stack (lasts 2 turns, max 4).'},
-      {name:'Assist',            type:'Normal',   element:'Buff',   sp:0,  desc:'Increase 1 ally ATK by 20% for 1 turn.'},
-      {name:'On-Site Leader',    type:'Passive',  element:'-',      sp:0,  desc:'After activating a Theurgy, increase party ATK by 40.0% for 2 turns. SEES members gain +30.0% ATK more.'},
-      {name:'Entrusted Hope',    type:'Passive',  element:'-',      sp:0,  desc:'When receiving buff/heal/shield from an ally, increase CRIT DMG by 7.2% for 2 turns (max 3 stacks).'},
+      {name:'Melody of Flames',  type:'Skill',    element:'Fire', sp:20, desc:"Deal Fire damage to 1 foe equal to 59.8%/66.0%/63.5%/69.6% of Attack (3 hits). Also, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times.\nAlso, when spending Moon Phase to use Scarlet Hades, increase skill multiplier by 32.5%/35.8%/34.5%/37.8% for 2 turns."},
+      {name:'Nocturne of Battle',type:'Skill',    element:'-',    sp:20, desc:"Increase party's critical damage by 23.4%/25.8%/24.9%/27.3%, and increase Makoto's Attack by 19.5%/21.5%/20.7%/22.7% for 2 turns.\nAlso, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times."},
+      {name:'Scarlet Hades',     type:'Skill',    element:'Fire', sp:24, desc:"Can be activated with 2 or more Moon Phase stacks. Spend all Moon Phase stacks, and deal Fire damage to 1 foe equal to 91.5%/100.8%/97.1%/106.5% of Makoto's Attack (1 hit per stack spent). Afterwards, spend all Full Moon stacks, and deal Fire damage to 1 foe equal to 150.7%/166.2%/160.0%/175.5% of Makoto's Attack (1 hit per stack spent).\nWhen this skill is activated with 4 Moon Phase stacks, increase Makoto's pierce rate by 11.7%/12.9%/12.4%/13.6%, and increase damage by 24.4%/26.9%/25.9%/28.4%."},
+      {name:'Ardhanari',         type:'Ultimate', element:'Fire', sp:0,  desc:"Can be activated when Theurgy Gauge is at 100. Deal Fire damage to 1 foe equal to 147.5%/162.6%/156.5%/171.6% of Makoto's Attack (4 hits).\nAlso, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times."},
+      {name:'Cadenza',           type:'Ultimate', element:'-',    sp:0,  desc:"Can be activated when Theurgy Gauge is at 100. Increase party's Attack by 24.4%/26.9%/25.9%/28.4%, and increase damage by 19.5%/21.5%/20.7%/22.7% for 2 turns. Also, gain 1 Full Moon stack. This effect lasts 2 turns, and stacks up to 4 times."},
+      {name:'Assist',            type:'Normal',   element:'-',    sp:0,  desc:"Increase 1 ally's Attack by 20% for 1 turn."},
+      {name:'On-Site Leader',    type:'Passive',  element:'-',    sp:0,  desc:"After activating a Theurgy, increase party's Attack by 40.0% for 2 turns. Increase Attack of SEES members by 30.0% more."},
+      {name:'Entrusted Hope',    type:'Passive',  element:'-',    sp:0,  desc:"When receiving buff, healing, or shield skill effects from an ally (excluding effects that also target foes), increase critical damage by 7.2% for 2 turns. Stacks up to 3 times."},
     ],
     awareness:[
       {stage:0, name:'Pathfinder',             desc:'Dual Theurgy: Cadenza & Ardhanari. At battle start, fill Theurgy Gauge to 35 if below. When receiving ally buff/heal/shield, gain 1 Moon Phase stack (max 1/turn, lasts 2 turns, max 4). Moon Phase: pierce rate +4%/8%/12% (at Lv.1/50/70).'},
@@ -64,8 +63,16 @@ const CHARACTERS = [
       {stage:5, name:'Soul Flames',            desc:'Increase skill level of Melody of Flames and Nocturne of Battle by 3.'},
       {stage:6, name:'Burn My Dread',          desc:'Activating a Theurgy also triggers the other Theurgy\'s effects. Scarlet Hades Full Moon stack damage +35%. First fatal hit: survive at 1 HP (KO\'d at turn end unless HP restored above 25%).'},
     ],
-    baseStats:     {hp:292,  atk:105,  def:52,  spd:98},
-    baseStatsLv80: {hp:3270, atk:1190, def:593, spd:98},
+    baseStats:     {hp:292, atk:105, def:52, spd:98},
+    baseStatsLv80: [
+      {hp:3270, atk:1190, def:593, spd:98},
+      {hp:3329, atk:1212, def:604, spd:98},
+      {hp:3388, atk:1233, def:615, spd:98},
+      {hp:3447, atk:1254, def:625, spd:98},
+      {hp:3505, atk:1276, def:636, spd:98},
+      {hp:3564, atk:1297, def:647, spd:98},
+      {hp:3623, atk:1319, def:657, spd:98},
+    ],
     hiddenAbility: 'ATK +29%',
   },
   {name:'Closer (Tropical)',  codename:'closer-tropical',role:'Sweeper',    element:'Bless',          rarity:5, cards:['Courage 4pc','Virtue 2pc'],     weapon:'Best Bless ATK weapon',                         statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Sweeper variant. Tropical-themed alternate version of Closer.'},
@@ -197,8 +204,16 @@ export default function P5XPage() {
   const [importError, setImportError] = useState('')
   const [copyOk, setCopyOk] = useState(false)
   const [charTab, setCharTab] = useState('build')
+  const [ascension, setAscension] = useState(6)
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
+
+  const lv80arr = currentChar?.baseStatsLv80
+  const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
+  const lv80 = lv80all ? lv80all[Math.min(ascension, lv80all.length - 1)] : null
+  const finalAtk = lv80 ? Math.round(lv80.atk * (1 + stats.atk / 100)) : null
+  const finalHp  = lv80 ? Math.round(lv80.hp  * (1 + stats.hp  / 100)) : null
+  const finalDef = lv80 ? Math.round(lv80.def * (1 + stats.def / 100)) : null
 
   const filtered = CHARACTERS.filter(c =>
     (filter === 'all' || c.role === filter) &&
@@ -276,15 +291,21 @@ export default function P5XPage() {
   }
 
   function CharCard({ c }) {
-    const ec = ELEM_COLORS[c.element] || '#888'
+    const ec  = ELEM_COLORS[c.element]  || '#888'
+    const ec2 = c.element2 ? (ELEM_COLORS[c.element2] || '#888') : null
     const isActive = charName === c.name
     const isRainbow = RAINBOW_CHARS.has(c.codename)
     const starColor = c.rarity === 4 ? '#ccaa22' : c.rarity <= 3 ? '#aa8811' : '#ffcc44'
+    const avatarBg = ec2
+      ? `linear-gradient(to right, ${ec}55 0%, ${ec}44 46%, ${ec2}44 54%, ${ec2}55 100%)`
+      : `radial-gradient(circle at 50% 38%, ${ec}44, #0a0818)`
+    const avatarShadow = ec2
+      ? `0 0 10px ${ec}55, 0 0 10px ${ec2}55`
+      : `0 0 10px ${ec}66, 0 0 20px ${ec}22`
     return (
       <div className={'char-card' + (isActive ? ' selected' : '')}
         onClick={() => setCharName(isActive ? '' : c.name)}>
         <div className="char-avatar-wrap">
-          <ElementRing element={c.element} />
           {ELEM_IMG[c.element] && (
             <div className={`char-elem-badge${c.element2 ? ' has-elem2' : ''}`}>
               <img src={ELEM_IMG[c.element]} alt={c.element}
@@ -297,10 +318,10 @@ export default function P5XPage() {
                 style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[c.element2] || '#888'})` }} />
             </div>
           )}
-          <div className="char-avatar" style={{ background: `radial-gradient(circle at 50% 38%, ${ec}44, #0a0818)`, borderColor: ec }}>
+          <div className="char-avatar" style={{ background: avatarBg, borderColor: ec, boxShadow: avatarShadow }}>
             {PORTRAITS[c.name]
               ? <img src={PORTRAITS[c.name]} alt={c.codename} className="portrait"
-                  style={{ filter: 'brightness(1.12) contrast(1.08) drop-shadow(0 2px 6px #000a)' }}
+                  style={{ filter: 'brightness(1.1) contrast(1.05)', transform: 'scale(0.9)' }}
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex' }} />
               : null}
             <span style={{ color: ec, fontWeight:700, display: PORTRAITS[c.name] ? 'none' : 'flex' }}>
@@ -468,20 +489,31 @@ export default function P5XPage() {
                     <div className="kit-block-title">Base Stats</div>
                     {(!currentChar.baseStats && !currentChar.baseStatsLv80)
                       ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
-                      : <table className="stats-table">
-                          <thead>
-                            <tr><th>Stat</th><th>Base</th><th>LV 80</th></tr>
-                          </thead>
-                          <tbody>
-                            {[['HP','hp'],['ATK','atk'],['DEF','def'],['SPD','spd']].map(([label, key]) => (
-                              <tr key={key}>
-                                <td>{label}</td>
-                                <td>{currentChar.baseStats?.[key] ?? '—'}</td>
-                                <td className="stat-lv80">{currentChar.baseStatsLv80?.[key] ?? '—'}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      : (() => {
+                          const rows = Array.isArray(currentChar.baseStatsLv80) ? currentChar.baseStatsLv80 : currentChar.baseStatsLv80 ? [currentChar.baseStatsLv80] : []
+                          return (
+                            <div className="stats-table-wrap">
+                              <table className="stats-table">
+                                <thead>
+                                  <tr>
+                                    <th>Stat</th>
+                                    <th>Base</th>
+                                    {rows.map((_, i) => <th key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>A{i}</th>)}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {[['HP','hp'],['ATK','atk'],['DEF','def'],['SPD','spd']].map(([label, key]) => (
+                                    <tr key={key}>
+                                      <td>{label}</td>
+                                      <td>{currentChar.baseStats?.[key] ?? '—'}</td>
+                                      {rows.map((r, i) => <td key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>{r[key] ?? '—'}</td>)}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )
+                        })()
                     }
                   </div>
 
@@ -586,6 +618,18 @@ export default function P5XPage() {
         {/* STAT CALCULATOR */}
         <div className="section-box">
           <div className="section-title">🧮 STAT CALCULATOR</div>
+
+          {lv80all && (
+            <div className="asc-selector">
+              <span className="asc-label">Ascension LV80</span>
+              <div className="asc-btns">
+                {lv80all.map((_, i) => (
+                  <button key={i} className={'asc-btn' + (ascension === i ? ' active' : '')} onClick={() => setAscension(i)}>A{i}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="p5x-stat-grid">
             <StatRow label="ATK%"           statKey="atk"  max={300} maxRange={150} />
             <StatRow label="CRIT Rate%"     statKey="crit" max={100} maxRange={100} />
@@ -599,6 +643,14 @@ export default function P5XPage() {
 
           <div style={{ marginTop: 12 }}>
             <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
+            {lv80 && (
+              <div className="final-stats-row">
+                <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
+                <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
+              </div>
+            )}
             <div className="summary-grid">
               <div className="sum-box"><div className="sum-val">{stats.atk.toFixed(1)}%</div><div className="sum-lbl">ATK%</div></div>
               <div className="sum-box"><div className="sum-val">{Math.min(stats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
