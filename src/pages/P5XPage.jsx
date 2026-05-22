@@ -173,6 +173,7 @@ export default function P5XPage() {
   const [importText, setImportText] = useState('')
   const [importError, setImportError] = useState('')
   const [copyOk, setCopyOk] = useState(false)
+  const [charTab, setCharTab] = useState('build')
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
 
@@ -402,7 +403,80 @@ export default function P5XPage() {
                 </div>
               </div>
 
-              <div className="info-grid">
+              <div className="char-tab-bar">
+                <button className={'char-tab-btn' + (charTab === 'build' ? ' active' : '')} onClick={() => setCharTab('build')}>🃏 Build</button>
+                <button className={'char-tab-btn' + (charTab === 'kit'   ? ' active' : '')} onClick={() => setCharTab('kit')}>⚔️ Kit</button>
+              </div>
+
+              {charTab === 'kit' && (
+                <div className="kit-section">
+                  {/* SKILLS */}
+                  <div className="kit-block">
+                    <div className="kit-block-title">Skills</div>
+                    {(currentChar.skills || []).length === 0
+                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
+                      : <div className="skill-grid">
+                          {(currentChar.skills || []).map((sk, i) => (
+                            <div key={i} className="skill-card">
+                              <span className={`skill-type skill-type-${sk.type.toLowerCase()}`}>{sk.type}</span>
+                              <div className="skill-name">{sk.name}</div>
+                              <div className="skill-desc">{sk.desc}</div>
+                            </div>
+                          ))}
+                        </div>
+                    }
+                  </div>
+
+                  {/* BASE STATS */}
+                  <div className="kit-block">
+                    <div className="kit-block-title">Base Stats</div>
+                    {(!currentChar.baseStats && !currentChar.baseStatsLv80)
+                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
+                      : <table className="stats-table">
+                          <thead>
+                            <tr><th>Stat</th><th>Base</th><th>LV 80</th></tr>
+                          </thead>
+                          <tbody>
+                            {[['HP','hp'],['ATK','atk'],['DEF','def'],['SPD','spd']].map(([label, key]) => (
+                              <tr key={key}>
+                                <td>{label}</td>
+                                <td>{currentChar.baseStats?.[key] ?? '—'}</td>
+                                <td className="stat-lv80">{currentChar.baseStatsLv80?.[key] ?? '—'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                    }
+                  </div>
+
+                  {/* AWARENESS */}
+                  <div className="kit-block">
+                    <div className="kit-block-title">Awareness</div>
+                    {(currentChar.awareness || []).length === 0
+                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
+                      : <div className="awareness-list">
+                          {(currentChar.awareness || []).map((aw, i) => (
+                            <div key={i} className="awareness-row">
+                              <span className="aw-stage">LV {aw.stage}</span>
+                              <span className="aw-bonus">{aw.bonus}</span>
+                            </div>
+                          ))}
+                        </div>
+                    }
+                  </div>
+
+                  {/* HIDDEN ABILITY LV7 */}
+                  <div className="kit-block">
+                    <div className="kit-block-title">Hidden Ability <span className="ha-lv">LV 7</span></div>
+                    {!currentChar.hiddenAbility
+                      ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
+                      : <div className="hidden-ability-box">{currentChar.hiddenAbility}</div>
+                    }
+                  </div>
+                </div>
+              )}
+
+              {charTab === 'build' && <div className="info-grid">
                 <div className="info-panel">
                   <div className="info-label">🃏 Revelation Card Sets (แนะนำ)</div>
                   <span className="cs-toggle" onClick={() => setLegendOpen(v => !v)}>
@@ -460,7 +534,7 @@ export default function P5XPage() {
                   <div className="info-label">💡 Playstyle Note</div>
                   <div className="note-box">{currentChar.note}</div>
                 </div>
-              </div>
+              </div>}
             </div>
           )}
         </div>
