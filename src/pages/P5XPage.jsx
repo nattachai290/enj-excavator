@@ -44,6 +44,8 @@ const CHARACTERS = [
   {name:'Phoebe',             codename:'Phoebe',         role:'Elucidator', element:'-',              rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best Ice ATK weapon',                           statPrio:['ATK%','Ice DMG%','CRIT Rate%','CRIT DMG%'],      note:'Ice Sweeper with crowd-control. Truth 4pc rewards pairing with a Saboteur.'},
   {name:'Marian',             codename:'Marian',         role:'Medic',      element:'Bless',          rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best Bless Healing weapon',                     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Medic with precise healing burst. Valor 2pc sustains high output.'},
   {name:'Makoto (Alt)',       codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
+    realName:'Makoto Yuki', affiliation:'S.E.E.S.', persona:'Orpheus',
+    weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'null', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
       {name:'Melody of Flames',  type:'Skill',    element:'Fire', sp:20, desc:"Deal Fire damage to 1 foe equal to 59.8%/66.0%/63.5%/69.6% of Attack (3 hits). Also, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times.\nAlso, when spending Moon Phase to use Scarlet Hades, increase skill multiplier by 32.5%/35.8%/34.5%/37.8% for 2 turns."},
       {name:'Nocturne of Battle',type:'Skill',    element:'-',    sp:20, desc:"Increase party's critical damage by 23.4%/25.8%/24.9%/27.3%, and increase Makoto's Attack by 19.5%/21.5%/20.7%/22.7% for 2 turns.\nAlso, gain 2 Moon Phase stacks. This effect lasts for 2 turns, and stacks up to 4 times."},
@@ -207,6 +209,7 @@ export default function P5XPage() {
   const [ascension, setAscension] = useState(6)
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
+  const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
 
   const lv80arr = currentChar?.baseStatsLv80
   const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
@@ -434,15 +437,15 @@ export default function P5XPage() {
         <div className="char-detail-sticky">
           {currentChar ? (
             <div className="char-info">
-              <div className="char-header">
-                <div className="char-header-portrait">
+              <div className="char-header" style={{ borderColor: currentEc, background: `linear-gradient(135deg,${currentEc}18,#0d0d0d)`, boxShadow: `0 0 20px ${currentEc}22` }}>
+                <div className="char-header-portrait" style={{ borderColor: currentEc, background: `${currentEc}11` }}>
                   {PORTRAITS[currentChar.name]
                     ? <img src={PORTRAITS[currentChar.name]} alt={currentChar.codename} onError={e => e.target.style.display='none'} />
                     : <span>{ROLE_ICONS[currentChar.role]||'❓'}</span>}
                 </div>
                 <div className="char-title">
                   <div className="char-name">{currentChar.name}</div>
-                  <div className="char-codename">{currentChar.codename}</div>
+                  <div className="char-codename" style={{ color: currentEc }}>{currentChar.codename}</div>
                   <div className="char-badges">
                     <span className={`cbadge rarity${currentChar.rarity}`}>{'★'.repeat(currentChar.rarity)} {currentChar.rarity}-Star</span>
                     <span className="cbadge role" style={{ borderColor: ROLE_COLORS[currentChar.role], color: ROLE_COLORS[currentChar.role] }}>{currentChar.role}</span>
@@ -450,6 +453,13 @@ export default function P5XPage() {
                       {currentChar.element === '-' ? 'No Element' : currentChar.element}
                     </span>
                   </div>
+                  {(currentChar.realName || currentChar.affiliation || currentChar.persona) && (
+                    <div className="char-lore-row">
+                      {currentChar.realName && <span className="char-real-name">{currentChar.realName}</span>}
+                      {currentChar.affiliation && <span className="char-affil">{currentChar.affiliation}</span>}
+                      {currentChar.persona && <span className="char-persona-label">⚡ {currentChar.persona}</span>}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -544,6 +554,26 @@ export default function P5XPage() {
                       : <div className="hidden-ability-box">{currentChar.hiddenAbility}</div>
                     }
                   </div>
+
+                  {/* ELEMENT AFFINITIES */}
+                  {currentChar.weakRes && (
+                    <div className="kit-block">
+                      <div className="kit-block-title">Element Affinities</div>
+                      <div className="elem-affinity-row">
+                        {Object.entries(currentChar.weakRes).map(([elem, val]) => (
+                          <div key={elem} className={`ea-cell ea-${val}`}>
+                            <img src={ELEM_IMG[elem]} alt={elem} className="ea-icon"
+                              style={{ filter: val === 'null' ? 'grayscale(1) opacity(0.35)' : `drop-shadow(0 0 2px ${ELEM_COLORS[elem]||'#888'})` }} />
+                            {val !== 'normal' && (
+                              <span className="ea-label">
+                                {val === 'wk' ? 'Wk' : val === 'res' ? 'Res' : val === 'null' ? 'Null' : 'Abs'}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
