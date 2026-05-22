@@ -106,6 +106,27 @@ const CHARACTERS = [
       {hp:3623, atk:1319, def:657, spd:98},
     ],
     hiddenAbility: 'ATK +29%',
+    weapons: [
+      {
+        name: 'Deus Xiphos', rarity: 5, img: 'p5x/weapon/deus-xiphos.png',
+        hp: 2160, atk: 786, def: 392,
+        abilityName: 'Hour of Reversal',
+        ability: [
+          'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
+          'For every 3 Moon Phase or Full Moon stacks gained, increase critical rate by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0% for 2 turns.',
+          'When Makoto deals 4 or more hits of damage with 1 skill or Theurgy, increase that skill or Theurgy\'s damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',
+        ],
+      },
+      {
+        name: 'Translucent Blade', rarity: 4, img: 'p5x/weapon/translucent-blade.png',
+        hp: 1729, atk: 629, def: 314,
+        abilityName: 'Silent Resolve',
+        ability: [
+          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          'When Makoto grants a buff to an ally, increase party\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2%, and also increase Makoto\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% more for 2 turns.',
+        ],
+      },
+    ],
   },
   {name:'Closer (Tropical)',  codename:'closer-tropical',role:'Sweeper',    element:'Bless',          rarity:5, cards:['Courage 4pc','Virtue 2pc'],     weapon:'Best Bless ATK weapon',                         statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Bless Sweeper variant. Tropical-themed alternate version of Closer.'},
   {name:'Rin (Firecracker)',  codename:'rin-firecracker',role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],     note:'Fire Sweeper variant. Festive alternate version of Rin.'},
@@ -668,7 +689,32 @@ export default function P5XPage() {
 
                 <div className="info-panel">
                   <div className="info-label">⚔️ Recommended Weapon</div>
-                  <div className="weapon-box">{currentChar.weapon}</div>
+                  {currentChar.weapons ? (
+                    <div className="weapon-list">
+                      {currentChar.weapons.map((w, wi) => (
+                        <div key={wi} className={`weapon-card rarity${w.rarity}`}>
+                          <div className="weapon-card-top">
+                            <img src={import.meta.env.BASE_URL + w.img} alt={w.name} className="weapon-img" onError={e => e.target.style.display='none'} />
+                            <div className="weapon-card-info">
+                              <div className="weapon-name">{w.name}</div>
+                              <div className={`weapon-stars rarity${w.rarity}-star`}>{'★'.repeat(w.rarity)}</div>
+                              <div className="weapon-stats-row">
+                                <span className="wstat"><span className="wstat-label">HP</span>{w.hp}</span>
+                                <span className="wstat"><span className="wstat-label">ATK</span>{w.atk}</span>
+                                <span className="wstat"><span className="wstat-label">DEF</span>{w.def}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="weapon-ability-name">{w.abilityName}</div>
+                          {w.ability.map((line, li) => (
+                            <div key={li} className="weapon-ability-line">{line}</div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="weapon-box">{currentChar.weapon}</div>
+                  )}
                 </div>
 
                 <div className="info-panel">
