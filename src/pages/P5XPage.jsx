@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import ElementRing from '../components/ElementRing'
 
 const CARD_SETS = [
   {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม'},
@@ -300,7 +299,6 @@ export default function P5XPage() {
       <div className={'char-card' + (isActive ? ' selected' : '')}
         onClick={() => setCharName(isActive ? '' : c.name)}>
         <div className="char-avatar-wrap">
-          <ElementRing element={c.element} />
           {ELEM_IMG[c.element] && (
             <div className={`char-elem-badge${c.element2 ? ' has-elem2' : ''}`}>
               <img src={ELEM_IMG[c.element]} alt={c.element}
@@ -313,10 +311,10 @@ export default function P5XPage() {
                 style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[c.element2] || '#888'})` }} />
             </div>
           )}
-          <div className="char-avatar" style={{ background: `radial-gradient(circle at 50% 38%, ${ec}44, #0a0818)`, borderColor: ec }}>
+          <div className="char-avatar" style={{ background: `radial-gradient(circle at 50% 38%, ${ec}44, #0a0818)`, borderColor: ec, boxShadow: `0 0 10px ${ec}66, 0 0 20px ${ec}22` }}>
             {PORTRAITS[c.name]
               ? <img src={PORTRAITS[c.name]} alt={c.codename} className="portrait"
-                  style={{ filter: 'brightness(1.12) contrast(1.08) drop-shadow(0 2px 6px #000a)' }}
+                  style={{ filter: 'brightness(1.1) contrast(1.05)', transform: 'scale(0.9)' }}
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex' }} />
               : null}
             <span style={{ color: ec, fontWeight:700, display: PORTRAITS[c.name] ? 'none' : 'flex' }}>
