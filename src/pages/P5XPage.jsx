@@ -501,20 +501,22 @@ export default function P5XPage() {
                           {(currentChar.skills || []).map((sk, i) => (
                             <div key={i} className="skill-card">
                               <div className="skill-card-header">
-                                <span className={`skill-type ${sk.isBuff ? 'skill-type-support' : `skill-type-${sk.type.toLowerCase()}`}`}>
-                                  {sk.isBuff ? 'SUPPORT' : sk.type}
-                                </span>
-                                {SKILL_TYPE_IMG[sk.type] && (
-                                  <img src={SKILL_TYPE_IMG[sk.type]} alt={sk.type} className="skill-type-icon"
-                                    onError={e => e.target.style.display='none'} />
-                                )}
-                                {sk.element && sk.element !== '-' && ELEM_IMG[sk.element] && (
-                                  <img src={ELEM_IMG[sk.element]} alt={sk.element} className="skill-elem-icon"
-                                    style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
-                                )}
+                                <div className="skill-header-left">
+                                  <span className={`skill-type ${sk.isBuff ? 'skill-type-support' : `skill-type-${sk.type.toLowerCase()}`}`}>
+                                    {sk.isBuff ? 'SUPPORT' : sk.type}
+                                  </span>
+                                  {SKILL_TYPE_IMG[sk.type] && (
+                                    <img src={SKILL_TYPE_IMG[sk.type]} alt={sk.type} className="skill-type-icon"
+                                      onError={e => e.target.style.display='none'} />
+                                  )}
+                                  {sk.element && sk.element !== '-' && ELEM_IMG[sk.element] && (
+                                    <img src={ELEM_IMG[sk.element]} alt={sk.element} className="skill-elem-icon"
+                                      style={{ filter: `drop-shadow(0 0 2px ${ELEM_COLORS[sk.element]||'#888'})` }} />
+                                  )}
+                                </div>
                                 <div className="skill-header-right">
                                   {sk.sp > 0 && <span className="skill-sp">SP {sk.sp}</span>}
-                                  {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" />}
+                                  {sk.isBuff && <img src={import.meta.env.BASE_URL + 'p5x/elements/buff.webp'} alt="buff" className="skill-buff-icon" onError={e => e.target.style.display='none'} />}
                                 </div>
                               </div>
                               <div className="skill-name">{sk.name}</div>

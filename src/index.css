@@ -264,7 +264,8 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 /* Skills */
 .skill-grid { display:flex; flex-direction:column; gap:6px; }
 .skill-card { background:#0f0f0f; border:1px solid #2a1a4a; border-radius:8px; padding:7px 10px; }
-.skill-card-header { display:flex; align-items:center; gap:5px; margin-bottom:4px; }
+.skill-card-header { display:flex; align-items:center; justify-content:space-between; gap:5px; margin-bottom:4px; }
+.skill-header-left { display:flex; align-items:center; gap:4px; }
 .skill-type { display:inline-block; font-size:0.58rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:1px 6px; border-radius:4px; }
 .skill-type-normal   { background:#33334a; color:#aaaacc; border:1px solid #555577; }
 .skill-type-skill    { background:#0a2040; color:#66aaff; border:1px solid #2255aa; }
