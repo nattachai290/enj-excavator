@@ -4054,6 +4054,7 @@ export default function P5XPage() {
   const [charName, setCharName] = useState('')
   const [legendOpen, setLegendOpen] = useState(false)
   const [selectedWeaponIdx, setSelectedWeaponIdx] = useState(null)
+  const [weaponRefine, setWeaponRefine] = useState(6)
   const [showExport, setShowExport] = useState(false)
   const [showImport, setShowImport] = useState(false)
   const [importText, setImportText] = useState('')
@@ -4089,6 +4090,13 @@ export default function P5XPage() {
   const grouped5gold    = filtered.filter(c => c.rarity === 5 && !RAINBOW_CHARS.has(c.codename))
   const grouped4 = filtered.filter(c => c.rarity === 4)
   const grouped3 = filtered.filter(c => c.rarity <= 3)
+
+  function resolveRefine(text) {
+    return text.replace(/([\d.]+%?)(?:\/([\d.]+%?)){6}/g, match => {
+      const parts = match.split('/')
+      return parts[weaponRefine] ?? match
+    })
+  }
 
   function setDmgField(key, val) {
     setDmg(prev => ({ ...prev, [key]: key === 'windswept' ? Boolean(val) : (Number(val) || 0) }))
@@ -4619,7 +4627,14 @@ export default function P5XPage() {
                 </div>
 
                 <div className="info-panel">
-                  <div className="info-label">⚔️ Recommended Weapon</div>
+                  <div className="info-label" style={{display:'flex',alignItems:'center',gap:8}}>
+                    <span>⚔️ Recommended Weapon</span>
+                    <div className="refine-picker">
+                      {[0,1,2,3,4,5,6].map(r => (
+                        <button key={r} className={'refine-btn'+(weaponRefine===r?' active':'')} onClick={()=>setWeaponRefine(r)}>{r}★</button>
+                      ))}
+                    </div>
+                  </div>
                   {currentChar.weapons ? (
                     <div className="weapon-list">
                       {currentChar.weapons.map((w, wi) => {
@@ -4642,7 +4657,7 @@ export default function P5XPage() {
                           </div>
                           <div className="weapon-ability-name">{w.abilityName}</div>
                           {(lang === 'th' && w.abilityTh ? w.abilityTh : Array.isArray(w.ability) ? w.ability : (w.ability||'').split('\n').filter(Boolean)).map((line, li) => (
-                            <div key={li} className="weapon-ability-line">{line}</div>
+                            <div key={li} className="weapon-ability-line">{resolveRefine(line)}</div>
                           ))}
                           {isWSelected && <div className="weapon-selected-badge">✓ Selected</div>}
                         </div>
