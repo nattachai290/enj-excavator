@@ -104,6 +104,90 @@ const CARD_SUB_STATS = {
   },
 }
 
+// ── REVELATION CARDS (individual cards per slot) ───────────────────────────
+// Each card: { name, passives:[{name, desc}] }  — all Space cards have 주 quality
+const REVELATION_CARDS = {
+  Space: [
+    {name:'Nativity',   passives:[
+      {name:'Power',          desc:'When equipped by Justine & Caroline: Increase Desire Level by 5.0%.'},
+    ]},
+    {name:'Hope',       passives:[
+      {name:'Labor',          desc:'When equipped by an Elucidator Phantom Thief: When granting buffs to allies with a skill, increase the main target\'s pierce rate by 5% for 1 turn.'},
+      {name:'Ruin',           desc:'Each time damage is dealt with a skill, increase the user\'s Fire damage by 3%. This effect lasts 3 turns and stacks up to 8 times. When at 8 stacks, also increase user\'s critical rate by 6%.'},
+      {name:'Transformation', desc:'Increase the DMG Dealt to enemies with Down status by 12%, doesn\'t stack.'},
+    ]},
+    {name:'Creation',   passives:[
+      {name:'Reconciliation', desc:'At the start of battle, increases the DMG Dealt of the ally with the lowest SPD by 12%, doesn\'t stack.'},
+      {name:'Worry',          desc:'Increases CRIT DMG by 15%/30%/45% when you have 100%/150%/200% SP Recovery.'},
+      {name:'Tenacity',       desc:'When using Theurgy, ATK increases by 30% and DMG Dealt increases by 25%.'},
+    ]},
+    {name:'Integrity',  passives:[
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Increase all allies\' HP, ATK and DEF by an additional 2% with each ally with the same element.'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 80% of your Healing Bonus.'},
+      {name:'Ruin',           desc:'After using a Theurgy, increase party\'s damage by 10% for 3 turns.'},
+    ]},
+    {name:'Resolve',    passives:[
+      {name:'Virtue',         desc:'Increase DMG Bonus by 10%/20%/30% when you reached 6000/9000/12000 HP.'},
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Decrease the main target\'s DEF by 10% for 2 turns when inflicting debuffs.'},
+      {name:'Prudence',       desc:'At the start of battle, if your SPD is at the 3rd/4th slot, then additionally increase own ATK by 24%/30%.'},
+    ]},
+    {name:'Awareness',  passives:[
+      {name:'Control',        desc:'Increase all allies\' Fire DMG by 6% for 2 turns when you inflict Burn.'},
+      {name:'Hindrance',      desc:'Increase ATK by 9% after every hit of damage to enemy with debuffs for 1 turn, up to 3 stacks.'},
+      {name:'Truth',          desc:'Increase DMG Dealt by 12% when attacking enemies inflicted with Elemental Ailments, up to 2 stacks.'},
+    ]},
+    {name:'Departure',  passives:[
+      {name:'Control',        desc:'Decrease main target\'s DEF by 23% for 2 turns after attacking them with a skill.'},
+      {name:'Prosperity',     desc:'Increase all allies\' DMG Dealt by 8% for 1 turn when attacking enemies.'},
+      {name:'Hindrance',      desc:'Increase ATK by 30% for 3 turns after defeating an enemy.'},
+    ]},
+    {name:'Growth',     passives:[
+      {name:'Opulence',       desc:'Increase Ice DMG Bonus by 10% for 2 turns when triggering Follow Up, up to 3 stacks.'},
+      {name:'Renewal',        desc:'Increase Follow Up CRIT DMG by 50%.'},
+      {name:'Power',          desc:'Increase the cap of the ATK buff up to 5 stacks.'},
+    ]},
+    {name:'Wisdom',     passives:[
+      {name:'Oppression',     desc:'Increase Physical DMG and Ailment Accuracy Rate by 20% when [Resentment] is not less than 5 stacks.'},
+      {name:'Virtue',         desc:'When using HIGHLIGHT, increases ATK by 30% and DMG Dealt by 25%.'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 50% of your Ailment Accuracy Rate.'},
+    ]},
+    {name:'Meditation', passives:[
+      {name:'Opulence',       desc:'Increase Follow Up CRIT DMG by 50%.'},
+      {name:'Courage',        desc:'Increase Physical and Electric DMG by 12%. Increase the effect to 24% when there\'s only 1 enemy.'},
+      {name:'Love',           desc:'Increase Healing Effect by 28% for 2 turns after landing a Crit.'},
+    ]},
+    {name:'Faith',      passives:[
+      {name:'Love',           desc:'Increase Healing Effect by 1% for every 800 HP you have, up to 20%.'},
+      {name:'Peace',          desc:'After granting Shield, increase the target\'s DEF by 7% for 2 turns up to 3 stacks.'},
+      {name:'Futility',       desc:'Increase damage dealt by allies to foes inflicted with technical ailments by 10%. This effect won\'t activate if stacked.'},
+    ]},
+    {name:'Trust',      passives:[
+      {name:'Prosperity',     desc:'When using skills on allies, the damage of all party members will be increased by 8% for 2 rounds.'},
+      {name:'Power',          desc:'When the battle starts, increase the attack of other party members by 10% and cannot be triggered repeatedly.'},
+      {name:'Renewal',        desc:'Increase all allies\' Electric DMG by 12% when the Electric DMG buff effect reached 3 stacks, can\'t be triggered again.'},
+    ]},
+    {name:'Harmony',    passives:[
+      {name:'Truth',          desc:'Increase all allies\' Nuke DMG by 5% for 2 turns when inflicting Elemental Ailments, each stack is counted independently.'},
+      {name:'Power',          desc:'Increase DMG Bonus by 10% for all allies with the same element, can\'t be triggered again.'},
+      {name:'Victory',        desc:'Increase the target\'s DMG Taken by 12% for 2 turns when triggering the effect of the Revelation\'s buff.'},
+    ]},
+    {name:'Acceptance', passives:[
+      {name:'Peace',          desc:'Increase DEF by 40% for 2 turns when attacked.'},
+      {name:'Strife',         desc:'Each enemy on field increases your attack by 8%, up to 40%.'},
+      {name:'Love',           desc:'Increase ATK by 25% when using Healing skills.'},
+    ]},
+    {name:'Freedom',    passives:[
+      {name:'Defeat',         desc:'Increases all allies\' DMG Dealt to enemies with debuffs by 8%, doesn\'t stack.'},
+      {name:'Triumph',        desc:'When using a Persona skill, gain 1 [Glory] stack. If the skill is Ice or Wind, gain 1 additional stack, up to 2 stacks. Glory: For 2 turns, increases Critical Effect by 10%. If the wearer is Ice or Wind, increases it by an additional 10%.'},
+      {name:'Disappointment', desc:'When dealing Almighty damage, increase Attack by 35% and critical rate by 12%.'},
+    ]},
+  ],
+  Sun:  [],
+  Moon: [],
+  Star: [],
+  Sky:  [],
+}
+
 const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
   {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
