@@ -33,6 +33,77 @@ const CARD_SETS = [
     stats2:{edm:10}, stats4:{}},
 ]
 
+// ── REVELATION CARD SLOTS ──────────────────────────────────────────────────
+// mainStats: { label, key (internal stat key or null), min (LV1), max (LV25) }
+const CARD_SLOTS = [
+  { id:'Space', mainStats:[
+    {label:'ATK',            key:null,   min:54,   max:359,  unit:''},
+    {label:'DEF',            key:null,   min:54,   max:359,  unit:''},
+  ]},
+  { id:'Sun', mainStats:[
+    {label:'HP',             key:null,   min:162,  max:1080, unit:''},
+  ]},
+  { id:'Moon', mainStats:[
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Elem DMG%',      key:'edm',  min:3.7,  max:25.1, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Healing Effect%',key:'heal', min:3.4,  max:22.6, unit:'%'},
+  ]},
+  { id:'Star', mainStats:[
+    {label:'CRIT Rate%',     key:'crit', min:2.8,  max:18.8, unit:'%'},
+    {label:'CRIT DMG%',      key:'cdmg', min:5.7,  max:37.6, unit:'%'},
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Ailment Acc%',   key:null,   min:5.7,  max:37.6, unit:'%'},
+  ]},
+  { id:'Sky', mainStats:[
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Speed',          key:'spd',  min:3.1,  max:20.3, unit:''},
+    {label:'SP Recovery',    key:null,   min:13.6, max:90.4, unit:'%'},
+  ]},
+]
+
+// Sub stats per slot — tiers [1st(best) … 5th(worst)] per upgrade roll
+const CARD_SUB_STATS = {
+  Space: {
+    'CRIT Rate%':   [2.6, 2.3, 2.1, 1.8, 1.6],
+    'CRIT DMG%':    [5.2, 4.7, 4.2, 3.6, 3.1],
+    'Pierce Rate%': [2.7, 2.5, 2.2, 1.8, 1.6],
+    'Elem DMG%':    [3.5, 3.1, 2.7, 2.5, 2.1],
+    'ATK%':         [4.3, 3.9, 3.5, 3.1, 2.6],
+    'HP%':          [4.4, 4.0, 3.5, 3.2, 2.7],
+    'HP':           [175, 157, 140, 123, 105],
+    'DEF%':         [6.4, 5.8, 5.2, 4.5, 3.8],
+    'Ailment Acc%': [5.2, 4.7, 4.2, 3.6, 3.1],
+    'SP Recovery%': [12.5, 11.2, 10.0, 8.7, 7.5],
+    'Speed':        [2.8, 2.5, 2.2, 1.9, 1.6],
+  },
+  // Sun / Moon / Star / Sky share the same sub stat pool
+  get Sun()  { return this._other },
+  get Moon() { return this._other },
+  get Star() { return this._other },
+  get Sky()  { return this._other },
+  _other: {
+    'CRIT Rate%':   [2.0, 1.8, 1.7, 1.4, 1.3],
+    'CRIT DMG%':    [4.1, 3.7, 3.4, 2.8, 2.5],
+    'Pierce Rate%': [2.1, 1.9, 1.7, 1.4, 1.3],
+    'Elem DMG%':    [2.8, 2.5, 2.1, 1.9, 1.7],
+    'ATK%':         [3.5, 3.2, 2.8, 2.5, 2.0],
+    'ATK':          [46,  41,  37,  32,  27],
+    'HP%':          [3.6, 3.3, 2.9, 2.6, 2.1],
+    'HP':           [140, 126, 112, 98,  84],
+    'DEF%':         [5.2, 4.6, 4.1, 3.5, 3.0],
+    'DEF':          [46,  41,  37,  32,  27],
+    'Ailment Acc%': [4.1, 3.7, 3.4, 2.8, 2.5],
+    'SP Recovery%': [10.0, 9.0, 7.9, 7.0, 5.9],
+    'Speed':        [2.2, 2.0, 1.8, 1.5, 1.3],
+  },
+}
+
 const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
   {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
@@ -4687,6 +4758,35 @@ export default function P5XPage() {
                         <div key={idx} className="card-set-item">
                           <span className="cs-pc">{pc}pc</span>
                           <div><div className="cs-name">{setName}</div><div className="cs-bonus">{bonus}</div></div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="info-panel">
+                  <div className="info-label">🎴 Revelation Card — Main Stats แนะนำ</div>
+                  <div className="slot-guide">
+                    {CARD_SLOTS.map(slot => {
+                      const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                      let bestLabel = null, bestWeight = -1
+                      slot.mainStats.forEach(({label, key}) => {
+                        if (!key || !charTgt) return
+                        const w = (charTgt[key] || [0,0])[1]
+                        if (w > bestWeight) { bestWeight = w; bestLabel = label }
+                      })
+                      return (
+                        <div key={slot.id} className="slot-row">
+                          <span className="slot-name">{slot.id}</span>
+                          <div className="slot-options">
+                            {slot.mainStats.map(({label, max, unit}) => (
+                              <span key={label}
+                                className={'slot-opt' + (label === bestLabel ? ' slot-rec' : '')}>
+                                {label}{label === bestLabel ? ' ★' : ''}
+                                {max != null && <span className="slot-range">{max}{unit}</span>}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       )
                     })}
