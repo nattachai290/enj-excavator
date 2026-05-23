@@ -1,37 +1,211 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
+// Sun / Moon / Star / Sky sets (일월성진)
 const CARD_SETS = [
-  {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม',
-    stats2:{edm:12}, stats4:{edm:24}},
-  {name:'Valor',     bonus2:'Physical/Electric DMG +12%',        bonus4:'Physical/Electric DMG +12%; ศัตรูเดี่ยว: +24%',
-    stats2:{edm:12}, stats4:{edm:12}},
-  {name:'Power',     bonus2:'ATK พาร์ตี้ธาตุเดียวกัน +10%',     bonus4:'ATK พาร์ตี้ธาตุเดียวกัน +10% (ไม่สะสม)',
-    stats2:{atk:10}, stats4:{atk:10}},
-  {name:'Peace',     bonus2:'DEF +20%',                          bonus4:'Shield effectiveness +18%',
-    stats2:{def:20}, stats4:{}},
-  {name:'Opulence',  bonus2:'HP +12%',                           bonus4:'Allies gain Life/Offense/Defense +8%',
-    stats2:{hp:12}, stats4:{hp:8,atk:8,def:8}},
-  {name:'Strife',    bonus2:'Curse DMG +10%',                    bonus4:'ATK +8% ต่อศัตรู 1 ตัว (สูงสุด +40%)',
-    stats2:{edm:10}, stats4:{atk:8}},
-  {name:'Truth',     bonus2:'Nuclear DMG +10%',                  bonus4:'ATK +30% เมื่อโจมตีศัตรูที่ถูก debuff',
-    stats2:{edm:10}, stats4:{atk:30}},
-  {name:'Hindrance', bonus2:'Curse DMG +10%',                    bonus4:'Curse DMG +20% vs ศัตรูที่ถูก debuff',
-    stats2:{edm:10}, stats4:{edm:20}},
-  {name:'Victory',   bonus2:'ศัตรูรับ DMG +12% เป็น 2 เทิร์น',  bonus4:'เหมือน 2pc',
-    stats2:{}, stats4:{}},
-  {name:'Resolve',   bonus2:'CRIT Rate +10%',                    bonus4:'CRIT DMG +20% เมื่อ CRIT Rate >70%',
-    stats2:{crit:10}, stats4:{cdmg:20}},
-  {name:'Integrity', bonus2:'SPD +5%',                           bonus4:'ATK +15% หลังใช้ Support Skill',
-    stats2:{spd:5}, stats4:{atk:15}},
-  {name:'Virtue',    bonus2:'Bless DMG +10%',                    bonus4:'Bless CRIT Rate +12%',
-    stats2:{edm:10}, stats4:{crit:12}},
-  {name:'Abundance', bonus2:'Healing +15%',                      bonus4:'ทีม DMG +8% เป็น 2 เทิร์น เมื่อผู้ใส่ฮีล',
-    stats2:{heal:15}, stats4:{}},
-  {name:'Creation',  bonus2:'ATK +10%',                          bonus4:'Special conditions apply',
-    stats2:{atk:10}, stats4:{}},
-  {name:'Labor',     bonus2:'Physical DMG +10%',                 bonus4:'Additional Physical effects',
-    stats2:{edm:10}, stats4:{}},
+  {name:'Prudence',       bonus2:'SPD -3, ATK +18%',                                     bonus4:'DMG Dealt +16%',
+    stats2:{atk:18},        stats4:{}},
+  {name:'Ruin',           bonus2:'ATK +12%',                                              bonus4:'ATK +25% for 3 turns; re-apply after Theurgy',
+    stats2:{atk:12},        stats4:{atk:25}},
+  {name:'Futility',       bonus2:'ATK +12%',                                              bonus4:'Ailment Accuracy +30% for 2 turns; reapply after Technical',
+    stats2:{atk:12},        stats4:{}},
+  {name:'Disappointment', bonus2:'ATK +12%',                                              bonus4:'DMG +25% if attribute differs from last-used skill',
+    stats2:{atk:12},        stats4:{}},
+  {name:'Triumph',        bonus2:'CRIT Rate +7.5%',                                       bonus4:'Resonance ATK DMG +40%',
+    stats2:{crit:7.5},      stats4:{}},
+  {name:'Defeat',         bonus2:'Ailment Accuracy +15%',                                 bonus4:'Fire DMG to enemies with ailments +20%',
+    stats2:{},              stats4:{edm:20}},
+  {name:'Worry',          bonus2:'SP Recovery +80%',                                      bonus4:'Enter battle with +25% Highlight charge',
+    stats2:{},              stats4:{}},
+  {name:'Reconciliation', bonus2:'SPD +6',                                                bonus4:'In combat: HP, ATK, DEF +15%',
+    stats2:{spd:6},         stats4:{hp:15,atk:15,def:15}},
+  {name:'Virtue',         bonus2:'Bless DMG +10%',                                        bonus4:'Bless CRIT Rate +12% when HP ≥ 50%',
+    stats2:{edm:10},        stats4:{crit:12}},
+  {name:'Oppression',     bonus2:'Physical DMG +10%',                                     bonus4:'Each skill hit: [Resentment] ATK +5% for 2 turns, up to 6 stacks',
+    stats2:{edm:10},        stats4:{atk:30}},
+  {name:'Pleasure',       bonus2:'Psy DMG +10%',                                          bonus4:'ATK +15% when dealing Psy DMG; +15% more with 3+ foes',
+    stats2:{edm:10},        stats4:{atk:15}},
+  {name:'Labor',          bonus2:'HP +12%',                                               bonus4:'[Navigator Thieves] All allies HP, ATK, DEF +8%',
+    stats2:{hp:12},         stats4:{hp:8,atk:8,def:8}},
+  {name:'Peace',          bonus2:'DEF +20%',                                              bonus4:'Shield effectiveness +18%',
+    stats2:{def:20},        stats4:{}},
+  {name:'Hindrance',      bonus2:'Curse DMG +10%',                                        bonus4:'Skill DMG to debuffed enemies +20%',
+    stats2:{edm:10},        stats4:{}},
+  {name:'Control',        bonus2:'HP +12%',                                               bonus4:'Skill attacks deal bonus 8% max-HP dmg to main target',
+    stats2:{hp:12},         stats4:{}},
+  {name:'Renewal',        bonus2:'Electric DMG +10%',                                     bonus4:'After ally uses Electric skill: Electric DMG +9%, up to 3 stacks',
+    stats2:{edm:10},        stats4:{edm:27}},
+  {name:'Courage',        bonus2:'Physical DMG +10%',                                     bonus4:'CRIT DMG +30% for 2 turns; re-apply on Crit',
+    stats2:{edm:10},        stats4:{cdmg:30}},
+  {name:'Strife',         bonus2:'Fire DMG +10%',                                         bonus4:'ATK +15%; +15% more if enemy weak to Fire',
+    stats2:{edm:10},        stats4:{atk:15}},
+  {name:'Love',           bonus2:'Healing Effect +9%',                                    bonus4:'Healing +23% when target HP ≤ 50%',
+    stats2:{heal:9},        stats4:{heal:23}},
+  {name:'Opulence',       bonus2:'Ice DMG +10%',                                          bonus4:'Resonance ATK DMG +40%',
+    stats2:{edm:10},        stats4:{}},
+  {name:'Power',          bonus2:'ATK +12%',                                              bonus4:'ATK +10% every 6 turns, up to 3 stacks',
+    stats2:{atk:12},        stats4:{atk:30}},
+  {name:'Victory',        bonus2:'Wind DMG +10%',                                         bonus4:'25% chance per hit to deal 20% ATK bonus damage',
+    stats2:{edm:10},        stats4:{}},
+  {name:'Truth',          bonus2:'Nuke DMG +10%',                                         bonus4:'Deal 30% ATK to main target when target has Elemental Ailment',
+    stats2:{edm:10},        stats4:{}},
+  {name:'Prosperity',     bonus2:'DMG Taken -8%',                                         bonus4:'Enter battle with +25% Highlight charge',
+    stats2:{},              stats4:{}},
 ]
+
+// ── REVELATION CARD SLOTS ──────────────────────────────────────────────────
+// mainStats: { label, key (internal stat key or null), min (LV1), max (LV25) }
+const CARD_SLOTS = [
+  { id:'Space', mainStats:[
+    {label:'ATK',            key:null,   min:54,   max:359,  unit:''},
+    {label:'DEF',            key:null,   min:54,   max:359,  unit:''},
+  ]},
+  { id:'Sun', mainStats:[
+    {label:'HP',             key:null,   min:162,  max:1080, unit:''},
+  ]},
+  { id:'Moon', mainStats:[
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Elem DMG%',      key:'edm',  min:3.7,  max:25.1, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Healing Effect%',key:'heal', min:3.4,  max:22.6, unit:'%'},
+  ]},
+  { id:'Star', mainStats:[
+    {label:'CRIT Rate%',     key:'crit', min:2.8,  max:18.8, unit:'%'},
+    {label:'CRIT DMG%',      key:'cdmg', min:5.7,  max:37.6, unit:'%'},
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Ailment Acc%',   key:null,   min:5.7,  max:37.6, unit:'%'},
+  ]},
+  { id:'Sky', mainStats:[
+    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Speed',          key:'spd',  min:3.1,  max:20.3, unit:''},
+    {label:'SP Recovery',    key:null,   min:13.6, max:90.4, unit:'%'},
+  ]},
+]
+
+// Sub stats per slot — tiers [1st(best) … 5th(worst)] per upgrade roll
+const CARD_SUB_STATS = {
+  Space: {
+    'CRIT Rate%':   [2.6, 2.3, 2.1, 1.8, 1.6],
+    'CRIT DMG%':    [5.2, 4.7, 4.2, 3.6, 3.1],
+    'Pierce Rate%': [2.7, 2.5, 2.2, 1.8, 1.6],
+    'Elem DMG%':    [3.5, 3.1, 2.7, 2.5, 2.1],
+    'ATK%':         [4.3, 3.9, 3.5, 3.1, 2.6],
+    'HP%':          [4.4, 4.0, 3.5, 3.2, 2.7],
+    'HP':           [175, 157, 140, 123, 105],
+    'DEF%':         [6.4, 5.8, 5.2, 4.5, 3.8],
+    'Ailment Acc%': [5.2, 4.7, 4.2, 3.6, 3.1],
+    'SP Recovery%': [12.5, 11.2, 10.0, 8.7, 7.5],
+    'Speed':        [2.8, 2.5, 2.2, 1.9, 1.6],
+  },
+  // Sun / Moon / Star / Sky share the same sub stat pool
+  get Sun()  { return this._other },
+  get Moon() { return this._other },
+  get Star() { return this._other },
+  get Sky()  { return this._other },
+  _other: {
+    'CRIT Rate%':   [2.0, 1.8, 1.7, 1.4, 1.3],
+    'CRIT DMG%':    [4.1, 3.7, 3.4, 2.8, 2.5],
+    'Pierce Rate%': [2.1, 1.9, 1.7, 1.4, 1.3],
+    'Elem DMG%':    [2.8, 2.5, 2.1, 1.9, 1.7],
+    'ATK%':         [3.5, 3.2, 2.8, 2.5, 2.0],
+    'ATK':          [46,  41,  37,  32,  27],
+    'HP%':          [3.6, 3.3, 2.9, 2.6, 2.1],
+    'HP':           [140, 126, 112, 98,  84],
+    'DEF%':         [5.2, 4.6, 4.1, 3.5, 3.0],
+    'DEF':          [46,  41,  37,  32,  27],
+    'Ailment Acc%': [4.1, 3.7, 3.4, 2.8, 2.5],
+    'SP Recovery%': [10.0, 9.0, 7.9, 7.0, 5.9],
+    'Speed':        [2.2, 2.0, 1.8, 1.5, 1.3],
+  },
+}
+
+// ── REVELATION CARDS (individual cards per slot) ───────────────────────────
+// Each card: { name, passives:[{name, desc}] }  — all Space cards have 주 quality
+const REVELATION_CARDS = {
+  Space: [
+    {name:'Nativity',   passives:[
+      {name:'Power',          desc:'When equipped by Justine & Caroline: Increase Desire Level by 5.0%.'},
+    ]},
+    {name:'Hope',       passives:[
+      {name:'Labor',          desc:'When equipped by an Elucidator Phantom Thief: When granting buffs to allies with a skill, increase the main target\'s pierce rate by 5% for 1 turn.'},
+      {name:'Ruin',           desc:'Each time damage is dealt with a skill, increase the user\'s Fire damage by 3%. This effect lasts 3 turns and stacks up to 8 times. When at 8 stacks, also increase user\'s critical rate by 6%.'},
+      {name:'Transformation', desc:'Increase the DMG Dealt to enemies with Down status by 12%, doesn\'t stack.'},
+    ]},
+    {name:'Creation',   passives:[
+      {name:'Reconciliation', desc:'At the start of battle, increases the DMG Dealt of the ally with the lowest SPD by 12%, doesn\'t stack.'},
+      {name:'Worry',          desc:'Increases CRIT DMG by 15%/30%/45% when you have 100%/150%/200% SP Recovery.'},
+      {name:'Tenacity',       desc:'When using Theurgy, ATK increases by 30% and DMG Dealt increases by 25%.'},
+    ]},
+    {name:'Integrity',  passives:[
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Increase all allies\' HP, ATK and DEF by an additional 2% with each ally with the same element.'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 80% of your Healing Bonus.'},
+      {name:'Ruin',           desc:'After using a Theurgy, increase party\'s damage by 10% for 3 turns.'},
+    ]},
+    {name:'Resolve',    passives:[
+      {name:'Virtue',         desc:'Increase DMG Bonus by 10%/20%/30% when you reached 6000/9000/12000 HP.'},
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Decrease the main target\'s DEF by 10% for 2 turns when inflicting debuffs.'},
+      {name:'Prudence',       desc:'At the start of battle, if your SPD is at the 3rd/4th slot, then additionally increase own ATK by 24%/30%.'},
+    ]},
+    {name:'Awareness',  passives:[
+      {name:'Control',        desc:'Increase all allies\' Fire DMG by 6% for 2 turns when you inflict Burn.'},
+      {name:'Hindrance',      desc:'Increase ATK by 9% after every hit of damage to enemy with debuffs for 1 turn, up to 3 stacks.'},
+      {name:'Truth',          desc:'Increase DMG Dealt by 12% when attacking enemies inflicted with Elemental Ailments, up to 2 stacks.'},
+    ]},
+    {name:'Departure',  passives:[
+      {name:'Control',        desc:'Decrease main target\'s DEF by 23% for 2 turns after attacking them with a skill.'},
+      {name:'Prosperity',     desc:'Increase all allies\' DMG Dealt by 8% for 1 turn when attacking enemies.'},
+      {name:'Hindrance',      desc:'Increase ATK by 30% for 3 turns after defeating an enemy.'},
+    ]},
+    {name:'Growth',     passives:[
+      {name:'Opulence',       desc:'Increase Ice DMG Bonus by 10% for 2 turns when triggering Follow Up, up to 3 stacks.'},
+      {name:'Renewal',        desc:'Increase Follow Up CRIT DMG by 50%.'},
+      {name:'Power',          desc:'Increase the cap of the ATK buff up to 5 stacks.'},
+    ]},
+    {name:'Wisdom',     passives:[
+      {name:'Oppression',     desc:'Increase Physical DMG and Ailment Accuracy Rate by 20% when [Resentment] is not less than 5 stacks.'},
+      {name:'Virtue',         desc:'When using HIGHLIGHT, increases ATK by 30% and DMG Dealt by 25%.'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 50% of your Ailment Accuracy Rate.'},
+    ]},
+    {name:'Meditation', passives:[
+      {name:'Opulence',       desc:'Increase Follow Up CRIT DMG by 50%.'},
+      {name:'Courage',        desc:'Increase Physical and Electric DMG by 12%. Increase the effect to 24% when there\'s only 1 enemy.'},
+      {name:'Love',           desc:'Increase Healing Effect by 28% for 2 turns after landing a Crit.'},
+    ]},
+    {name:'Faith',      passives:[
+      {name:'Love',           desc:'Increase Healing Effect by 1% for every 800 HP you have, up to 20%.'},
+      {name:'Peace',          desc:'After granting Shield, increase the target\'s DEF by 7% for 2 turns up to 3 stacks.'},
+      {name:'Futility',       desc:'Increase damage dealt by allies to foes inflicted with technical ailments by 10%. This effect won\'t activate if stacked.'},
+    ]},
+    {name:'Trust',      passives:[
+      {name:'Prosperity',     desc:'When using skills on allies, the damage of all party members will be increased by 8% for 2 rounds.'},
+      {name:'Power',          desc:'When the battle starts, increase the attack of other party members by 10% and cannot be triggered repeatedly.'},
+      {name:'Renewal',        desc:'Increase all allies\' Electric DMG by 12% when the Electric DMG buff effect reached 3 stacks, can\'t be triggered again.'},
+    ]},
+    {name:'Harmony',    passives:[
+      {name:'Truth',          desc:'Increase all allies\' Nuke DMG by 5% for 2 turns when inflicting Elemental Ailments, each stack is counted independently.'},
+      {name:'Power',          desc:'Increase DMG Bonus by 10% for all allies with the same element, can\'t be triggered again.'},
+      {name:'Victory',        desc:'Increase the target\'s DMG Taken by 12% for 2 turns when triggering the effect of the Revelation\'s buff.'},
+    ]},
+    {name:'Acceptance', passives:[
+      {name:'Peace',          desc:'Increase DEF by 40% for 2 turns when attacked.'},
+      {name:'Strife',         desc:'Each enemy on field increases your attack by 8%, up to 40%.'},
+      {name:'Love',           desc:'Increase ATK by 25% when using Healing skills.'},
+    ]},
+    {name:'Freedom',    passives:[
+      {name:'Defeat',         desc:'Increases all allies\' DMG Dealt to enemies with debuffs by 8%, doesn\'t stack.'},
+      {name:'Triumph',        desc:'When using a Persona skill, gain 1 [Glory] stack. If the skill is Ice or Wind, gain 1 additional stack, up to 2 stacks. Glory: For 2 turns, increases Critical Effect by 10%. If the wearer is Ice or Wind, increases it by an additional 10%.'},
+      {name:'Disappointment', desc:'When dealing Almighty damage, increase Attack by 35% and critical rate by 12%.'},
+    ]},
+  ],
+  Sun:  [],
+  Moon: [],
+  Star: [],
+  Sky:  [],
+}
 
 const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
@@ -59,25 +233,25 @@ const CHARACTERS = [
         descTh:"เพิ่มความเสียหายในการกระทำพิเศษ 72.0%"},
     ],
     awareness:[
-      {stage:0, name:'Rebellion Resurgence',
+      {name:'Rebellion Resurgence',
         desc:"At the end of Ren's action, gain 1 Will of Rebellion stack for each foe with less than 60% HP (up to 5 stacks).\nWhen Will of Rebellion reaches 3 stacks, gain an extra action.\nAn additional extra action cannot be gained during the extra action. (Extra actions do not affect the duration of effects with turn limits).\nAt the end of an extra action, spend 3 Will of Rebellion stacks.\n*Can gain 1 Will of Rebellion stack per foe per battle.",
         descTh:"เมื่อสิ้นสุดเทิร์นของ Ren รับ Will of Rebellion 1 stack ต่อศัตรูที่มี HP ต่ำกว่า 60% (สูงสุด 5 stack)\nเมื่อ Will of Rebellion ถึง 3 stack รับการกระทำพิเศษ\nไม่สามารถรับการกระทำพิเศษเพิ่มระหว่างการกระทำพิเศษ (การกระทำพิเศษไม่ส่งผลต่อระยะเวลาของเอฟเฟกต์ที่มีกำหนดเทิร์น)\nเมื่อสิ้นสุดการกระทำพิเศษ ใช้ Will of Rebellion 3 stack\n*รับ Will of Rebellion ได้ 1 stack ต่อศัตรู 1 ตัวต่อการต่อสู้"},
-      {stage:1, name:'Calling Card',
+      {name:'Calling Card',
         desc:"Increase skill damage to the main target by 30%, and increase skill damage to other targets by 10%.",
         descTh:"เพิ่มความเสียหายสกิลต่อเป้าหมายหลัก 30% และเพิ่มความเสียหายสกิลต่อเป้าหมายอื่น 10%"},
-      {stage:2, name:'Meditate',
+      {name:'Meditate',
         desc:"On an extra action, decrease SP cost of skills by 80%. When Ren's SP is above 60%, increase Attack by 50%.",
         descTh:"ในการกระทำพิเศษ ลดค่า SP ของสกิล 80% เมื่อ SP ของ Ren สูงกว่า 60% เพิ่ม Attack 50%"},
-      {stage:3, name:'Secret Maneuvers',
+      {name:'Secret Maneuvers',
         desc:"Increase the skill levels of Arsène's Chains and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Arsène's Chains และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Highway Robbery',
+      {name:'Highway Robbery',
         desc:"Highlight Enhanced: Increase number of Will of Rebellion stacks gained to 3.",
         descTh:"Highlight Enhanced: เพิ่มจำนวน Will of Rebellion stack ที่ได้รับเป็น 3"},
-      {stage:5, name:'Moonlit Evening',
+      {name:'Moonlit Evening',
         desc:"Increase the skill levels of Trickster's Plunder and Phantom Omen by 3.",
         descTh:"เพิ่มระดับสกิล Trickster's Plunder และ Phantom Omen ขึ้น 3"},
-      {stage:6, name:'Merciless Pursuit',
+      {name:'Merciless Pursuit',
         desc:"After taking an extra action, if there are foes with below 25% HP, deal damage to those foes equal to up to 250% of Ren's Attack (once per enemy per battle).\nAfter using a skill on an extra action, deal Curse damage equal to 50% of Attack to all foes.",
         descTh:"หลังจากกระทำพิเศษ หากมีศัตรูที่มี HP ต่ำกว่า 25% สร้างความเสียหายให้ศัตรูเหล่านั้นสูงสุด 250% ของ Attack ของ Ren (1 ครั้งต่อศัตรู 1 ตัวต่อการต่อสู้)\nหลังจากใช้สกิลในการกระทำพิเศษ สร้างความเสียหาย Curse เท่ากับ 50% ของ Attack ให้ศัตรูทุกตัว"},
     ],
@@ -92,17 +266,16 @@ const CHARACTERS = [
       {hp:3623, atk:1307, def:621, spd:102},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
+    weapons:[
       {
-        name: 'Phoenix Dagger', rarity: 5, img: 'p5x/weapon/phoenix-dagger.png',
+        name: 'Phoenix Dagger', stars:5,
         hp: 2160, atk: 780, def: 370,
         bonusStats: {atk:30},
         abilityName: 'Phoenix Dagger',
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'After gaining Will of Rebellion, increase Ren\'s Curse damage by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns. Stacks up to 3 times.',
-          'At 3 or more Will of Rebellion stacks, increase Ren\'s next damage by 23.0%/30.0%/30.0%/37.0%/37.0%/44.0%/44.0%.',
-        ],
+          'At 3 or more Will of Rebellion stacks, increase Ren\'s next damage by 23.0%/30.0%/30.0%/37.0%/37.0%/44.0%/44.0%.',],
         abilityTh: [
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'หลังจากได้รับ Will of Rebellion เพิ่มความเสียหาย Curse ของ Ren 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% เป็นเวลา 2 เทิร์น สะสมสูงสุด 3 ครั้ง',
@@ -110,13 +283,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Machete', rarity: 4, img: 'p5x/weapon/machete.png',
+        name: 'Machete', stars:4,
         hp: 1729, atk: 623, def: 296,
         bonusStats: {atk:12},
         abilityName: 'Machete',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When attacking a foe with an ailment, increase Attack by 19.1%/24.8%/24.8%/30.5%/30.5%/36.2%/36.2%.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When attacking a foe with an ailment, increase Attack by 19.1%/24.8%/24.8%/30.5%/30.5%/36.2%/36.2%.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -149,25 +322,25 @@ const CHARACTERS = [
         descTh:"เมื่อ La Vie en Rose สิ้นสุด ฟื้นฟู HP ให้พันธมิตรที่มี HP เหลือน้อยที่สุด 45.0% ของ Attack ของ Ann"},
     ],
     awareness:[
-      {stage:0, name:'Passion',
+      {name:'Passion',
         desc:"When dealing Fire damage to a foe with a skill, gain 1 Passion. Gain up to 4 stacks of Passion with 1 skill.\nIf Passion is at 4 or more stacks on Ann's action, spend all Passion stacks to gain La Vie en Rose for 1 turn.\nLa Vie en Rose: Increase Ann's Attack by 30%/40%/50% (effect changes at level 1/50/70).\n*Cannot gain La Vie en Rose consecutively on Ann's next action.",
         descTh:"เมื่อสร้างความเสียหายธาตุไฟให้ศัตรูด้วยสกิล รับ 1 Passion สะสม Passion สูงสุด 4 stack จาก 1 สกิล\nหาก Passion อยู่ที่ 4 stack ขึ้นไปในเทิร์นของ Ann ใช้ Passion ทั้งหมดเพื่อรับ La Vie en Rose 1 เทิร์น\nLa Vie en Rose: เพิ่ม Attack ของ Ann 30%/40%/50% (เปลี่ยนที่ Lv. 1/50/70)\n*ไม่สามารถรับ La Vie en Rose ซ้ำในเทิร์นถัดไปของ Ann"},
-      {stage:1, name:'Seguidilla',
+      {name:'Seguidilla',
         desc:"When La Vie en Rose is active, increase the party's Attack by 25% for 1 turn.",
         descTh:"เมื่อ La Vie en Rose ทำงาน เพิ่ม Attack ของปาร์ตี้ 25% เป็นเวลา 1 เทิร์น"},
-      {stage:2, name:'Marriage of Flames',
+      {name:'Marriage of Flames',
         desc:"When La Vie en Rose ends, activate 2 follow-up attacks, dealing Fire damage equal to 66% of Ann's Attack to random foes.",
         descTh:"เมื่อ La Vie en Rose สิ้นสุด เปิดใช้การโจมตีตาม 2 ครั้ง สร้างความเสียหายธาตุไฟ เท่ากับ 66% ของ Attack ของ Ann ให้ศัตรูแบบสุ่ม"},
-      {stage:3, name:'Beautiful Sins',
+      {name:'Beautiful Sins',
         desc:"Increase the skill levels of Falling Sun and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Falling Sun และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Hearts on Fire',
+      {name:'Hearts on Fire',
         desc:"Highlight Enhanced: When Ann uses a Highlight, increase her Attack by 100% for 1 turn.",
         descTh:"Highlight Enhanced: เมื่อ Ann ใช้ Highlight เพิ่ม Attack ของเธอ 100% เป็นเวลา 1 เทิร์น"},
-      {stage:5, name:'Makeup',
+      {name:'Makeup',
         desc:"Increase the skill levels of Crimson Rose and Trifire by 3.",
         descTh:"เพิ่มระดับสกิล Crimson Rose และ Trifire ขึ้น 3"},
-      {stage:6, name:'Time for Punishment',
+      {name:'Time for Punishment',
         desc:"When attacking foes with Fire skills, 60% chance to gain 1 Passion stack.\nWhen La Vie en Rose is active, increase Fire damage by 11% per Passion stack spent (up to 110%).",
         descTh:"เมื่อโจมตีศัตรูด้วยสกิลธาตุไฟ โอกาส 60% รับ 1 Passion stack\nเมื่อ La Vie en Rose ทำงาน เพิ่มความเสียหายธาตุไฟ 11% ต่อ Passion stack ที่ใช้ (สูงสุด 110%)"},
     ],
@@ -182,17 +355,16 @@ const CHARACTERS = [
       {hp:3590, atk:1340, def:687, spd:94},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
+    weapons:[
       {
-        name: 'Rosethorn', rarity: 5, img: 'p5x/weapon/rosethorn.png',
+        name: 'Rosethorn', stars:5,
         hp: 2141, atk: 799, def: 410,
         bonusStats: {edm:24},
         abilityName: 'Rosethorn',
         ability: [
           'Increase Fire damage by 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%.',
           'When La Vie En Rose is active, inflict Burn on 1 random foe.',
-          'Increase Fire damage by 25.5%/33.5%/33.5%/41.5%/41.5%/49.5%/49.5% for each Burning foe. Maximum of 76%/100%/100%/124%/124%/148%/148%.',
-        ],
+          'Increase Fire damage by 25.5%/33.5%/33.5%/41.5%/41.5%/49.5%/49.5% for each Burning foe. Maximum of 76%/100%/100%/124%/124%/148%/148%.',],
         abilityTh: [
           'เพิ่มความเสียหายธาตุไฟ 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%',
           'เมื่อ La Vie En Rose ทำงาน ทำให้ศัตรูแบบสุ่ม 1 ตัวติด Burn',
@@ -200,13 +372,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Masquerade Ribbon', rarity: 4, img: 'p5x/weapon/masquerade-ribbon.png',
+        name: 'Masquerade Ribbon', stars:4,
         hp: 1712, atk: 640, def: 328,
         bonusStats: {atk:12},
         abilityName: 'Masquerade Ribbon',
-        ability: [
-          'Increase Attack by 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%.',
-          'When attacking a Burning foe, increase Attack by 23.7%/23.7%/30.8%/30.8%/37.9%/37.9%/45.0%.',
+        ability:[
+          "Increase Attack by 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%.",
+          "When attacking a Burning foe, increase Attack by 23.7%/23.7%/30.8%/30.8%/37.9%/37.9%/45.0%.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%',
@@ -216,7 +388,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Ryuji Sakamoto', codename:'Skull', role:'Assassin', element:'Physical', rarity:5,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best Physical/CRIT weapon (Revenge Axe)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Physical/CRIT weapon (Revenge Axe)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'], note:'Physical Assassin. Low-HP berserker — ATK scales with missing HP, Rebound state enables CRIT-guaranteed burst. Uses HP as resource for skills.',
     realName:'Ryuji Sakamoto', persona:'Captain Kidd',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'res', Wind:'wk', Nuclear:'normal',
@@ -242,25 +414,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Ryuji มี Rebound และใช้ Pirate Tactics, Thunderbolt หรือ God Hand Burst ฟื้นฟู HP เท่ากับ 30.0% ของ Attack"},
     ],
     awareness:[
-      {stage:0, name:'Wounded Glory',
+      {name:'Wounded Glory',
         desc:"Increase Attack based on missing HP (min +10%, max +40% when HP ≤20%). When Ryuji has less than 75% HP on his action, gain Rebound for 1 turn. Rebound: next skill damage +30%, critical rate +30%.",
         descTh:"เพิ่ม Attack ตาม HP ที่หาย (ต่ำสุด +10% สูงสุด +40% เมื่อ HP ≤20%) เมื่อ Ryuji มี HP ต่ำกว่า 75% ในแอ็คชันของตน รับ Rebound 1 เทิร์น Rebound: ดาเมจสกิลถัดไป +30% และ CRIT Rate +30%"},
-      {stage:1, name:'Under the Skull and Bones',
+      {name:'Under the Skull and Bones',
         desc:"Increase damage of God Hand Burst by 20%. When in the Changing Gears state, decrease damage taken by 20%.",
         descTh:"เพิ่มดาเมจ God Hand Burst 20% เมื่ออยู่ในสถานะ Changing Gears ลดดาเมจที่รับ 20%"},
-      {stage:2, name:'Fearless Charge',
+      {name:'Fearless Charge',
         desc:"When dealing critical damage with a skill, ignore 35% of target's Defense.",
         descTh:"เมื่อดาเมจสกิล CRIT ไม่สนใจ DEF ของเป้าหมาย 35%"},
-      {stage:3, name:'Anchor Management',
+      {name:'Anchor Management',
         desc:"Increase the skill levels of God Hand Burst and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล God Hand Burst และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Riding the Storm',
+      {name:'Riding the Storm',
         desc:"Highlight Enhanced: Increase the next skill's damage by 30%, and increase critical damage by 75%.",
         descTh:"Highlight เสริม: เพิ่มดาเมจสกิลถัดไป 30% และเพิ่ม CRIT DMG 75%"},
-      {stage:5, name:'Raise the Sails!',
+      {name:'Raise the Sails!',
         desc:"Increase the skill levels of Pirate Tactics and Thunderbolt by 3.",
         descTh:"เพิ่มระดับสกิล Pirate Tactics และ Thunderbolt ขึ้น 3 ระดับ"},
-      {stage:6, name:'Comeback Kid',
+      {name:'Comeback Kid',
         desc:"Survive fatal damage 1 time during battle and recover 25% HP. After damaging a foe with God Hand Burst, inflict Cower on the target. Cower: increase Ryuji's next skill damage taken by 60%.",
         descTh:"รอดพ้นจากดาเมจสังหาร 1 ครั้งระหว่างการต่อสู้ และฟื้นฟู HP 25% หลังดาเมจด้วย God Hand Burst ทำให้เป้าหมายติด Cower Cower: เพิ่มดาเมจสกิลถัดไปของ Ryuji 60%"},
     ],
@@ -275,28 +447,27 @@ const CHARACTERS = [
       {hp:4388, atk:1219, def:591, spd:0},
     ],
     hiddenAbility: 'CRIT DMG +184.9%',
-    weapons: [
-      {name:'Revenge Axe', rarity:5, img:'p5x/weapon/revenge-axe.png',
+    weapons:[
+      {name:'Revenge Axe', stars:5,
         hp:2616, atk:727, def:352,
         bonusStats:{},
         abilityName:'Revenge Axe',
         ability:[
           'Increase critical damage by 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%.',
           'After foes or allies act, gain 1 Fired Up stack (up to 10).',
-          'When dealing damage, spend all Fired Up stacks to increase skill damage by 4.5%/5.8%/5.8%/7.2%/7.2%/8.6%/8.6% per stack.',
-        ],
+          'When dealing damage, spend all Fired Up stacks to increase skill damage by 4.5%/5.8%/5.8%/7.2%/7.2%/8.6%/8.6% per stack.',],
         abilityTh:[
           'เพิ่ม CRIT DMG 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%',
           'หลังศัตรูหรือพันธมิตรใช้แอ็คชัน รับ Fired Up 1 stack (สูงสุด 10)',
           'เมื่อดีลดาเมจ ใช้ Fired Up stack ทั้งหมดเพื่อเพิ่มดาเมจสกิล 4.5%/5.8%/5.8%/7.2%/7.2%/8.6%/8.6% ต่อ stack',
         ]},
-      {name:'Grand Presser', rarity:4, img:'p5x/weapon/grand-presser.png',
+      {name:'Grand Presser', stars:4,
         hp:2093, atk:581, def:282,
         bonusStats:{},
         abilityName:'Grand Presser',
         ability:[
-          'Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.',
-          'When Ryuji has Rebound and deals a critical hit with a skill, increase damage by 38.0%/49.5%/49.5%/61.0%/61.0%/72.5%/72.5%.',
+          "Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.",
+          "When Ryuji has Rebound and deals a critical hit with a skill, increase damage by 38.0%/49.5%/49.5%/61.0%/61.0%/72.5%/72.5%.",
         ],
         abilityTh:[
           'เพิ่ม CRIT Rate 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%',
@@ -305,7 +476,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Kasumi Yoshizawa', codename:'Violet', role:'Assassin', element:'Bless', rarity:5,
-    cards:['Courage 4pc','Resolve 2pc'], weapon:'Best CRIT Bless weapon (Royal Étoile)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best CRIT Bless weapon (Royal Étoile)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Bless Assassin. Masquerade mode unlocks Highlight usage and stacks Lead/Follow Step for massive CRIT DMG. Invitation grants Dance Partner to an ally whose skills trigger bonus Cinderella Glow hits.',
     realName:'Kasumi Yoshizawa', persona:'Cendrillon',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -331,25 +502,25 @@ const CHARACTERS = [
         descTh:"เมื่อพันธมิตร (ยกเว้น Kasumi) ใช้ Highlight หรือ Theurgy เพิ่ม Attack ของ Kasumi 45.0% 2 เทิร์น สะสมสูงสุด 2 ครั้ง"},
     ],
     awareness:[
-      {stage:0, name:'Masked Ball',
+      {name:'Masked Ball',
         desc:"Kasumi's Highlight does not deplete the Highlight gauge and can activate critical hits. On an ally's action with 2+ Step stacks, Kasumi can use Spellbound Cinders (3-turn cooldown) to enter Masquerade mode and activate Highlight. Masquerade lasts until the start of Kasumi's 2nd turn (or end of following turn if triggered on her own turn). In Masquerade: per Step stack gained, ATK +10% and CRIT Rate +4%. When Masquerade ends: lose all Step stacks. If Highlight was unused, auto-activate on 1 random foe.",
         descTh:"Highlight ของ Kasumi ไม่ใช้ Highlight gauge และสามารถ CRIT ได้ ในแอ็คชันพันธมิตรเมื่อมี Step stack 2+, Kasumi สามารถใช้ Spellbound Cinders (Cooldown: 3 เทิร์น) เพื่อเข้าโหมด Masquerade และเปิดใช้ Highlight ได้ Masquerade คงจนต้นเทิร์นที่ 2 ของ Kasumi (หรือสิ้นสุดเทิร์นถัดไปหากเปิดในเทิร์นตัวเอง) ในโหมด Masquerade: ต่อ Step stack ที่ได้รับ ATK +10% และ CRIT Rate +4% เมื่อ Masquerade สิ้นสุด: Step stack ทั้งหมดหายไป หาก Highlight ยังไม่ได้ใช้ จะเปิดใช้อัตโนมัติต่อศัตรูสุ่ม 1 ตัว"},
-      {stage:1, name:'Charming Invite',
+      {name:'Charming Invite',
         desc:"Extend the duration of Dance Partner by 1 turn. When using Invitation, increase CRIT Rate of Kasumi and her Dance Partner by 15% for 3 turns.",
         descTh:"ขยายระยะเวลา Dance Partner 1 เทิร์น เมื่อใช้ Invitation เพิ่ม CRIT Rate ของ Kasumi และ Dance Partner 15% 3 เทิร์น"},
-      {stage:2, name:'Blossoming Dance Floor',
+      {name:'Blossoming Dance Floor',
         desc:"With 2 Step stacks: permanently increase Attack by 33%. With 3 or more stacks: permanently increase CRIT DMG by 33%.",
         descTh:"ที่ Step stack 2: เพิ่ม Attack ถาวร 33% ที่ Step stack 3+: เพิ่ม CRIT DMG ถาวร 33%"},
-      {stage:3, name:'Glittering Night',
+      {name:'Glittering Night',
         desc:"Increase the skill levels of Cinderella Glow and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Cinderella Glow และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Toll the Hour',
+      {name:'Toll the Hour',
         desc:"When activating a Highlight, gain 1 Stroke of Midnight stack. Spend 1 Stroke of Midnight to evade the next incoming damage (not activated by some skills). Also, with 4 Step stacks, increase Highlight damage by 50%.",
         descTh:"เมื่อเปิดใช้ Highlight รับ Stroke of Midnight 1 stack ใช้ 1 stack เพื่อหลบดาเมจที่รับถัดไป (ไม่เปิดใช้กับสกิลบางอย่าง) นอกจากนี้ ที่ Step stack 4 เพิ่มดาเมจ Highlight 50%"},
-      {stage:5, name:'Neverending Dream',
+      {name:'Neverending Dream',
         desc:"Increase the skill levels of Invitation and Midnight Magic by 3.",
         descTh:"เพิ่มระดับสกิล Invitation และ Midnight Magic ขึ้น 3 ระดับ"},
-      {stage:6, name:'Unmasked Ball',
+      {name:'Unmasked Ball',
         desc:"After Kasumi activates her Highlight, she can activate her Highlight 1 more time while in Masquerade mode (80% of normal damage). Usable once per Masquerade. This additional Highlight will not activate automatically when Masquerade ends.",
         descTh:"หลัง Kasumi เปิดใช้ Highlight สามารถเปิดใช้ Highlight อีก 1 ครั้งในโหมด Masquerade (ดาเมจ 80%) ใช้ได้ครั้งละ 1 ครั้งต่อการเข้า Masquerade Highlight เพิ่มเติมนี้จะไม่เปิดใช้อัตโนมัติเมื่อ Masquerade สิ้นสุด"},
     ],
@@ -364,28 +535,27 @@ const CHARACTERS = [
       {hp:3756, atk:1286, def:621, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Royal Étoile', rarity:5, img:'p5x/weapon/royal-etoile.png',
+    weapons:[
+      {name:'Royal Étoile', stars:5,
         hp:2240, atk:766, def:370,
         bonusStats:{},
         abilityName:'Sunrise',
         ability:[
           'Increase critical damage by 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%.',
           'When gaining a Step stack, increase Attack by 21.0%/27.0%/27.0%/33.0%/33.0%/39.0%/39.0% for 2 turns. This effect does not stack.',
-          'When an ally activates a Highlight or Theurgy, gain 1 Glass Slipper stack, and increase Kasumi\'s damage by 8.4%/11.1%/11.1%/13.8%/13.8%/16.5%/16.5% for 3 turns (stacks up to 2). At 2 Glass Slipper stacks, increase Kasumi\'s Highlight damage by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0% more.',
-        ],
+          'When an ally activates a Highlight or Theurgy, gain 1 Glass Slipper stack, and increase Kasumi\'s damage by 8.4%/11.1%/11.1%/13.8%/13.8%/16.5%/16.5% for 3 turns (stacks up to 2). At 2 Glass Slipper stacks, increase Kasumi\'s Highlight damage by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0% more.',],
         abilityTh:[
           'เพิ่ม CRIT DMG 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%',
           'เมื่อรับ Step stack เพิ่ม Attack 21.0%/27.0%/27.0%/33.0%/33.0%/39.0%/39.0% 2 เทิร์น เอฟเฟกต์นี้ไม่สะสม',
           'เมื่อพันธมิตรเปิดใช้ Highlight หรือ Theurgy รับ Glass Slipper 1 stack และเพิ่มดาเมจของ Kasumi 8.4%/11.1%/11.1%/13.8%/13.8%/16.5%/16.5% 3 เทิร์น (สะสมสูงสุด 2) ที่ Glass Slipper 2 stack เพิ่มดาเมจ Highlight ของ Kasumi อีก 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0%',
         ]},
-      {name:'Divine Sword of Sinai', rarity:4, img:'p5x/weapon/divine-sword-of-sinai.png',
+      {name:'Divine Sword of Sinai', stars:4,
         hp:1792, atk:613, def:296,
         bonusStats:{atk:24},
         abilityName:'Blessing',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'With 2 or more Step stacks, increase damage by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "With 2 or more Step stacks, increase damage by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -394,7 +564,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Futaba Sakura', codename:'Oracle', role:'Elucidator', element:'-', rarity:5,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best ATK support weapon (Technomage Ultra FS)',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Technomage Ultra FS)',
     statPrio:['ATK%','SPD','HP%'], note:'Elucidator. Stat Buff shares 20% of all stats with party. Virus changes foe affinities (Null→Resist, Resist→Normal, Normal→Weak) to create weakness targets. Data Storm buffs from Analysis Progress amplify weakness damage.',
     realName:'Futaba Sakura', persona:'Necronomicon',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -420,25 +590,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Data Storm ใช้งานอยู่ มอบ shield ให้พันธมิตรทุกคน 30.0% ของ Attack Futaba 3 เทิร์น"},
     ],
     awareness:[
-      {stage:0, name:'Data Scan',
+      {name:'Data Scan',
         desc:"After an ally uses a skill: +5% Analysis Progress. When an ally deals weakness damage with a skill/Resonance/Highlight/Theurgy: +20% more Analysis Progress. When Data Storm is active: party damage +10%/15%/20% (Lv.1/50/70); dealing weakness damage doubles this bonus.",
         descTh:"หลังพันธมิตรใช้สกิล: Analysis Progress +5% เมื่อพันธมิตรดีล weakness damage: Analysis Progress +20% เพิ่มเติม เมื่อ Data Storm ใช้งานอยู่: ดาเมจปาร์ตี้ +10%/15%/20% (Lv.1/50/70); การดีล weakness damage คูณโบนัสนี้ด้วย 2"},
-      {stage:1, name:'Payload Optimization',
+      {name:'Payload Optimization',
         desc:"When Futaba's Analysis Progress reaches 100% or when Data Storm is active, increase allies' CRIT Rate by 12%.",
         descTh:"เมื่อ Analysis Progress ของ Futaba ถึง 100% หรือ Data Storm ใช้งานอยู่ เพิ่ม CRIT Rate ของพันธมิตร 12%"},
-      {stage:2, name:'Storage Redundancy',
+      {name:'Storage Redundancy',
         desc:"When an ally attacks a foe debuffed by Futaba, increase Attack by 25%. Once per battle: if any ally takes damage that would KO them, they survive with 1 HP and all allies receive a shield equal to 20% of Futaba's Attack for 3 turns.",
         descTh:"เมื่อพันธมิตรโจมตีศัตรูที่ Futaba ดีบัฟ เพิ่ม ATK 25% ครั้งเดียวต่อการต่อสู้: หากพันธมิตรใดรับดาเมจที่จะ KO รอดด้วย HP 1 และพันธมิตรทุกคนได้รับ shield 20% ของ Attack Futaba 3 เทิร์น"},
-      {stage:3, name:'Elegant Code',
+      {name:'Elegant Code',
         desc:"Increase the skill levels of Data Link Established! and Vulnerability Found! by 3.",
         descTh:"เพิ่มระดับสกิล Data Link Established! และ Vulnerability Found! ขึ้น 3 ระดับ"},
-      {stage:4, name:'Zero-Day Exploit',
+      {name:'Zero-Day Exploit',
         desc:"When an ally uses a Highlight or Theurgy, gain 1 Security Flaw stack (max 2). When using Pentest Complete! or Vulnerability Found!, spend all Security Flaw stacks to increase the effect by 8% per stack.",
         descTh:"เมื่อพันธมิตรใช้ Highlight หรือ Theurgy รับ Security Flaw 1 stack (สูงสุด 2) เมื่อใช้ Pentest Complete! หรือ Vulnerability Found! ใช้ Security Flaw stack ทั้งหมดเพื่อเพิ่มเอฟเฟกต์ 8% ต่อ stack"},
-      {stage:5, name:'Master Codebreaker',
+      {name:'Master Codebreaker',
         desc:"Increase the skill level of Pentest Complete! by 3.",
         descTh:"เพิ่มระดับสกิล Pentest Complete! ขึ้น 3 ระดับ"},
-      {stage:6, name:'Wizard-Level Hacker',
+      {name:'Wizard-Level Hacker',
         desc:"When using Data Link Established!, target all allies and inflict Virus on all foes corresponding to each ally's element (same-element Viruses do not stack). Data Storm duration extended to 3 turns. Allies' weakness damage +10%, damage dealt +25%.",
         descTh:"เมื่อใช้ Data Link Established! กำหนดเป้าหมายเป็นพันธมิตรทุกคน และทำให้ศัตรูทุกตัวติด Virus ตามธาตุของพันธมิตรแต่ละคน (Virus ธาตุเดียวกันไม่สะสม) ระยะเวลา Data Storm ขยายเป็น 3 เทิร์น ดาเมจ weakness ของพันธมิตร +10% ดาเมจที่ดีล +25%"},
     ],
@@ -453,28 +623,27 @@ const CHARACTERS = [
       {hp:3756, atk:1263, def:665, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Technomage Ultra FS', rarity:5, img:'p5x/weapon/technomage-ultra-fs.png',
+    weapons:[
+      {name:'Technomage Ultra FS', stars:5,
         hp:2240, atk:753, def:396,
         bonusStats:{atk:30},
         abilityName:'Technomage Ultra FS',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When an ally deals weakness damage, increase the ally\'s Attack by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns.',
-          'After Futaba inflicts a debuff with a skill, increase the foe\'s critical damage taken by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 3 turns. Stacks up to 2 times.',
-        ],
+          'After Futaba inflicts a debuff with a skill, increase the foe\'s critical damage taken by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 3 turns. Stacks up to 2 times.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อพันธมิตรดีล weakness damage เพิ่ม ATK ของพันธมิตรนั้น 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% 2 เทิร์น',
           'หลัง Futaba ทำให้ติดดีบัฟด้วยสกิล เพิ่ม CRIT DMG ที่รับของศัตรู 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% 3 เทิร์น สะสมสูงสุด 2 ครั้ง',
         ]},
-      {name:'Cyberdeck Pro', rarity:4, img:'p5x/weapon/cyberdeck-pro.png',
+      {name:'Cyberdeck Pro', stars:4,
         hp:1792, atk:602, def:317,
         bonusStats:{atk:24},
         abilityName:'Cyberdeck Pro',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'After inflicting Virus on a foe, increase the target\'s damage taken by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After inflicting Virus on a foe, increase the target\'s damage taken by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -483,7 +652,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Ayaka Sakai', codename:'Chord', role:'Strategist', element:'Electric', rarity:5,
-    cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best ATK/Support weapon (Superstar)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best ATK/Support weapon (Superstar)',
     statPrio:['ATK%','SPD','HP%'], note:'Top-tier Strategist. Catchy Hook instantly triggers ally Highlights — Costar mechanic amplifies the chosen DPS. ATK scales her own buff values.',
     realName:'Ayaka Sakai', persona:'Calliope',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
@@ -509,25 +678,25 @@ const CHARACTERS = [
         descTh:"หลังพันธมิตรใช้ Highlight หรือ Theurgy พันธมิตรที่มี HP ต่ำสุดจะฟื้นฟู HP เท่ากับ 15.0% ของ Attack Ayaka + 1350"},
     ],
     awareness:[
-      {stage:0, name:'Opening Act',
+      {name:'Opening Act',
         desc:"When using Catchy Hook, increase Ayaka's Attack by 20% for that battle (up to 40%). Catchy Hook has a 1-turn cooldown before it can be used, which increases each use (up to 3 turns).",
         descTh:"เมื่อใช้ Catchy Hook เพิ่ม Attack Ayaka 20% ตลอดการต่อสู้ (สูงสุด 40%) Catchy Hook มี Cooldown 1 เทิร์นก่อนใช้ได้ และเพิ่มขึ้นทุกการใช้งาน (สูงสุด 3 เทิร์น)"},
-      {stage:1, name:'Hard Rock',
+      {name:'Hard Rock',
         desc:"At the start of battle, grant Costar to the ally with the highest Attack for 3 turns (prioritizing Assassins and Sweepers). Increase that ally's critical rate by 15%.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ ให้ Costar แก่พันธมิตรที่มี Attack สูงสุด 3 เทิร์น (ให้ความสำคัญ Assassin และ Sweeper) เพิ่ม CRIT Rate ของพวกเขา 15%"},
-      {stage:2, name:'Crescendo Shout',
+      {name:'Crescendo Shout',
         desc:"When using Catchy Hook, increase the targeted ally's damage by 30% for 2 turns.",
         descTh:"เมื่อใช้ Catchy Hook เพิ่มดาเมจของพันธมิตรที่เลือก 30% เป็นเวลา 2 เทิร์น"},
-      {stage:3, name:'Amplifier',
+      {name:'Amplifier',
         desc:"Increase the skill levels of Distortion and Catchy Hook by 3.",
         descTh:"เพิ่มระดับสกิล Distortion และ Catchy Hook ขึ้น 3 ระดับ"},
-      {stage:4, name:'Spotlight',
+      {name:'Spotlight',
         desc:"Highlight Enhanced: Increase effect duration to 6 ally actions. Fill Highlight gauge to 60%, and decrease all other allies' Highlight activation cooldown by 1 turn.",
         descTh:"Highlight เสริม: เพิ่มระยะเวลาเป็น 6 แอ็คชันของพันธมิตร เติม Highlight gauge เป็น 60% และลด Cooldown Highlight ของพันธมิตรอื่นทุกคน 1 เทิร์น"},
-      {stage:5, name:'Shredding',
+      {name:'Shredding',
         desc:"Increase the skill levels of Unison Notes and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Unison Notes และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Spirit of Rock',
+      {name:'Spirit of Rock',
         desc:"At the start of battle, Catchy Hook can be used immediately. Its cooldown is permanently 1 turn (no longer increases). Each use of Catchy Hook increases party's damage by 20% (up to 2 stacks).",
         descTh:"เมื่อเริ่มต้นการต่อสู้ สามารถใช้ Catchy Hook ได้ทันที Cooldown จะเป็น 1 เทิร์นถาวร (ไม่เพิ่มอีก) ทุกการใช้ Catchy Hook เพิ่มดาเมจของปาร์ตี้ 20% (สูงสุด 2 stack)"},
     ],
@@ -542,8 +711,8 @@ const CHARACTERS = [
       {hp:3823, atk:1197, def:650, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Superstar', rarity:5, img:'p5x/weapon/superstar.png',
+    weapons:[
+      {name:'Superstar', stars:5,
         hp:2279, atk:714, def:388,
         bonusStats:{atk:30},
         abilityName:'Superstar',
@@ -551,21 +720,20 @@ const CHARACTERS = [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'At start of battle, fill Highlight gauge by 40.0%/52.0%/52.0%/64.0%/64.0%/76.0%/76.0%.',
           "Increase Costar's Attack by 15.0%/19.5%/19.5%/24.0%/24.0%/28.5%/28.5%.",
-          "Each time an ally uses a Highlight or Theurgy, increase Costar's Attack by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (up to 3 stacks).",
-        ],
+          "Each time an ally uses a Highlight or Theurgy, increase Costar's Attack by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (up to 3 stacks).",],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อเริ่มต้นการต่อสู้ เติม Highlight gauge 40.0%/52.0%/52.0%/64.0%/64.0%/76.0%/76.0%',
           'เพิ่ม Attack ของ Costar 15.0%/19.5%/19.5%/24.0%/24.0%/28.5%/28.5%',
           'ทุกครั้งที่พันธมิตรใช้ Highlight หรือ Theurgy เพิ่ม Attack ของ Costar 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (สูงสุด 3 stack)',
         ]},
-      {name:"Rock 'n' Roller", rarity:4, img:"p5x/weapon/rock-n-roller.png",
+      {name:"Rock 'n' Roller", stars:4,
         hp:1823, atk:571, def:310,
         bonusStats:{atk:24},
         abilityName:"Rock 'n' Roller",
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'After using Catchy Hook, increase Attack by 28.0%/36.0%/36.0%/44.0%/44.0%/52.0%/52.0% for 2 turns.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After using Catchy Hook, increase Attack by 28.0%/36.0%/36.0%/44.0%/44.0%/52.0%/52.0% for 2 turns.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -574,7 +742,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Riko Tanemura', codename:'Wind', role:'Elucidator', element:'-', rarity:4,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:"Best SPD support weapon (Kunoichi: Sky's Edge)",
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:"Best SPD support weapon (Kunoichi: Sky's Edge)",
     statPrio:['SPD','ATK%','HP%'], note:"Elucidator. Speed-scaling DEF debuffer and damage amplifier via Insight/Intel system. Verngale Petals grants Fair Winds (party DMG buff). Stat Buff shares 15% of Revealed Phantom Thief's stats with party.",
     realName:'Riko Tanemura', persona:'Chiyome',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -636,21 +804,20 @@ const CHARACTERS = [
     weapons:[
       {name:"Kunoichi: Sky's Edge", stars:5, hp:2299, atk:687, def:401, bonusStats:{spd:15},
         abilityName:'Shadow Dance',
-        ability:"Increase Speed by 15.0/15.0/20.0/20.0/25.0/25.0/30.0. For every 2 Insight stack spent, gain 2/3/3/4/4/5/5 Intel stacks. Also, increase party's damage by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% for 1 turn. Increase max stacks of Intel to 11/12/12/13/13/14/14.",
+        ability:["Increase Speed by 15.0/15.0/20.0/20.0/25.0/25.0/30.0. For every 2 Insight stack spent, gain 2/3/3/4/4/5/5 Intel stacks. Also, increase party's damage by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% for 1 turn. Increase max stacks of Intel to 11/12/12/13/13/14/14."],
         abilityTh:[
           'เพิ่ม Speed 15.0/15.0/20.0/20.0/25.0/25.0/30.0',
-          'ต่อ Insight 2 stack ที่ใช้ รับ Intel 2/3/3/4/4/5/5 stack เพิ่มดาเมจของปาร์ตี้ 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% 1 เทิร์น เพิ่ม Intel stack สูงสุดเป็น 11/12/12/13/13/14/14',
-        ]},
+          'ต่อ Insight 2 stack ที่ใช้ รับ Intel 2/3/3/4/4/5/5 stack เพิ่มดาเมจของปาร์ตี้ 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% 1 เทิร์น เพิ่ม Intel stack สูงสุดเป็น 11/12/12/13/13/14/14',]},
       {name:'Moonlight Needle', stars:4, hp:1839, atk:550, def:320, bonusStats:{atk:24},
         abilityName:'Reflected Moon',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. For each Insight stack spent, permanently increase party's Attack by 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8%. Stacks up to 5 times.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. For each Insight stack spent, permanently increase party's Attack by 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8%. Stacks up to 5 times."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ต่อ Insight 1 stack ที่ใช้ เพิ่ม Attack ของปาร์ตี้แบบถาวร 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8% สะสมสูงสุด 5 ครั้ง',
         ]},
       {name:'Red Plum Blossom', stars:4, hp:1982, atk:550, def:285, bonusStats:{spd:9}, isEvent:true,
         abilityName:'In Bud',
-        ability:"Increase Speed by 4.6/4.6/5.9/5.9/7.2/7.2/8.5. For each Insight stack spent, randomly grant 1 of the following effects to the party: Increase Attack by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns), Increase Defense by 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 turns), Increase max HP by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns). Also, 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% chance to gain 1 Intel stack.",
+        ability:["Increase Speed by 4.6/4.6/5.9/5.9/7.2/7.2/8.5. For each Insight stack spent, randomly grant 1 of the following effects to the party: Increase Attack by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns), Increase Defense by 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 turns), Increase max HP by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns). Also, 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% chance to gain 1 Intel stack."],
         abilityTh:[
           'เพิ่ม Speed 4.6/4.6/5.9/5.9/7.2/7.2/8.5',
           'ต่อ Insight 1 stack ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 เทิร์น), เพิ่ม Defense 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 เทิร์น), เพิ่ม HP สูงสุด 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 เทิร์น) โอกาส 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% ที่จะได้ Intel 1 stack',
@@ -681,25 +848,25 @@ const CHARACTERS = [
         descTh:"เมื่อโจมตีศัตรูที่มี HP มากกว่า 50% เพิ่มความเสียหาย Curse ที่ศัตรูรับ 30.0%"},
     ],
     awareness:[
-      {stage:0, name:'Goddess of Oblivion',
+      {name:'Goddess of Oblivion',
         desc:"On Yaoling's action, gain 1 Memory stack for every 10 points of Speed (up to 18 stacks per turn). When Memory reaches 40 stacks, spend all stacks to gain 1 Meng Po Soup stack.\nWhen using a skill, spend 1 Meng Po Soup stack for a 50% chance to inflict Forget on 1 foe for 1 turn, and enhance effects of Flowers of Naihe and Lion Dance of Oblivion.",
         descTh:"ในเทิร์นของ Yaoling รับ Memory 1 stack ต่อ Speed 10 จุด (สูงสุด 18 stack ต่อเทิร์น) เมื่อ Memory ถึง 40 stack ใช้ stack ทั้งหมดเพื่อรับ Meng Po Soup 1 stack\nเมื่อใช้สกิล ใช้ Meng Po Soup 1 stack เพื่อโอกาส 50% ทำให้ศัตรู 1 ตัวติด Forget 1 เทิร์น และเพิ่มเอฟเฟกต์ของ Flowers of Naihe และ Lion Dance of Oblivion"},
-      {stage:1, name:'Road to Rebirth',
+      {name:'Road to Rebirth',
         desc:"At the start of battle, gain 1 Meng Po Soup stack.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Meng Po Soup 1 stack"},
-      {stage:2, name:'Soul Reaper',
+      {name:'Soul Reaper',
         desc:"Increase Attack by 10% for each debuff inflicted on foes for 2 turns. Stacks up to 5 times.",
         descTh:"เพิ่ม Attack 10% ต่อ debuff ที่ทำให้ศัตรูติด เป็นเวลา 2 เทิร์น สะสมสูงสุด 5 ครั้ง"},
-      {stage:3, name:'Beyond the Bend',
+      {name:'Beyond the Bend',
         desc:"Increase the skill levels of Lion Dance of Oblivion and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Lion Dance of Oblivion และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Training Results',
+      {name:'Training Results',
         desc:"Highlight Enhanced: Increase damage taken effect by 20%. Inflict Curse on all foes for 2 turns.",
         descTh:"Highlight Enhanced: เพิ่มเอฟเฟกต์ความเสียหายที่รับ 20% ทำให้ศัตรูทุกตัวติด Curse 2 เทิร์น"},
-      {stage:5, name:"Meng Po's Medicine",
+      {name:"Meng Po's Medicine",
         desc:"Increase the skill levels of Underworld Ferry and Flowers of Naihe by 3.",
         descTh:"เพิ่มระดับสกิล Underworld Ferry และ Flowers of Naihe ขึ้น 3"},
-      {stage:6, name:'Wisps of Crimson',
+      {name:'Wisps of Crimson',
         desc:"When spending Meng Po Soup, increase party's Curse damage by 20% for 1 turn. Also, 60% chance to gain 1 Meng Po Soup stack. This effect won't activate again on the next turn.",
         descTh:"เมื่อใช้ Meng Po Soup เพิ่มความเสียหาย Curse ของปาร์ตี้ 20% เป็นเวลา 1 เทิร์น นอกจากนี้ โอกาส 60% รับ Meng Po Soup 1 stack เอฟเฟกต์นี้จะไม่ทำงานอีกในเทิร์นถัดไป"},
     ],
@@ -714,17 +881,16 @@ const CHARACTERS = [
       {hp:3523, atk:1208, def:702, spd:106},
     ],
     hiddenAbility: 'SPD +124.8',
-    weapons: [
+    weapons:[
       {
-        name: 'Infinite Moment', rarity: 5, img: 'p5x/weapon/infinite-moment.png',
+        name: 'Infinite Moment', stars:5,
         hp: 2101, atk: 720, def: 418,
         bonusStats: {spd:15},
         abilityName: 'Infinite Moment',
         ability: [
           'Increase Speed by 15.0/15.0/20.0/20.0/25.0/25.0/30.0.',
           'After attacking a foe with a skill, inflict Waters of Oblivion on the main target.\nWaters of Oblivion: Increase foe\'s damage taken by 1.2%/1.6%/1.6%/2.0%/2.0%/2.4%/2.4% for every 10 of Yaoling\'s Speed for 1 turn.',
-          'Increase Yaoling\'s Speed by 15 for 2 turns.\nAfter spending Meng Po Soup to use a skill on a foe, inflict this effect on all foes.',
-        ],
+          'Increase Yaoling\'s Speed by 15 for 2 turns.\nAfter spending Meng Po Soup to use a skill on a foe, inflict this effect on all foes.',],
         abilityTh: [
           'เพิ่ม Speed 15.0/15.0/20.0/20.0/25.0/25.0/30.0',
           'หลังจากโจมตีศัตรูด้วยสกิล ทำให้เป้าหมายหลักติด Waters of Oblivion\nWaters of Oblivion: เพิ่มความเสียหายที่ศัตรูรับ 1.2%/1.6%/1.6%/2.0%/2.0%/2.4%/2.4% ต่อ Speed ของ Yaoling 10 จุด เป็นเวลา 1 เทิร์น',
@@ -732,13 +898,14 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Sunstaff', rarity: 4, img: 'p5x/weapon/sunstaff.png',
+        name: 'Sunstaff', stars:4,
         hp: 1680, atk: 576, def: 335,
         bonusStats: {atk:12},
         abilityName: 'Sunstaff',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'After inflicting a debuff, increase Speed by 8/11/11/14/14/17/17 for 2 turns. Stacks up to 2 times.\nGain 2 stacks at the start of battle.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After inflicting a debuff, increase Speed by 8/11/11/14/14/17/17 for 2 turns. Stacks up to 2 times.",
+          "Gain 2 stacks at the start of battle.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -748,7 +915,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Seiji Shiratori', codename:'Fleuret', role:'Assassin', element:'Wind', rarity:4,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best CRIT/Wind weapon (Venus Sunrise)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best CRIT/Wind weapon (Venus Sunrise)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'4★ Wind Assassin. Right to Strike stack mechanic — AoE skills stack faster with more foes. At 3+ stacks, all skills gain bonus hits.',
     realName:'Seiji Shiratori', persona:'Leucothea',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'res', Nuclear:'normal',
@@ -774,25 +941,25 @@ const CHARACTERS = [
         descTh:"ท้ายแอ็คชันของ Seiji มีโอกาส 60.0% รับ Right to Strike 1 stack"},
     ],
     awareness:[
-      {stage:0, name:'Attaque au Fer',
+      {name:'Attaque au Fer',
         desc:"Each time Seiji deals damage with a skill, 40% chance to gain 1 Right to Strike stack for 2 turns (up to 3). Gain ATK +7% and SPD +4 per stack for 2 turns. Each stack's duration is managed individually.",
         descTh:"ทุกครั้งที่ Seiji ดีลดาเมจด้วยสกิล โอกาส 40% รับ Right to Strike 1 stack 2 เทิร์น (สูงสุด 3) ต่อ stack: ATK +7% และ SPD +4 เป็นเวลา 2 เทิร์น ระยะเวลาแต่ละ stack นับแยกกัน"},
-      {stage:1, name:'Pression',
+      {name:'Pression',
         desc:"Increase maximum Right to Strike stacks to 5. Increase critical rate by 4% per Right to Strike stack.",
         descTh:"เพิ่ม Right to Strike stack สูงสุดเป็น 5 เพิ่ม CRIT Rate 4% ต่อ Right to Strike stack"},
-      {stage:2, name:'Parade',
+      {name:'Parade',
         desc:"When attacked, 12% chance to evade.",
         descTh:"เมื่อถูกโจมตี มีโอกาส 12% หลีกเลี่ยง"},
-      {stage:3, name:'Sword of Truthseeking',
+      {name:'Sword of Truthseeking',
         desc:"Increase the skill levels of Blustering Épée and Graceful Gale by 2.",
         descTh:"เพิ่มระดับสกิล Blustering Épée และ Graceful Gale ขึ้น 2 ระดับ"},
-      {stage:4, name:'En Garde',
+      {name:'En Garde',
         desc:"Highlight Enhanced: When Seiji has 3+ Right to Strike stacks, increase hits by 1 and inflict Windswept on the target.",
         descTh:"Highlight เสริม: เมื่อ Seiji มี Right to Strike 3+ stack เพิ่ม 1 ครั้งและทำให้เป้าหมายติด Windswept"},
-      {stage:5, name:'Favorite Pre-Match Book',
+      {name:'Favorite Pre-Match Book',
         desc:"Increase the skill levels of Saber Surge and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Saber Surge และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Clumsy Swordwielder',
+      {name:'Clumsy Swordwielder',
         desc:"Increase chance to gain Right to Strike by 20%. When at 5 Right to Strike stacks, Blustering Épée, Graceful Gale, and Saber Surge deal 1 more hit.",
         descTh:"เพิ่มโอกาสรับ Right to Strike 20% เมื่อมี Right to Strike 5 stack สกิล Blustering Épée, Graceful Gale และ Saber Surge ดีลเพิ่ม 1 ครั้ง"},
     ],
@@ -807,28 +974,27 @@ const CHARACTERS = [
       {hp:2647, atk:906, def:497, spd:0},
     ],
     hiddenAbility: 'CRIT Rate +18%',
-    weapons: [
-      {name:'Venus Sunrise', rarity:5, img:'p5x/weapon/venus-sunrise.png',
+    weapons:[
+      {name:'Venus Sunrise', stars:5,
         hp:2180, atk:747, def:410,
         bonusStats:{},
         abilityName:'Venus Sunrise',
         ability:[
           'Increase critical rate by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.',
           'At the start of battle, gain 1 Right to Strike stack and increase critical damage by 12%.',
-          'For each Right to Strike stack, increase damage by (current stacks × 7.5%/9.8%/9.8%/12.1%/12.1%/14.4%/14.4%) for 1 turn.',
-        ],
+          'For each Right to Strike stack, increase damage by (current stacks × 7.5%/9.8%/9.8%/12.1%/12.1%/14.4%/14.4%) for 1 turn.',],
         abilityTh:[
           'เพิ่ม CRIT Rate 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%',
           'เมื่อเริ่มต้นการต่อสู้ รับ Right to Strike 1 stack และเพิ่ม CRIT DMG 12%',
           'ต่อ Right to Strike stack เพิ่มดาเมจ (จำนวน stack × 7.5%/9.8%/9.8%/12.1%/12.1%/14.4%/14.4%) เป็นเวลา 1 เทิร์น',
         ]},
-      {name:"Knight's Reward", rarity:4, img:"p5x/weapon/knights-reward.png",
+      {name:"Knight's Reward", stars:4,
         hp:1744, atk:597, def:328,
         bonusStats:{atk:24},
         abilityName:"Knight's Reward",
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When dealing damage to the same foe multiple times, each hit has a 30% chance to deal 3.8%/4.9%/4.9%/6.0%/6.0%/7.1%/7.1% more damage (up to 19.0%/24.5%/24.5%/30.0%/30.0%/35.5%/35.5%).',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When dealing damage to the same foe multiple times, each hit has a 30% chance to deal 3.8%/4.9%/4.9%/6.0%/6.0%/7.1%/7.1% more damage (up to 19.0%/24.5%/24.5%/30.0%/30.0%/35.5%/35.5%).",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -837,7 +1003,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Manaka Nagao', codename:'Ange', role:'Elucidator', element:'-', rarity:5,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best ATK support weapon (Angel\'s Hymn)',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Angel\'s Hymn)',
     statPrio:['ATK%','SPD','HP%'], note:'Elucidator. Stat Buff passively shares 20% of all Manaka\'s stats with the party. Musical Notes fuel skill cooldown reduction and pierce/ATK scaling. Da Capo grants an ally a rewind extra action — resetting their HP/SP/buffs/cooldowns to before their last action.',
     realName:'Manaka Nagao', persona:'Euterpe',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -863,25 +1029,25 @@ const CHARACTERS = [
         descTh:"ตามจำนวน Musical Note stack ที่ได้รับทั้งหมด เพิ่ม pierce rate ของปาร์ตี้ 1.0% ต่อ stack (นับสูงสุด 12 stack)"},
     ],
     awareness:[
-      {stage:0, name:'Andante',
+      {name:'Andante',
         desc:"On each ally's action, gain 1 Musical Note (max 12). Before any ally's action, can activate Da Capo (1 use per battle; after spending, restored when Wonder takes 7 non-extra actions — once per battle). Da Capo: Remove 1 debuff from 1 ally. At end of that ally's next action, grant a special extra action — HP, SP, buffs/debuffs, and skill cooldowns reset to their state at the start of the previous action.",
         descTh:"ต่อแอ็คชันของพันธมิตร รับ Musical Note 1 stack (สูงสุด 12) ก่อนแอ็คชันของพันธมิตรใด สามารถเปิดใช้ Da Capo ได้ (1 ครั้งต่อการต่อสู้; หลังใช้ จะได้คืนเมื่อ Wonder ใช้ 7 แอ็คชันที่ไม่ใช่แอ็คชันพิเศษ — ครั้งเดียวต่อการต่อสู้) Da Capo: ลบดีบัฟ 1 จากพันธมิตร 1 คน เมื่อสิ้นสุดแอ็คชันถัดไปของพันธมิตรนั้น มอบแอ็คชันพิเศษ — HP, SP, buff/debuff และ cooldown สกิลรีเซ็ตเป็นสถานะต้นแอ็คชันก่อนหน้า"},
-      {stage:1, name:'Allegro',
+      {name:'Allegro',
         desc:"At the start of battle, gain the maximum number of Musical Note stacks and reduce the first cooldown by 4 actions. When using Melody of Steps, also increase party's CRIT Rate by 12% for 2 turns.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Musical Note stack สูงสุดและลด cooldown แรกสุด 4 actions เมื่อใช้ Melody of Steps เพิ่ม CRIT Rate ปาร์ตี้ 12% 2 เทิร์นด้วย"},
-      {stage:2, name:'Fortissimo',
+      {name:'Fortissimo',
         desc:"Increase final damage of allies with extra actions from Da Capo by 12%. When an ally is KO'd, restore their HP equal to 20% of Manaka's Attack + 2000. Activates once per battle.",
         descTh:"เพิ่ม final damage ของพันธมิตรที่มีแอ็คชันพิเศษจาก Da Capo 12% เมื่อพันธมิตรถูก KO ฟื้นฟู HP 20% ของ Attack Manaka + 2000 เปิดใช้ได้ครั้งเดียวต่อการต่อสู้"},
-      {stage:3, name:'Vibrato',
+      {name:'Vibrato',
         desc:"Increase the skill levels of Prayer Refrain and Melody of Steps by 3.",
         descTh:"เพิ่มระดับสกิล Prayer Refrain และ Melody of Steps ขึ้น 3 ระดับ"},
-      {stage:4, name:'Symphonia',
+      {name:'Symphonia',
         desc:"At the start of battle, or when an ally activates a Highlight or Theurgy, gain 2 Musical Note stacks. Stacks from this effect can exceed the maximum limit up to 2 times.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ หรือเมื่อพันธมิตรเปิดใช้ Highlight หรือ Theurgy รับ Musical Note 2 stack stack จากเอฟเฟกต์นี้สามารถเกิน max ได้สูงสุด 2 ครั้ง"},
-      {stage:5, name:'Molto Vivace',
+      {name:'Molto Vivace',
         desc:"Increase the skill level of Winged Canon by 3.",
         descTh:"เพิ่มระดับสกิล Winged Canon ขึ้น 3 ระดับ"},
-      {stage:6, name:'Con Anima',
+      {name:'Con Anima',
         desc:"Increase the initial use count of Da Capo by 1.",
         descTh:"เพิ่มจำนวนครั้งใช้เริ่มต้นของ Da Capo 1 ครั้ง"},
     ],
@@ -896,20 +1062,19 @@ const CHARACTERS = [
       {hp:3723, atk:1274, def:665, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:"Angel's Hymn", rarity:5, img:"p5x/weapon/angels-hymn.png",
+    weapons:[
+      {name:"Angel's Hymn", stars:5,
         hp:2220, atk:760, def:396,
         bonusStats:{atk:30},
         abilityName:'Divine Radiance',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
-          'For each Musical Note gained, grant 1 Angelic Chorus stack to all allies. Angelic Chorus: Permanently increase damage by 0.7%/0.9%/0.9%/1.1%/1.1%/1.3%/1.3% (stacks up to 12). At 12 stacks, increase critical damage by 15.3%/19.9%/19.9%/24.5%/24.5%/29.1%/29.1%.',
-        ],
+          'For each Musical Note gained, grant 1 Angelic Chorus stack to all allies. Angelic Chorus: Permanently increase damage by 0.7%/0.9%/0.9%/1.1%/1.1%/1.3%/1.3% (stacks up to 12). At 12 stacks, increase critical damage by 15.3%/19.9%/19.9%/24.5%/24.5%/29.1%/29.1%.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'ต่อ Musical Note ที่ได้รับ มอบ Angelic Chorus 1 stack ให้พันธมิตรทุกคน Angelic Chorus: เพิ่มดาเมจถาวร 0.7%/0.9%/0.9%/1.1%/1.1%/1.3%/1.3% (สะสมสูงสุด 12) ที่ 12 stack เพิ่ม CRIT DMG 15.3%/19.9%/19.9%/24.5%/24.5%/29.1%/29.1%',
         ]},
-      {name:'Divine Muse', rarity:4, img:'p5x/weapon/divine-muse.png',
+      {name:'Divine Muse', stars:4,
         hp:1776, atk:608, def:317,
         bonusStats:{atk:24},
         abilityName:'Luminous Glaze',
@@ -947,25 +1112,25 @@ const CHARACTERS = [
         descTh:"ทุกครั้งที่ได้รับ shield ด้วยสกิลของ Yusuke เพิ่ม pierce rate ของ Yusuke 20.0% เป็นเวลา 1 เทิร์น"},
     ],
     awareness:[
-      {stage:0, name:'Inspiration',
+      {name:'Inspiration',
         desc:"When taking damage from a foe's skill, 65% chance to activate a Resonance and counterattack, dealing Ice damage equal to 88% of Yusuke's Defense.\nEvolve this effect to Imagination by using a skill.",
         descTh:"เมื่อรับความเสียหายจากสกิลของศัตรู โอกาส 65% เปิดใช้ Resonance และ counterattack สร้างความเสียหายธาตุน้ำแข็ง 88% ของ DEF ของ Yusuke\nพัฒนาเป็น Imagination ได้โดยการใช้สกิล"},
-      {stage:1, name:'Natural Talent',
+      {name:'Natural Talent',
         desc:"Every 2 times Keen Eye is used, activate Imagination 1 time as a follow-up. Counterattacks activated by this effect deal 70% of the original damage.",
         descTh:"ทุกๆ การใช้ Keen Eye 2 ครั้ง เปิดใช้ Imagination 1 ครั้งเป็นการโจมตีตาม Counterattack ที่เปิดใช้จากเอฟเฟกต์นี้สร้างความเสียหาย 70% ของต้นฉบับ"},
-      {stage:2, name:'Both Beauty and Vice',
+      {name:'Both Beauty and Vice',
         desc:"When Yusuke's HP is above 70%, increase counterattack damage dealt to foes by 35%.",
         descTh:"เมื่อ HP ของ Yusuke มากกว่า 70% เพิ่มความเสียหาย counterattack ต่อศัตรู 35%"},
-      {stage:3, name:'A Breathtaking Sight',
+      {name:'A Breathtaking Sight',
         desc:"Increase the skill levels of Keen Eye and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Keen Eye และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Still Life',
+      {name:'Still Life',
         desc:"Highlight Enhanced: After using a Highlight, increase counterattack damage by 30% for 3 turns.",
         descTh:"Highlight Enhanced: หลังจากใช้ Highlight เพิ่มความเสียหาย counterattack 30% เป็นเวลา 3 เทิร์น"},
-      {stage:5, name:'With a Single Stroke',
+      {name:'With a Single Stroke',
         desc:"Increase the skill levels of Frozen Presence and Bone-Chilling Cold by 3.",
         descTh:"เพิ่มระดับสกิล Frozen Presence และ Bone-Chilling Cold ขึ้น 3"},
-      {stage:6, name:'Finishing Touches',
+      {name:'Finishing Touches',
         desc:"Evolve the effects of Inspiration and Imagination to Vision & Emotion and Creation.\nEach counterattack becomes 2 consecutive attacks, each dealing 90% of the original attack's damage. Also increase counterattack pierce rate by 30%.",
         descTh:"พัฒนาเอฟเฟกต์ Inspiration และ Imagination เป็น Vision & Emotion และ Creation\nแต่ละ counterattack กลายเป็นการโจมตีต่อเนื่อง 2 ครั้ง โดยแต่ละครั้งสร้างความเสียหาย 90% ของต้นฉบับ นอกจากนี้เพิ่ม pierce rate ของ counterattack 30%"},
     ],
@@ -980,17 +1145,16 @@ const CHARACTERS = [
       {hp:4122, atk:909, def:886, spd:102},
     ],
     hiddenAbility: 'DEF% +43.6%',
-    weapons: [
+    weapons:[
       {
-        name: 'Shadowkiller', rarity: 5, img: 'p5x/weapon/shadowkiller.png',
+        name: 'Shadowkiller', stars:5,
         hp: 2458, atk: 542, def: 529,
         bonusStats: {def:45},
         abilityName: 'Shadowkiller',
         ability: [
           'Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%.',
           'At the start of battle, increase counterattack damage by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0%.',
-          'After gaining a shield, gain 1 Blade Spirit stack. Increase counterattack damage by 2% per stack. At 6 stacks, increase counterattack damage by 30.0%/40.0%/40.0%/50.0%/50.0%/60.0%/60.0%. This effect is permanent.',
-        ],
+          'After gaining a shield, gain 1 Blade Spirit stack. Increase counterattack damage by 2% per stack. At 6 stacks, increase counterattack damage by 30.0%/40.0%/40.0%/50.0%/50.0%/60.0%/60.0%. This effect is permanent.',],
         abilityTh: [
           'เพิ่ม DEF 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%',
           'เมื่อเริ่มต้นการต่อสู้ เพิ่มความเสียหาย counterattack 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0%',
@@ -998,13 +1162,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Jagato', rarity: 4, img: 'p5x/weapon/jagato.png',
+        name: 'Jagato', stars:4,
         hp: 1966, atk: 434, def: 423,
         bonusStats: {def:18},
         abilityName: 'Jagato',
-        ability: [
-          'Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.',
-          'Each time a counterattack is activated, increase Ice damage by 7.4%/9.6%/9.6%/11.8%/11.8%/14.0%/14.0% for 2 turns. Stacks up to 2 times.',
+        ability:[
+          "Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.",
+          "Each time a counterattack is activated, increase Ice damage by 7.4%/9.6%/9.6%/11.8%/11.8%/14.0%/14.0% for 2 turns. Stacks up to 2 times.",
         ],
         abilityTh: [
           'เพิ่ม DEF 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%',
@@ -1040,25 +1204,25 @@ const CHARACTERS = [
         descTh:"เมื่อเริ่มต้นการต่อสู้ เพิ่มอัตราลดดาเมจ 6.0% เมื่อ Crash Out ใช้งานอยู่ เพิ่มอัตราลดดาเมจอีก 6.0% (สูงสุด 18.0%)"},
     ],
     awareness:[
-      {stage:0, name:'Enraged Usurper',
+      {name:'Enraged Usurper',
         desc:"When attacking a foe with a skill, gain 1 Tenacity stack. If Crash Out is not active, at end of action, gain more Tenacity stacks based on elemental ailments inflicted on foes that turn. If Makoto has 5 Tenacity stacks at the start of her turn, activate Crash Out: ATK +40%, DEF +20%, Nuclear Fury evolves to Thermonuclear Fury for 2 turns. When Crash Out ends, lose all Tenacity stacks.",
         descTh:"เมื่อโจมตีศัตรูด้วยสกิล รับ Tenacity 1 stack หาก Crash Out ไม่ใช้งาน เมื่อสิ้นสุดแอ็คชัน รับ Tenacity เพิ่มตามสภาวะธาตุที่ทำให้ติดในเทิร์นนั้น หาก Makoto มี Tenacity 5 stack ต้นเทิร์น เปิดใช้ Crash Out: ATK +40%, DEF +20%, Nuclear Fury พัฒนาเป็น Thermonuclear Fury 2 เทิร์น เมื่อ Crash Out สิ้นสุด Tenacity ทั้งหมดหายไป"},
-      {stage:1, name:'Execution of Justice',
+      {name:'Execution of Justice',
         desc:"At the start of battle, gain 5 Tenacity stacks, allowing Makoto to activate Crash Out. When Crash Out is active, increase Attack by 50% more and damage by 35%.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Tenacity 5 stack ทำให้ Makoto เปิดใช้ Crash Out ได้ เมื่อ Crash Out ใช้งานอยู่ เพิ่ม Attack 50% และดาเมจ 35%"},
-      {stage:2, name:'Hot and Cold',
+      {name:'Hot and Cold',
         desc:"When Crash Out is active, inflict random elemental ailments on foes, and for each different type of elemental ailment, increase Makoto's pierce rate by 6%.",
         descTh:"เมื่อ Crash Out ใช้งานอยู่ ทำให้ศัตรูติดสภาวะธาตุสุ่ม และต่อสภาวะธาตุต่างชนิดบนศัตรู เพิ่มอัตรา pierce ของ Makoto 6%"},
-      {stage:3, name:'Full Throttle',
+      {name:'Full Throttle',
         desc:"Increase the skill levels of Sanctioned Drift and Nuclear Fury by 3.",
         descTh:"เพิ่มระดับสกิล Sanctioned Drift และ Nuclear Fury ขึ้น 3 ระดับ"},
-      {stage:4, name:'Fist of the Phantom Star',
+      {name:'Fist of the Phantom Star',
         desc:"Highlight Enhanced: Increase maximum Frenzied Voltage stacks to 4. Inflict up to 4 elemental ailments on foes, and increase skill damage up to 4 times.",
         descTh:"Highlight เสริม: เพิ่ม Frenzied Voltage สูงสุดเป็น 4 stack ทำให้ศัตรูติดสภาวะธาตุสูงสุด 4 และเพิ่มดาเมจสกิลสูงสุด 4 ครั้ง"},
-      {stage:5, name:'Feel My Wrath',
+      {name:'Feel My Wrath',
         desc:"Increase the skill levels of President's Prowess and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล President's Prowess และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Fist of Justice!',
+      {name:'Fist of Justice!',
         desc:"When Crash Out is active, Makoto can gain an extra action. (Extra actions do not affect the duration of effects with turn limits.) Also decrease the SP cost of Thermonuclear Fury by 33%.",
         descTh:"เมื่อ Crash Out ใช้งานอยู่ Makoto สามารถได้รับแอ็คชันพิเศษ (แอ็คชันพิเศษไม่ส่งผลต่อระยะเวลาของเอฟเฟกต์ที่จำกัดด้วยเทิร์น) นอกจากนี้ลดค่า SP ของ Thermonuclear Fury 33%"},
     ],
@@ -1073,8 +1237,8 @@ const CHARACTERS = [
       {hp:3457, atk:1286, def:754, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Nuclear Finisher', rarity:5, img:'p5x/weapon/nuclear-finisher.png',
+    weapons:[
+      {name:'Nuclear Finisher', stars:5,
         hp:2061, atk:766, def:449,
         bonusStats:{edm:24},
         abilityName:'Will Extinction',
@@ -1082,21 +1246,20 @@ const CHARACTERS = [
           'Increase Nuclear damage by 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%.',
           'When attacking a foe with an elemental ailment, increase Attack by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0%.',
           'When an ally inflicts an elemental ailment, gain 1 Heat stack.',
-          'When Crash Out is active, spend all Heat stacks to increase next Nuclear skill damage by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% per stack (up to 60.0%/78.0%/78.0%/96.0%/96.0%/114.0%/114.0%).',
-        ],
+          'When Crash Out is active, spend all Heat stacks to increase next Nuclear skill damage by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% per stack (up to 60.0%/78.0%/78.0%/96.0%/96.0%/114.0%/114.0%).',],
         abilityTh:[
           'เพิ่มดาเมจนิวเคลียร์ 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%',
           'เมื่อโจมตีศัตรูที่มีสภาวะธาตุ เพิ่ม Attack 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0%',
           'เมื่อพันธมิตรทำให้ศัตรูติดสภาวะธาตุ รับ Heat 1 stack',
           'เมื่อ Crash Out ใช้งานอยู่ ใช้ Heat stack ทั้งหมดเพื่อเพิ่มดาเมจสกิลนิวเคลียร์ถัดไป 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% ต่อ stack (สูงสุด 60.0%/78.0%/78.0%/96.0%/96.0%/114.0%/114.0%)',
         ]},
-      {name:'Omega Knuckle', rarity:4, img:'p5x/weapon/omega-knuckle.png',
+      {name:'Omega Knuckle', stars:4,
         hp:1649, atk:613, def:359,
         bonusStats:{atk:24},
         abilityName:'Unquenchable Flame',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When dealing Nuclear damage, increase damage by 4.4%/5.6%/5.6%/6.8%/6.8%/8.0%/8.0% for each Tenacity stack gained.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When dealing Nuclear damage, increase damage by 4.4%/5.6%/5.6%/6.8%/6.8%/8.0%/8.0% for each Tenacity stack gained.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1105,7 +1268,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Goro Akechi', codename:'Crow', role:'Sweeper', element:'Almighty', rarity:5,
-    cards:['Courage 4pc','Resolve 2pc'], weapon:'Best ATK/CRIT Almighty weapon (Gordian Kopis)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best ATK/CRIT Almighty weapon (Gordian Kopis)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Almighty Sweeper. Alternating Bless/Curse skills maintain both Deduction (+party DMG) and Stratagem (DEF shred) simultaneously. Mastermind records ally damage into Arrow of Truth → Almighty burst via Rain of Justice.',
     realName:'Goro Akechi', persona:'Robin Hood',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -1131,25 +1294,25 @@ const CHARACTERS = [
         descTh:"เมื่อดีลดาเมจอัลไมตี้ ต่อ DEF ที่ลดลง 1% ของเป้าหมาย เพิ่มดาเมจของ Akechi 0.5% (สูงสุด 120.0%)"},
     ],
     awareness:[
-      {stage:0, name:'High School Detective',
+      {name:'High School Detective',
         desc:"Grant Mastermind to the ally with the highest Attack (priority: Sweeper/Assassin; Akechi if none). Can manually reselect each turn (1-turn cooldown). Akechi ATK +25% of Mastermind ally's ATK (up to 500/750/1000 at Lv.1/50/70). When a non-Akechi Mastermind ally deals AoE skill/Highlight/Theurgy/Resonance damage, record average damage dealt (40% if targeting 1 foe). At start of Akechi's turn: gain 1 Arrow of Truth stack (held 2 turns). When Akechi has Mastermind, Rain of Justice changes and Arrow of Truth deals Almighty damage based on Arrow of Perjury multiplier.",
         descTh:"มอบ Mastermind ให้พันธมิตรที่มี ATK สูงสุด (ให้ความสำคัญ Sweeper/Assassin; Akechi หากไม่พบ) สามารถเลือกใหม่ด้วยตนเองทุกเทิร์น (Cooldown: 1 เทิร์น) ATK ของ Akechi +25% ของ ATK พันธมิตร Mastermind (สูงสุด 500/750/1000 ที่ Lv.1/50/70) เมื่อพันธมิตร Mastermind (ไม่ใช่ Akechi) ดีลดาเมจ AoE ด้วยสกิล/Highlight/Theurgy/Resonance บันทึกดาเมจเฉลี่ย (40% หากโจมตีเป้าหมายเดียว) ต้นเทิร์น Akechi: รับ Arrow of Truth 1 stack (คงอยู่ 2 เทิร์น) เมื่อ Akechi มี Mastermind Rain of Justice เปลี่ยนรูปแบบ Arrow of Truth ดีลดาเมจอัลไมตี้ตามตัวคูณ Arrow of Perjury"},
-      {stage:1, name:'Detective Profile',
+      {name:'Detective Profile',
         desc:"At the start of battle, gain Deduction. Deduction and Stratagem durations extended to 4 turns. When both are active: Akechi CRIT Rate +16%, Akechi and Mastermind ally damage +25%.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Deduction ระยะเวลา Deduction และ Stratagem ขยายเป็น 4 เทิร์น เมื่อทั้งคู่ใช้งานอยู่: CRIT Rate ของ Akechi +16% ดาเมจของ Akechi และพันธมิตร Mastermind +25%"},
-      {stage:2, name:'Detective Advice',
+      {name:'Detective Advice',
         desc:"When dealing skill damage with a different element than the last skill used, increase Attack of Akechi and Mastermind ally by 25%, and their CRIT DMG by 30% for 1 turn.",
         descTh:"เมื่อดีลดาเมจสกิลด้วยธาตุต่างจากสกิลก่อนหน้า เพิ่ม ATK ของ Akechi และพันธมิตร Mastermind 25% และ CRIT DMG 30% 1 เทิร์น"},
-      {stage:3, name:'Detective Style',
+      {name:'Detective Style',
         desc:"Increase the skill levels of Rain of Justice and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Rain of Justice และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Detective Trick',
+      {name:'Detective Trick',
         desc:"Highlight Enhanced: Increase the damage of Arrow of Perjury by 30% more for 4 turns.",
         descTh:"Highlight เสริม: เพิ่มดาเมจของ Arrow of Perjury อีก 30% เป็นเวลา 4 เทิร์น"},
-      {stage:5, name:'Detective Logic',
+      {name:'Detective Logic',
         desc:"Increase the skill levels of Flash of Intuition and Decisive Scheme by 3.",
         descTh:"เพิ่มระดับสกิล Flash of Intuition และ Decisive Scheme ขึ้น 3 ระดับ"},
-      {stage:6, name:'Masked Detective',
+      {name:'Masked Detective',
         desc:"When using Rain of Justice, increase Arrow of Truth effect by 50%. Akechi and all allies are considered to have Mastermind (ATK increase based on ally with highest ATK). During battle, Akechi gains additional CRIT Rate equal to 40% of the Mastermind ally's CRIT Rate (up to 20%), and additional CRIT DMG equal to 40% of the highest CRIT DMG above 100% (up to 40%).",
         descTh:"เมื่อใช้ Rain of Justice เพิ่มเอฟเฟกต์ Arrow of Truth 50% Akechi และพันธมิตรทุกคนถือว่ามี Mastermind (การเพิ่ม ATK อ้างอิงพันธมิตรที่มี ATK สูงสุด) ระหว่างการต่อสู้ Akechi รับ CRIT Rate เพิ่มเติม 40% ของ CRIT Rate พันธมิตร Mastermind ที่สูงสุด (สูงสุด 20%) และ CRIT DMG เพิ่มเติม 40% ของ CRIT DMG ที่เกิน 100% สูงสุด (สูงสุด 40%)"},
     ],
@@ -1164,28 +1327,27 @@ const CHARACTERS = [
       {hp:3922, atk:1241, def:687, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Gordian Kopis', rarity:5, img:'p5x/weapon/gordian-kopis.png',
+    weapons:[
+      {name:'Gordian Kopis', stars:5,
         hp:2339, atk:740, def:410,
         bonusStats:{atk:30},
         abilityName:'Divine Blessing',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When Deduction or Stratagem are active, increase party\'s Attack by 21.0%/27.3%/27.3%/33.7%/33.7%/40.0%/40.0% for 2 turns.',
-          'When an ally with Mastermind activates a skill, Highlight, Theurgy, or Resonance, increase Akechi\'s critical damage by 15.0%/19.5%/19.5%/24.0%/24.0%/28.5%/28.5% for 2 turns. Stacks up to 2 times.',
-        ],
+          'When an ally with Mastermind activates a skill, Highlight, Theurgy, or Resonance, increase Akechi\'s critical damage by 15.0%/19.5%/19.5%/24.0%/24.0%/28.5%/28.5% for 2 turns. Stacks up to 2 times.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อ Deduction หรือ Stratagem ใช้งานอยู่ เพิ่ม Attack ปาร์ตี้ 21.0%/27.3%/27.3%/33.7%/33.7%/40.0%/40.0% 2 เทิร์น',
           'เมื่อพันธมิตรที่มี Mastermind เปิดใช้สกิล Highlight Theurgy หรือ Resonance เพิ่ม CRIT DMG ของ Akechi 15.0%/19.5%/19.5%/24.0%/24.0%/28.5%/28.5% 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
         ]},
-      {name:'Victory Beam', rarity:4, img:'p5x/weapon/victory-beam.png',
+      {name:'Victory Beam', stars:4,
         hp:1871, atk:592, def:328,
         bonusStats:{edm:10},
         abilityName:'Planar Cohesion',
         ability:[
-          'Increase Almighty damage by 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%.',
-          'When gaining Suspicion, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',
+          "Increase Almighty damage by 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%.",
+          "When gaining Suspicion, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
         ],
         abilityTh:[
           'เพิ่มดาเมจอัลไมตี้ 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%',
@@ -1194,7 +1356,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Luce', codename:'Luce', role:'Strategist', element:'Bless', rarity:4,
-    cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best ATK/ailment accuracy support weapon (Ribalta)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best ATK/ailment accuracy support weapon (Ribalta)',
     statPrio:['Ailment Accuracy%','ATK%','SPD'], note:'Bless Strategist. 4 Improv states cycle elemental ailments and grant different per-ally buffs via Improvise. Blessing stacks boost party damage. Method Acting converts ailment accuracy into ATK.',
     realName:'Shoki Ikenami', persona:'Ghino',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'wk',
@@ -1220,25 +1382,25 @@ const CHARACTERS = [
         descTh:"เพิ่ม Attack 0.72% ต่อ ailment accuracy 1% ของ Shoki (สูงสุด 72.0%)"},
     ],
     awareness:[
-      {stage:0, name:'High School Heartthrob',
+      {name:'High School Heartthrob',
         desc:"Shoki has 4 Improv states: Blazing Passion, Chilling Intensity, Electrifying Performance, and Tempestuous Drama. He can switch states at the start of each turn. When dealing skill damage, 75% chance to inflict all foes with an elemental ailment based on current state (Burn, Freeze, Shock, or Windswept).",
         descTh:"Shoki มี Improv state 4 แบบ: Blazing Passion, Chilling Intensity, Electrifying Performance และ Tempestuous Drama สามารถสลับ state ต้นเทิร์น เมื่อดีลดาเมจด้วยสกิล มีโอกาส 75% ทำให้ศัตรูทุกตัวติดสภาวะธาตุตาม state ปัจจุบัน (Burn, Freeze, Shock หรือ Windswept)"},
-      {stage:1, name:'In the Limelight',
+      {name:'In the Limelight',
         desc:"When using a skill on an ally, for each Blessing stack on the target, increase the target's damage dealt by 3% (up to 15%) for 2 turns.",
         descTh:"เมื่อใช้สกิลต่อพันธมิตร ต่อ Blessing stack บนเป้าหมาย เพิ่มดาเมจของเป้าหมาย 3% (สูงสุด 15%) 2 เทิร์น"},
-      {stage:2, name:'Flawless Performance',
+      {name:'Flawless Performance',
         desc:"When using Adlib, also grant: when the target next takes skill damage, decrease their final damage taken by 35% for 1 turn.",
         descTh:"เมื่อใช้ Adlib มอบเพิ่มเติม: เมื่อเป้าหมายรับดาเมจสกิลครั้งถัดไป ลดดาเมจสุทธิที่รับ 35% 1 เทิร์น"},
-      {stage:3, name:'Heroic Climax',
+      {name:'Heroic Climax',
         desc:"Increase the skill levels of Followspot and Adlib by 2.",
         descTh:"เพิ่มระดับสกิล Followspot และ Adlib ขึ้น 2 ระดับ"},
-      {stage:4, name:'Standing Ovation',
+      {name:'Standing Ovation',
         desc:"Highlight Enhanced: Increase the main target's Attack by 10% for 2 turns, and grant 2 more Blessing stacks to all allies.",
         descTh:"Highlight เสริม: เพิ่ม ATK เป้าหมายหลัก 10% 2 เทิร์น และมอบ Blessing 2 stack เพิ่มเติมให้พันธมิตรทุกคน"},
-      {stage:5, name:'Flowers on the Stage',
+      {name:'Flowers on the Stage',
         desc:"Increase the skill levels of Improvise and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Improvise และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Bright Future',
+      {name:'Bright Future',
         desc:"When the additional effects of Improvise are activated based on Improv state, extend the duration of the additional effects to 4 turns.",
         descTh:"เมื่อเอฟเฟกต์พิเศษของ Improvise เปิดใช้ตาม Improv state ขยายระยะเวลาเอฟเฟกต์พิเศษเป็น 4 เทิร์น"},
     ],
@@ -1253,40 +1415,39 @@ const CHARACTERS = [
       {hp:2767, atk:818, def:530, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +26.1%',
-    weapons: [
-      {name:'Ribalta', rarity:5, img:'p5x/weapon/ribalta.png',
+    weapons:[
+      {name:'Ribalta', stars:5,
         hp:2279, atk:674, def:436,
         bonusStats:{atk:30},
         abilityName:'Starstruck Throne',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When using a skill on an ally, if the target has Blessing stacks, increase damage by 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% for 2 turns.',
-          'Each time Followspot or Improvise is activated with a different Improv state, permanently increase Shoki\'s Attack by 14.0%/18.0%/18.0%/22.0%/22.0%/26.0%/26.0% (stacks up to 3). Allies besides Shoki gain 50% of this effect.',
-        ],
+          'Each time Followspot or Improvise is activated with a different Improv state, permanently increase Shoki\'s Attack by 14.0%/18.0%/18.0%/22.0%/22.0%/26.0%/26.0% (stacks up to 3). Allies besides Shoki gain 50% of this effect.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อใช้สกิลต่อพันธมิตร หากเป้าหมายมี Blessing stack เพิ่มดาเมจ 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% 2 เทิร์น',
           'ทุกครั้งที่ใช้ Followspot หรือ Improvise ด้วย Improv state ต่างกัน เพิ่ม Attack ของ Shoki ถาวร 14.0%/18.0%/18.0%/22.0%/22.0%/26.0%/26.0% (สะสมสูงสุด 3 ครั้ง) พันธมิตรอื่นนอกจาก Shoki ได้รับ 50% ของเอฟเฟกต์นี้',
         ]},
-      {name:'Mattatóre', rarity:4, img:'p5x/weapon/mattatore.png',
+      {name:'Mattatóre', stars:4,
         hp:1823, atk:539, def:349,
         bonusStats:{atk:24},
         abilityName:'Fated Enthroning',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When Shoki grants Blessing stacks, increase his Attack by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for 2 turns. Stacks up to 3 times.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Shoki grants Blessing stacks, increase his Attack by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for 2 turns. Stacks up to 3 times.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Shoki มอบ Blessing stack เพิ่ม Attack 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% และ ailment accuracy 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% 2 เทิร์น สะสมสูงสุด 3 ครั้ง',
         ]},
-      {name:'Sipario', rarity:4, img:'p5x/weapon/sipario.png',
+      {name:'Sipario', stars:4,
         hp:2497, atk:595, def:449,
         bonusStats:{atk:24},
         abilityName:'Innumerable Stages',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When using a skill on an ally, increase Shoki\'s ailment accuracy by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% and grant 60% of this effect to all allies besides Shoki for 2 turns.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When using a skill on an ally, increase Shoki\'s ailment accuracy by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% and grant 60% of this effect to all allies besides Shoki for 2 turns.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1295,7 +1456,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Turbo', codename:'Turbo', role:'Strategist', element:'Physical', rarity:5,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best SPD/Physical weapon (Nebula Pennant)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best SPD/Physical weapon (Nebula Pennant)',
     statPrio:['SPD','ATK%','HP%'], note:'Physical Strategist. SPD-scaling buffs — every 10 SPD over 100 increases buff potency. Velocity mechanic grants extra actions.',
     realName:'Mayumi Hashimoto', persona:'Pitys',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -1321,25 +1482,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Mayumi อยู่ในปาร์ตี้ เพิ่มดาเมจของปาร์ตี้ต่อศัตรูที่ถูก Down 30.0% เมื่อ Mayumi ทำศัตรู Down จะดีลดาเมจกายภาพโบนัส 60.0% ของ Attack"},
     ],
     awareness:[
-      {stage:0, name:'Racing Game Lover',
+      {name:'Racing Game Lover',
         desc:"At the start of battle, gain 90 Velocity stacks. At the end of each ally action, gain 4 Velocity stacks (+1 per 10 SPD over 100, up to 6). At the start of Mayumi's turn, if Velocity > 120, can spend Velocity for an extra action (CD: 1 turn). When total Velocity reaches 100/220/350, activate Torque Boost Lv1/2/3. Torque Boost: increase party's pierce rate by 5%/10%/15%.",
         descTh:"เริ่มต้นด้วย Velocity 90 stack ท้ายแอ็คชันพันธมิตรทุกครั้ง รับ Velocity 4 stack (+1 ต่อ SPD 10 หน่วยเกิน 100 สูงสุด 6) ต้นเทิร์น Mayumi หาก Velocity > 120 ใช้ Velocity เพื่อได้แอ็คชันพิเศษ (CD: 1 เทิร์น) เมื่อ Velocity รวมถึง 100/220/350 เปิดใช้ Torque Boost Lv1/2/3: เพิ่ม pierce rate ปาร์ตี้ 5%/10%/15%"},
-      {stage:1, name:'Tire Change',
+      {name:'Tire Change',
         desc:"At the end of each ally action, gain 10 more Velocity stacks. On an extra action using a different skill from the previous: Shockwave +50% CRIT DMG; Aero Setup +30% shield and +30% DEF; Power Setup +10% pierce rate for main target.",
         descTh:"ท้ายแอ็คชันพันธมิตรทุกครั้ง รับ Velocity เพิ่ม 10 stack บนแอ็คชันพิเศษ หากใช้สกิลต่างจากครั้งก่อน: Shockwave +50% CRIT DMG; Aero Setup เพิ่ม shield 30% และ DEF 30%; Power Setup เพิ่ม pierce rate เป้าหมายหลัก 10%"},
-      {stage:2, name:'High-Spec Engine',
+      {name:'High-Spec Engine',
         desc:"When activating Torque Boost: Lv1 → party CRIT DMG +20%; Lv2 → party damage +20%; Lv3 → party ATK +30%.",
         descTh:"เมื่อเปิดใช้ Torque Boost: Lv1 → CRIT DMG ปาร์ตี้ +20%; Lv2 → ดาเมจปาร์ตี้ +20%; Lv3 → ATK ปาร์ตี้ +30%"},
-      {stage:3, name:'Output Control',
+      {name:'Output Control',
         desc:"Increase the skill levels of Power Setup and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Power Setup และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Pole Position',
+      {name:'Pole Position',
         desc:"Highlight Enhanced: Increase party's damage by 10% more. Also, extend the duration of the Highlight's buffs by 1 turn.",
         descTh:"Highlight เสริม: เพิ่มดาเมจปาร์ตี้ 10% เพิ่มเติม และขยายระยะเวลา buff ของ Highlight อีก 1 เทิร์น"},
-      {stage:5, name:'Aerodynamic Control',
+      {name:'Aerodynamic Control',
         desc:"Increase the skill levels of Shockwave and Aero Setup by 3.",
         descTh:"เพิ่มระดับสกิล Shockwave และ Aero Setup ขึ้น 3 ระดับ"},
-      {stage:6, name:'Circuit Queen',
+      {name:'Circuit Queen',
         desc:"Start battle with 120 Velocity. On extra action, spend 40 or 80 Velocity for bonus effects on the next skill: (40) Shockwave: +20% Mayumi CRIT Rate, if target downed party ATK +25% for 2 turns; Aero Setup: +20% shield, extend shield by 1 turn; Power Setup: change buff target from main target to all allies. (80) Shockwave: party damage to downed foes +15% for 1 turn; Aero Setup: party damage taken -20% for 1 turn; Power Setup: party damage +25% for 1 turn.",
         descTh:"เริ่มต้นด้วย Velocity 120 stack บนแอ็คชันพิเศษ ใช้ Velocity 40 หรือ 80 stack เพื่อผลโบนัสบนสกิลถัดไป: (40) Shockwave: CRIT Rate +20% หากเป้าหมาย Down ปาร์ตี้ ATK +25% 2 เทิร์น; Aero Setup: shield +20% ขยายระยะ 1 เทิร์น; Power Setup: เปลี่ยนเป้า buff จากเป้าหมายหลักเป็นทุกคน (80) Shockwave: ดาเมจต่อ Down +15% 1 เทิร์น; Aero Setup: ลดดาเมจที่รับ 20% 1 เทิร์น; Power Setup: ดาเมจปาร์ตี้ +25% 1 เทิร์น"},
     ],
@@ -1354,28 +1515,27 @@ const CHARACTERS = [
       {hp:3756, atk:1164, def:687, spd:107},
     ],
     hiddenAbility: 'SPD +125.8',
-    weapons: [
-      {name:'Nebula Pennant', rarity:5, img:'p5x/weapon/nebula-pennant.png',
+    weapons:[
+      {name:'Nebula Pennant', stars:5,
         hp:2240, atk:694, def:410,
         bonusStats:{spd:15},
         abilityName:'Gravity Acceleration',
         ability:[
           'Increase Speed by 15/15/20/20/25/25/30.',
           'When Speed is over 100, for every 10 points above 100, increase Attack by 12.5%/16.2%/16.2%/20.0%/20.0%/23.8%/23.8% (max 100.0%/130.0%/130.0%/160.0%/160.0%/190.0%/190.0%).',
-          'After activating a skill, for every 40 total Velocity stacks, increase party\'s damage by 3.4%/4.4%/4.4%/5.4%/5.4%/6.4%/6.4% for 2 turns (max 17.0%/22.0%/22.0%/27.0%/27.0%/32.0%/32.0%).',
-        ],
+          'After activating a skill, for every 40 total Velocity stacks, increase party\'s damage by 3.4%/4.4%/4.4%/5.4%/5.4%/6.4%/6.4% for 2 turns (max 17.0%/22.0%/22.0%/27.0%/27.0%/32.0%/32.0%).',],
         abilityTh:[
           'เพิ่ม Speed 15/15/20/20/25/25/30',
           'เมื่อ Speed เกิน 100 ทุก 10 หน่วยเกิน 100 เพิ่ม Attack 12.5%/16.2%/16.2%/20.0%/20.0%/23.8%/23.8% (สูงสุด 100.0%/130.0%/130.0%/160.0%/160.0%/190.0%/190.0%)',
           'หลังใช้สกิล ทุก Velocity 40 stack เพิ่มดาเมจปาร์ตี้ 3.4%/4.4%/4.4%/5.4%/5.4%/6.4%/6.4% เป็นเวลา 2 เทิร์น (สูงสุด 17.0%/22.0%/22.0%/27.0%/27.0%/32.0%/32.0%)',
         ]},
-      {name:'Formula Pennant', rarity:4, img:'p5x/weapon/formula-pennant.png',
+      {name:'Formula Pennant', stars:4,
         hp:1792, atk:555, def:328,
         bonusStats:{atk:24},
         abilityName:'Wake Effect',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When activating Torque Boost, increase damage by 18.0%/23.4%/23.4%/28.8%/28.8%/34.2%/34.2%.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When activating Torque Boost, increase damage by 18.0%/23.4%/23.4%/28.8%/28.8%/34.2%/34.2%.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1407,25 +1567,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Natsukawa อยู่ในทีม เพิ่มความเสียหายที่ศัตรูที่ติด Freeze รับ 27.0% และเพิ่มความเสียหายที่ศัตรูที่ติด Icebound รับ 27.0%"},
     ],
     awareness:[
-      {stage:0, name:'Smothering Agony',
+      {name:'Smothering Agony',
         desc:"Some skills and Highlight can activate Ice Technicals. Also, when dealing Ice damage, ignore foes' Ice resistance.\nOn Natsukawa's action, gain 1 Extinguish stack. Stacks up to 4 times. When using Extinguishing Guidance, spend Extinguish stacks, and inflict 1 Damnation stack on all foes for each stack spent.\nDamnation: Increase damage taken by 6% for 2 turns. Stacks up to 4 times.",
         descTh:"สกิลบางส่วนและ Highlight สามารถเปิดใช้ Ice Technical ได้ นอกจากนี้ เมื่อสร้างความเสียหายธาตุน้ำแข็ง ให้ข้ามการต้านธาตุน้ำแข็งของศัตรู\nในเทิร์นของ Natsukawa รับ Extinguish 1 stack สะสมสูงสุด 4 ครั้ง เมื่อใช้ Extinguishing Guidance ใช้ Extinguish stack และทำให้ศัตรูทุกตัวติด Damnation 1 stack ต่อ stack ที่ใช้\nDamnation: เพิ่มความเสียหายที่รับ 6% เป็นเวลา 2 เทิร์น สะสมสูงสุด 4 ครั้ง"},
-      {stage:1, name:'Cooling Spray',
+      {name:'Cooling Spray',
         desc:"When using Sub-Zero Torrent, gain 1 more Extinguish stack. When spending Extinguish stacks, increase all foes' critical damage taken by 30% for 2 turns.",
         descTh:"เมื่อใช้ Sub-Zero Torrent รับ Extinguish เพิ่ม 1 stack เมื่อใช้ Extinguish stack เพิ่ม CRIT DMG ที่ศัตรูทุกตัวรับ 30% เป็นเวลา 2 เทิร์น"},
-      {stage:2, name:'Frozen Gateway',
+      {name:'Frozen Gateway',
         desc:"When spending Extinguish stacks, increase party's Attack by 20%, Defense by 30%, and damage dealt by 15% for 2 turns.",
         descTh:"เมื่อใช้ Extinguish stack เพิ่ม Attack ของปาร์ตี้ 20%, DEF 30% และความเสียหายที่สร้าง 15% เป็นเวลา 2 เทิร์น"},
-      {stage:3, name:'Whirlpool Cannon',
+      {name:'Whirlpool Cannon',
         desc:"Increase the skill levels of Extinguishing Guidance and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Extinguishing Guidance และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Terrifying Chill',
+      {name:'Terrifying Chill',
         desc:"Highlight Enhanced: Extend the duration of the damage taken increase effect by 1 turn. Also, when the Highlight activates Deepfreeze, the chance to inflict Icebound becomes 44%.",
         descTh:"Highlight Enhanced: ขยายระยะเวลาเอฟเฟกต์เพิ่มความเสียหายที่รับอีก 1 เทิร์น นอกจากนี้ เมื่อ Highlight เปิดใช้ Deepfreeze โอกาสทำให้ติด Icebound กลายเป็น 44%"},
-      {stage:5, name:'Wellspring of Grief',
+      {name:'Wellspring of Grief',
         desc:"Increase the skill levels of Sub-Zero Torrent and Freezing Prison by 3.",
         descTh:"เพิ่มระดับสกิล Sub-Zero Torrent และ Freezing Prison ขึ้น 3"},
-      {stage:6, name:"Firefighter's Soul",
+      {name:"Firefighter's Soul",
         desc:"If foes have Burn or Scald on Natsukawa's action, activate Sub-Zero Torrent on that foe 1 time.\nAlso, when the same foe is attacked repeatedly with Extinguishing Guidance or Requiem Guidance, increase the target's damage taken by 25% more for 1 turn.\nThe maximum number of Damnation stacks becomes 6.",
         descTh:"หากศัตรูมี Burn หรือ Scald ในเทิร์นของ Natsukawa จะเปิดใช้ Sub-Zero Torrent ต่อศัตรูนั้น 1 ครั้ง\nนอกจากนี้ เมื่อโจมตีศัตรูตัวเดิมซ้ำด้วย Extinguishing Guidance หรือ Requiem Guidance เพิ่มความเสียหายที่เป้าหมายรับ 25% เป็นเวลา 1 เทิร์น\nจำนวน stack สูงสุดของ Damnation กลายเป็น 6"},
     ],
@@ -1440,17 +1600,16 @@ const CHARACTERS = [
       {hp:3922, atk:1130, def:695, spd:104},
     ],
     hiddenAbility: 'Ailment Accur. +34.9%',
-    weapons: [
+    weapons:[
       {
-        name: 'Entropy', rarity: 5, img: 'p5x/weapon/entropy.png',
+        name: 'Entropy', stars:5,
         hp: 2339, atk: 674, def: 414,
         bonusStats: {},
         abilityName: 'Conflagrations, Dauntless',
         ability: [
           'Increase ailment accuracy by 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%.',
           'During battle, for every 66.0%/68.0%/68.0%/70.0%/70.0%/72.0%/72.0% of Natsukawa\'s ailment accuracy, increase Attack.',
-          'Each time an Ice Technical is activated, decrease the target\'s Defense by 23.3%/30.3%/30.3%/37.3%/37.3%/44.3%/44.3% more for 2 turns.',
-        ],
+          'Each time an Ice Technical is activated, decrease the target\'s Defense by 23.3%/30.3%/30.3%/37.3%/37.3%/44.3%/44.3% more for 2 turns.',],
         abilityTh: [
           'เพิ่ม ailment accuracy 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%',
           'ระหว่างการต่อสู้ ต่อ ailment accuracy ของ Natsukawa 66.0%/68.0%/68.0%/70.0%/70.0%/72.0%/72.0% เพิ่ม Attack',
@@ -1458,13 +1617,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Abyssal Thorn', rarity: 4, img: 'p5x/weapon/abyssal-thorn.png',
+        name: 'Abyssal Thorn', stars:4,
         hp: 1871, atk: 539, def: 331,
         bonusStats: {atk:12},
         abilityName: 'Waterflowing Afterglow',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'For each Extinguish stack, increase ailment accuracy by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4%.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "For each Extinguish stack, increase ailment accuracy by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4%.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1497,25 +1656,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Runa ทำให้ศัตรูติด debuff ด้วยสกิล เพิ่ม Attack ของเธอ 33.0% เป็นเวลา 1 เทิร์น เมื่อพันธมิตรสร้างความเสียหายธาตุไฟ น้ำแข็ง ไฟฟ้า ลม หรือ Resonance ให้เอฟเฟกต์เพิ่ม Attack เดียวกันนั้นแก่พวกเขาด้วย"},
     ],
     awareness:[
-      {stage:0, name:'Station Square Mascot',
+      {name:'Station Square Mascot',
         desc:"When Big Welcome or Furrocious Follow-Up are active, Runa can use Woof Woof Blaze. When using Woof Woof Blaze, 60% chance to decrease target's healing received by 30%/40%/50%, and Defense by 6%/12%/18% (effect changes at Lv. 1/50/70, respectively) for 2 turns.",
         descTh:"เมื่อ Big Welcome หรือ Furrocious Follow-Up ทำงาน Runa สามารถใช้ Woof Woof Blaze ได้ เมื่อใช้ Woof Woof Blaze โอกาส 60% ลดการรับการฟื้นฟูของเป้าหมาย 30%/40%/50% และ DEF 6%/12%/18% (เปลี่ยนที่ Lv. 1/50/70) เป็นเวลา 2 เทิร์น"},
-      {stage:1, name:'Legendary Devotion',
+      {name:'Legendary Devotion',
         desc:"After using Woof Woof Blaze and activating the effects of Big Welcome, increase target's Fire, Ice, Electric and Wind damage taken by 36% for 2 turns. When activating the effects of Furrocious Follow-Up, increase target's Resonance damage taken by 50% for 2 turns.",
         descTh:"หลังจากใช้ Woof Woof Blaze และเปิดใช้เอฟเฟกต์ Big Welcome เพิ่มความเสียหายธาตุไฟ น้ำแข็ง ไฟฟ้า ลมที่เป้าหมายรับ 36% เป็นเวลา 2 เทิร์น เมื่อเปิดใช้เอฟเฟกต์ Furrocious Follow-Up เพิ่มความเสียหาย Resonance ที่เป้าหมายรับ 50% เป็นเวลา 2 เทิร์น"},
-      {stage:2, name:'Trapped in Shibuya',
+      {name:'Trapped in Shibuya',
         desc:"When a foe has a debuff inflicted by Runa, increase target's critical damage taken by 36%, and decrease healing received by 20%.",
         descTh:"เมื่อศัตรูมี debuff ที่ Runa ทำให้ติด เพิ่ม CRIT DMG ที่เป้าหมายรับ 36% และลดการรับการฟื้นฟู 20%"},
-      {stage:3, name:'I ♥ Shichi-kun!',
+      {name:'I ♥ Shichi-kun!',
         desc:"Increase the skill levels of Woof Woof Blaze and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Woof Woof Blaze และ Thief Tactics ขึ้น 3"},
-      {stage:4, name:'Welcome to Shibuya!',
+      {name:'Welcome to Shibuya!',
         desc:"Highlight Enhanced: Increase number of Enthusiastic Fuse stacks inflicted on foes to 4, and increase the maximum number of stacks to 4.",
         descTh:"Highlight Enhanced: เพิ่มจำนวน Enthusiastic Fuse stack ที่ทำให้ศัตรูติดเป็น 4 และเพิ่มจำนวน stack สูงสุดเป็น 4"},
-      {stage:5, name:'I ♥ Shibuya!',
+      {name:'I ♥ Shibuya!',
         desc:"Increase the skill levels of Welcome Hug and Furrious Bark by 3.",
         descTh:"เพิ่มระดับสกิล Welcome Hug และ Furrious Bark ขึ้น 3"},
-      {stage:6, name:'Station Square Superstar',
+      {name:'Station Square Superstar',
         desc:"At the start of battle, gain Big Welcome and Furrocious Follow-Up for 2 turns.\nExtend the duration of debuffs from Welcome Hug, Furrious Bark, and Woof Woof Blaze by 1 turn.\nWhen Big Welcome and Furrocious Follow-Up are both active, increase Woof Woof Blaze's Fire, Ice, Electric, and Wind damage taken effect on all foes by 30%, increase the Resonance damage taken effect on the main target by 60%, and the effects granted by Big Welcome and Furrocious Follow-Up will both activate (the damage taken increase effects do not stack, and the greater effect is applied).",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Big Welcome และ Furrocious Follow-Up เป็นเวลา 2 เทิร์น\nขยายระยะเวลาของ debuff จาก Welcome Hug, Furrious Bark และ Woof Woof Blaze อีก 1 เทิร์น\nเมื่อ Big Welcome และ Furrocious Follow-Up ทำงานพร้อมกัน เพิ่มเอฟเฟกต์ความเสียหายธาตุไฟ น้ำแข็ง ไฟฟ้า ลมของ Woof Woof Blaze ต่อศัตรูทั้งหมด 30% เพิ่มเอฟเฟกต์ความเสียหาย Resonance ต่อเป้าหมายหลัก 60% และเอฟเฟกต์ทั้งจาก Big Welcome และ Furrocious Follow-Up จะเปิดใช้พร้อมกัน (เอฟเฟกต์เพิ่มความเสียหายที่รับไม่สะสม ใช้เอฟเฟกต์ที่มากกว่า)"},
     ],
@@ -1530,9 +1689,9 @@ const CHARACTERS = [
       {hp:3590, atk:1174, def:724, spd:105},
     ],
     hiddenAbility: 'Ailment Accur. +34.9%',
-    weapons: [
+    weapons:[
       {
-        name: 'Cerberus Claws', rarity: 5, img: 'p5x/weapon/cerberus-claws.png',
+        name: 'Cerberus Claws', stars:5,
         hp: 2141, atk: 700, def: 432,
         bonusStats: {},
         abilityName: 'Cerberus Claws',
@@ -1540,8 +1699,7 @@ const CHARACTERS = [
           'Increase ailment accuracy by 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%.',
           'When an ally uses a Fire, Ice, Electric or Wind skill or activates a Resonance, increase Runa\'s ailment accuracy by 23.0%/28.0%/28.0%/33.0%/33.0%/38.0%/38.0% for 2 turns. This effect does not stack.',
           'When using Woof Woof Blaze and activating the effect of Big Welcome, decrease the target\'s Defense by 16.6%/21.6%/21.6%/26.6%/26.6%/31.6%/31.6% more for 3 turns.',
-          'When the effect of Furrocious Follow-Up is activated, decrease the target\'s Defense by 33.3%/43.3%/43.3%/53.3%/53.3%/63.3%/63.3% more for 3 turns. These 2 debuffs do not stack.',
-        ],
+          'When the effect of Furrocious Follow-Up is activated, decrease the target\'s Defense by 33.3%/43.3%/43.3%/53.3%/53.3%/63.3%/63.3% more for 3 turns. These 2 debuffs do not stack.',],
         abilityTh: [
           'เพิ่ม ailment accuracy 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%',
           'เมื่อพันธมิตรใช้สกิลธาตุไฟ น้ำแข็ง ไฟฟ้า หรือลม หรือเปิดใช้ Resonance เพิ่ม ailment accuracy ของ Runa 23.0%/28.0%/28.0%/33.0%/33.0%/38.0%/38.0% เป็นเวลา 2 เทิร์น เอฟเฟกต์นี้ไม่สะสม',
@@ -1550,13 +1708,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Hunting Hound Claws', rarity: 4, img: 'p5x/weapon/hunting-hound-claws.png',
+        name: 'Hunting Hound Claws', stars:4,
         hp: 1712, atk: 560, def: 346,
         bonusStats: {atk: 12},
         abilityName: 'Hunting Hound Claws',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When Big Welcome or Furrocious Follow-Up is active, increase Runa\'s ailment accuracy by 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Big Welcome or Furrocious Follow-Up is active, increase Runa\'s ailment accuracy by 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1566,7 +1724,7 @@ const CHARACTERS = [
     ],
   },
   {name:'J&C', codename:'J&C', role:'Virtuoso', element:'Almighty', rarity:5,
-    cards:['Courage 4pc','Resolve 2pc'], weapon:'Best ATK/CRIT weapon (Warden\'s Judgement)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best ATK/CRIT weapon (Warden\'s Judgement)',
     statPrio:['ATK%','CRIT DMG%','CRIT Rate%'], note:'Dual-Persona Virtuoso. Select 2 of 4 Mask pairs before battle to define role and Facade combinations. Desire Level (scales with ATK/DMG Mult/CRIT DMG) amplifies all skill multipliers. Two Masks as One spends both Facades for powerful combo effects.',
     realName:'Justine & Caroline', persona:'Multiple Personas',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -1598,25 +1756,25 @@ const CHARACTERS = [
         descTh:"โบนัสสถิติตามคู่ Persona: M+S: Healing +21%, ดาเมจปาร์ตี้ +24% ขณะอยู่ในสนาม M+A: SPD +5, ATK ปาร์ตี้ +30% ขณะอยู่ในสนาม M+L: CRIT Rate +15% S+A: Shield +21% S+L: SPD +5, ดาเมจที่รับของศัตรู +24% ขณะอยู่ในสนาม A+L: CRIT DMG +30%"},
     ],
     awareness:[
-      {stage:0, name:'Twin Wardens',
+      {name:'Twin Wardens',
         desc:"Obtaining J&C increases Wonder's skill and Thief Tactics levels by 1 (even when not in battle). Before battle, select 2 of 4 Mask pairs; Skill 1 and Skill 2 change accordingly. Role effect by pair: M+S=Medic, M+A=Strategist, M+L=Sweeper, S+A=Guardian, S+L=Saboteur, A+L=Assassin. Skill effects scale with Desire Level. At battle start, Desire Level +25.",
         descTh:"การได้รับ J&C เพิ่มระดับสกิลและ Thief Tactics ของ Wonder 1 (แม้ไม่ได้อยู่ในทีม) ก่อนต่อสู้ เลือก Mask 2 ใน 4 คู่; สกิล 1 และ 2 เปลี่ยนตามนั้น บทบาทตามคู่: M+S=Medic, M+A=Strategist, M+L=Sweeper, S+A=Guardian, S+L=Saboteur, A+L=Assassin เอฟเฟกต์สกิลขึ้นกับ Desire Level เมื่อเริ่มต้นการต่อสู้ Desire Level +25"},
-      {stage:1, name:'Strict Tolerance',
+      {name:'Strict Tolerance',
         desc:"At battle start, gain 2 Facades based on selected Personas. At start of J&C's turn or end of their action, if they have 2 Facade types, automatically activate Two Masks as One on a random target (prioritizing the previous skill's target).",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Facade 2 ชนิดตาม Persona ที่เลือก ต้นเทิร์น J&C หรือสิ้นสุดแอ็คชัน หากมี Facade 2 ชนิด เปิดใช้ Two Masks as One อัตโนมัติต่อเป้าหมายสุ่ม (ให้ความสำคัญกับเป้าหมายจากสกิลก่อนหน้า)"},
-      {stage:2, name:'Callous Kindness',
+      {name:'Callous Kindness',
         desc:"When a Facade is gained, activate a buff based on type: Mischief & Innocence: party ATK +30% 2T. Service & Admonition: party DMG taken -20% 2T. Absurdity & Nonsense: highest-ATK Assassin/Sweeper CRIT DMG +20% 2T. Luck & Loss: J&C skill damage +10% 2T.",
         descTh:"เมื่อรับ Facade เปิดใช้ buff ตามชนิด: Mischief & Innocence: ATK ปาร์ตี้ +30% 2T Service & Admonition: ดาเมจที่รับปาร์ตี้ -20% 2T Absurdity & Nonsense: CRIT DMG Assassin/Sweeper ATK สูงสุด +20% 2T Luck & Loss: ดาเมจสกิล J&C +10% 2T"},
-      {stage:3, name:'Punitive Mercy',
+      {name:'Punitive Mercy',
         desc:"Increase the skill levels of Selected Skill 1 and Two Masks as One by 3.",
         descTh:"เพิ่มระดับสกิลที่เลือกเป็นสกิล 1 และ Two Masks as One ขึ้น 3 ระดับ"},
-      {stage:4, name:'Execution of Rebirth',
+      {name:'Execution of Rebirth',
         desc:"When J&C activate their Highlight, increase their ATK by 40%, damage dealt by 20%, and grant 50% of these effects to other allies for 2 turns.",
         descTh:"เมื่อ J&C เปิดใช้ Highlight เพิ่ม ATK 40%, ดาเมจ 20% และมอบ 50% ของเอฟเฟกต์เหล่านี้ให้พันธมิตรอื่น 2 เทิร์น"},
-      {stage:5, name:'Humane Prison',
+      {name:'Humane Prison',
         desc:"Increase the skill levels of Selected Skill 2 and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิลที่เลือกเป็นสกิล 2 และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Power to Resist Ruin',
+      {name:'Power to Resist Ruin',
         desc:"Wonder's skill and Thief Tactics levels increase by 1 more. Desire Level +20%. At battle start, gain True Desire (regained every 8 actions after spending). At start of J&C's turn, spend 1 True Desire to enhance the next Two Masks as One: activate ALL 6 Facade combos simultaneously + deal 8 hits of bonus Almighty damage to main target (40% ATK each, 1 hit per element; +1% per DL).",
         descTh:"เพิ่มระดับสกิลและ Thief Tactics ของ Wonder อีก 1 Desire Level +20% เมื่อเริ่มต้นการต่อสู้ รับ True Desire (ได้รับคืนทุก 8 แอ็คชันหลังใช้) ต้นเทิร์น J&C ใช้ True Desire 1 stack เพื่อเพิ่มพลัง Two Masks as One ถัดไป: เปิดใช้คอมโบ Facade ทั้ง 6 แบบพร้อมกัน + ดีลดาเมจโบนัสอัลไมตี้ต่อเป้าหมายหลัก 8 ครั้ง (40% ATK ต่อครั้ง 1 ครั้งต่อธาตุ; +1% ต่อ DL)"},
     ],
@@ -1631,28 +1789,27 @@ const CHARACTERS = [
       {hp:3989, atk:1108, def:739, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:"Warden's Judgement", rarity:5, img:'p5x/weapon/wardens-judgement.png',
+    weapons:[
+      {name:"Warden's Judgement", stars:5,
         hp:2378, atk:661, def:440,
         bonusStats:{atk:30},
         abilityName:"Warden's Judgement",
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When Two Masks as One is activated, increase Desire Level by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0%.',
-          'When a Facade is gained, increase party\'s critical damage and damage dealt by 13.0%/17.0%/17.0%/21.0%/21.0%/25.0%/25.0% for 2 turns. Stacks up to 2 times.',
-        ],
+          'When a Facade is gained, increase party\'s critical damage and damage dealt by 13.0%/17.0%/17.0%/21.0%/21.0%/25.0%/25.0% for 2 turns. Stacks up to 2 times.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อเปิดใช้ Two Masks as One เพิ่ม Desire Level 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0%',
           'เมื่อรับ Facade เพิ่ม CRIT DMG และดาเมจของปาร์ตี้ 13.0%/17.0%/17.0%/21.0%/21.0%/25.0%/25.0% 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
         ]},
-      {name:'Deliverance of Strength', rarity:4, img:'p5x/weapon/deliverance-of-strength.png',
+      {name:'Deliverance of Strength', stars:4,
         hp:1903, atk:529, def:352,
         bonusStats:{atk:24},
         abilityName:'Deliverance of Strength',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When Two Masks as One is activated, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0% for 2 turns.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Two Masks as One is activated, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0% for 2 turns.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1661,7 +1818,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Noir', codename:'Noir', role:'Sweeper', element:'Psychokinesis', rarity:5,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best Ailment/Psy weapon (Last Quarter)',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best Ailment/Psy weapon (Last Quarter)',
     statPrio:['ATK%','CRIT DMG%','CRIT Rate%'], note:'Psychokinesis Sweeper. Thoughtful Round stack system — each skill grants a unique round type that powers up the next ranged attack. Ailment accuracy scales ATK and CRIT DMG.',
     realName:'Haru Okumura', persona:'Milady',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'wk',
@@ -1687,25 +1844,25 @@ const CHARACTERS = [
         descTh:"รับ Area to Improve 1 stack ถาวรต่อ Thoughtful Round ที่ได้รับ ผล: 1 stack → ailment accuracy +18%, resistance +18%; 2 stack → ATK +18%, DEF +18%; 3 stack → CRIT DMG +18%"},
     ],
     awareness:[
-      {stage:0, name:'My Name Is Beauty Thief',
+      {name:'My Name Is Beauty Thief',
         desc:"Haru's ranged attacks deal Psy damage to all foes equal to 66% of Attack. Each skill grants 1 Thoughtful Round (up to 3 different types simultaneously). Skill damage increases at 1/2/3 stacks: +20%/40%/50%. At 2+ stacks: ATK +25%. After ranged attack: remove all Thoughtful Rounds.",
         descTh:"การโจมตีระยะไกลของ Haru ดีลดาเมจพลังจิตต่อศัตรูทุกตัว 66% ของ Attack แต่ละสกิลให้ Thoughtful Round 1 stack (สูงสุด 3 ประเภทต่างกัน) ดาเมจสกิลเพิ่มที่ 1/2/3 stack: +20%/40%/50% ที่ 2+ stack: ATK +25% หลังโจมตีระยะไกล: ลบ Thoughtful Round ทั้งหมด"},
-      {stage:1, name:'Expressing Emotions',
+      {name:'Expressing Emotions',
         desc:"After a new foe appears, activate Extrasensory Aim at start of Haru's next turn. Per Target Audience stack: ATK +8% (max 24%) and ranged attack CRIT Rate +6% (max 18%).",
         descTh:"หลังศัตรูใหม่ปรากฏ เปิดใช้ Extrasensory Aim ต้นเทิร์นถัดไปของ Haru ต่อ Target Audience stack: ATK +8% (สูงสุด 24%) และ CRIT Rate การโจมตีระยะไกล +6% (สูงสุด 18%)"},
-      {stage:2, name:'Unwavering Faith',
+      {name:'Unwavering Faith',
         desc:"With 1+ Target Audience stacks, decrease damage taken by 25%. With 3+ stacks, increase Psychokinesis damage by 60%.",
         descTh:"เมื่อมี Target Audience 1+ stack ลดดาเมจที่รับ 25% เมื่อมี 3+ stack เพิ่มดาเมจพลังจิต 60%"},
-      {stage:3, name:'Advancing Courage',
+      {name:'Advancing Courage',
         desc:"Increase the skill levels of Mindful Release and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Mindful Release และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Straight to the Point',
+      {name:'Straight to the Point',
         desc:"Overload Round Enhanced: When using a ranged attack, increase critical damage by 30%.",
         descTh:"Overload Round เสริม: เมื่อใช้การโจมตีระยะไกล เพิ่ม CRIT DMG 30%"},
-      {stage:5, name:'Giving It My Best Shot',
+      {name:'Giving It My Best Shot',
         desc:"Increase the skill levels of Extrasensory Aim and Precise Volley by 3.",
         descTh:"เพิ่มระดับสกิล Extrasensory Aim และ Precise Volley ขึ้น 3 ระดับ"},
-      {stage:6, name:'Heroine of Justice',
+      {name:'Heroine of Justice',
         desc:"At 2+ Thoughtful Rounds: evolve ranged attacks to Resonating Shots (also fires all Thoughtful Round effects once at 70% damage). At 2+ Thoughtful Rounds from skills: Focused Round gives target ailment resistance -27% for 2 turns; Painpoint Round gives +12% pierce rate; Spillover Round gives +20% CRIT Rate and +20% CRIT DMG.",
         descTh:"ที่ 2+ Thoughtful Round: โจมตีระยะไกลพัฒนาเป็น Resonating Shots (ยิง Thoughtful Round ทั้งหมด 1 ครั้งที่ 70%) ที่ 2+ Thoughtful Round จากสกิล: Focused Round → ailment resistance ศัตรู -27% 2 เทิร์น; Painpoint Round → pierce rate +12%; Spillover Round → CRIT Rate +20%, CRIT DMG +20%"},
     ],
@@ -1720,28 +1877,27 @@ const CHARACTERS = [
       {hp:3590, atk:1274, def:716, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +34.9%',
-    weapons: [
-      {name:'Last Quarter', rarity:5, img:'p5x/weapon/last-quarter.png',
+    weapons:[
+      {name:'Last Quarter', stars:5,
         hp:2141, atk:760, def:427,
         bonusStats:{},
         abilityName:'Last Quarter',
         ability:[
           'Increase ailment accuracy by 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%.',
           'When dealing Psy damage with Target Audience, increase Psy damage by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.',
-          'For each Thoughtful Round gained, increase Attack by 34.0%/43.0%/43.0%/52.0%/52.0%/61.0%/61.0% for 1 turn.',
-        ],
+          'For each Thoughtful Round gained, increase Attack by 34.0%/43.0%/43.0%/52.0%/52.0%/61.0%/61.0% for 1 turn.',],
         abilityTh:[
           'เพิ่ม ailment accuracy 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%',
           'เมื่อดีลดาเมจพลังจิตพร้อม Target Audience เพิ่มดาเมจพลังจิต 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%',
           'ต่อ Thoughtful Round ที่ได้รับ เพิ่ม Attack 34.0%/43.0%/43.0%/52.0%/52.0%/61.0%/61.0% เป็นเวลา 1 เทิร์น',
         ]},
-      {name:'Gilgamesh Axe', rarity:4, img:'p5x/weapon/gilgamesh-axe.png',
+      {name:'Gilgamesh Axe', stars:4,
         hp:1712, atk:608, def:341,
         bonusStats:{atk:24},
         abilityName:'Gilgamesh Axe',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'Increase Attack and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for each foe with a debuff (up to 9.9%/12.9%/12.9%/15.9%/15.9%/18.9%/18.9%).',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Increase Attack and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for each foe with a debuff (up to 9.9%/12.9%/12.9%/15.9%/15.9%/18.9%/18.9%).",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1773,25 +1929,25 @@ const CHARACTERS = [
         descTh:"ขณะ Ashiya อยู่ในการต่อสู้ เมื่อพันธมิตรใช้ ailment resistance หลีก Curse, elemental ailment หรือ spiritual ailment ให้ buff stack 1, 2 หรือ 3 stack ตามลำดับ\nต่อ buff stack เพิ่มความเสียหายที่พันธมิตรนั้นสร้าง 10.0% เป็นเวลา 2 เทิร์น สะสมสูงสุด 3 ครั้ง เมื่อครบ 3 stack เพิ่ม CRIT DMG 20.0% เป็นเวลา 2 เทิร์นด้วย"},
     ],
     awareness:[
-      {stage:0, name:'Noble Knight of Flowers',
+      {name:'Noble Knight of Flowers',
         desc:"At the start of battle, grant all allies 1 Knight's Protection shield equal to 12% of Ashiya's Defense + 120/240/360 (changes at Lv. 1/50/70).\nWhen an ally with Knight's Protection takes an attack, grant Ashiya 1 Heroism stack (up to 2 per turn). Heroism stacks up to 4 times.\nAt the start of the turn, if Heroism is at 4 stacks, spend 4 Heroism stacks to gain Garden of Promises and grant Knight's Protection again to all allies.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ ให้ Knight's Protection shield เท่ากับ 12% ของ DEF ของ Ashiya + 120/240/360 (เปลี่ยนที่ Lv. 1/50/70) แก่พันธมิตรทุกคน\nเมื่อพันธมิตรที่มี Knight's Protection ถูกโจมตี ให้ Heroism แก่ Ashiya 1 stack (สูงสุด 2 ต่อเทิร์น) สะสมสูงสุด 4 ครั้ง\nเมื่อเริ่มต้นเทิร์น หาก Heroism อยู่ที่ 4 stack ใช้ 4 stack เพื่อรับ Garden of Promises และให้ Knight's Protection แก่พันธมิตรทุกคนอีกครั้ง"},
-      {stage:1, name:'Floriography: Freesia',
+      {name:'Floriography: Freesia',
         desc:"At the start of battle, gain 3 Heroism stacks. Garden of Promises requires 3 Heroism stacks to activate.\nIncrease party's pierce rate by 20%.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Heroism 3 stack Garden of Promises ต้องใช้ Heroism 3 stack เพื่อเปิดใช้\nเพิ่ม pierce rate ของปาร์ตี้ 20%"},
-      {stage:2, name:'Floriography: Gerbera',
+      {name:'Floriography: Gerbera',
         desc:"Increase Defense by 15%, damage dealt by 15%, and critical damage by 10% for every Knight's Protection shield. This effect can stack up to 2 times.\nWhen the effect of Knight's Protection ends, restore the targeted ally's HP by 20% of remaining shield.",
         descTh:"เพิ่ม DEF 15%, ความเสียหายที่สร้าง 15% และ CRIT DMG 10% ต่อ Knight's Protection shield สะสมสูงสุด 2 ครั้ง\nเมื่อ Knight's Protection สิ้นสุด ฟื้นฟู HP ของพันธมิตรเป้าหมาย 20% ของ shield ที่เหลืออยู่"},
-      {stage:3, name:'Benevolent Iceheart Knight',
+      {name:'Benevolent Iceheart Knight',
         desc:"Increase the skill levels of Frost Vines and Winter Fortress by 3.",
         descTh:"เพิ่มระดับสกิล Frost Vines และ Winter Fortress ขึ้น 3"},
-      {stage:4, name:'Floriography: Chamomile',
+      {name:'Floriography: Chamomile',
         desc:"Highlight Enhanced: Increase shield granted to party by 30% (lasts for 2 turns).",
         descTh:"Highlight Enhanced: เพิ่ม shield ที่ให้แก่ปาร์ตี้ 30% (คงอยู่ 2 เทิร์น)"},
-      {stage:5, name:'Floriography: Gentian',
+      {name:'Floriography: Gentian',
         desc:"Increase the skill levels of Hoarfrost Vow and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Hoarfrost Vow และ Thief Tactics ขึ้น 3"},
-      {stage:6, name:'True-Hearted Friendship',
+      {name:'True-Hearted Friendship',
         desc:"When gaining Garden of Promises, gain Poise for 3 turns.\nPoise: Increase the party's critical rate by 15%.",
         descTh:"เมื่อได้รับ Garden of Promises รับ Poise 3 เทิร์น\nPoise: เพิ่ม CRIT Rate ของปาร์ตี้ 15%"},
     ],
@@ -1806,17 +1962,16 @@ const CHARACTERS = [
       {hp:3922, atk:930, def:901, spd:104},
     ],
     hiddenAbility: 'DEF% +43.6%',
-    weapons: [
+    weapons:[
       {
-        name: 'Spina Sacramenti', rarity: 5, img: 'p5x/weapon/spina-sacramenti.png',
+        name: 'Spina Sacramenti', stars:5,
         hp: 2339, atk: 555, def: 537,
         bonusStats: {def:45},
         abilityName: 'Spina Sacramenti',
         ability: [
           "Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%.",
           "Increase Knight's Protection shield by 30.0%/40.0%/40.0%/50.0%/50.0%/60.0%/60.0%.",
-          "Also increase the target's damage dealt by 8.0%/10.5%/10.5%/13.0%/13.0%/15.5%/15.5% for each Knight's Protection shield granted. This effect can stack up to 2 times.",
-        ],
+          "Also increase the target's damage dealt by 8.0%/10.5%/10.5%/13.0%/13.0%/15.5%/15.5% for each Knight's Protection shield granted. This effect can stack up to 2 times.",],
         abilityTh: [
           'เพิ่ม DEF 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%',
           "เพิ่ม Knight's Protection shield 30.0%/40.0%/40.0%/50.0%/50.0%/60.0%/60.0%",
@@ -1824,12 +1979,12 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Spina Caritatis', rarity: 4, img: 'p5x/weapon/spina-caritatis.png',
+        name: 'Spina Caritatis', stars:4,
         hp: 1871, atk: 444, def: 430,
         bonusStats: {},
         abilityName: 'Spina Caritatis',
-        ability: [
-          'Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.',
+        ability:[
+          "Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.",
           "Also increase shield granted by Ashiya to allies with less than 60% HP by 13.7%/17.8%/17.8%/21.9%/21.9%/26.0%/26.0%.",
         ],
         abilityTh: [
@@ -1840,7 +1995,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Messa', codename:'Messa', role:'Assassin', element:'Physical', rarity:5,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best Physical/Bleed weapon (Bloodletter)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Physical/Bleed weapon (Bloodletter)',
     statPrio:['ATK%','Physical DMG%','CRIT Rate%'], note:'Physical Assassin. Dual-mode Bleed stacker — Doctor mode builds stacks, Ripper mode detonates with Rending damage.',
     realName:'Kira Kitazato', persona:'Harpyia',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -1866,25 +2021,25 @@ const CHARACTERS = [
         descTh:"Doctor mode: เพิ่ม ailment accuracy 36% Ripper mode: เพิ่ม pierce rate 21%"},
     ],
     awareness:[
-      {stage:0, name:'Mortal Responsibility',
+      {name:'Mortal Responsibility',
         desc:"Kitazato has 2 modes: Doctor and Ripper. Starts in Doctor mode.\nDoctor: 70% chance to inflict 1 Bleed per skill hit. Defeated foe's Bleed passes to highest HP foe.\nRipper: 1 Rending stack per 3 Bleed stacks when using a skill.\nBleed: Almighty 1% max HP + Physical 4% ATK per turn, lasts 4 turns, stacks up to 10.\nRending: Physical damage based on ATK and Nightfall's skill level (no crit or Down Point damage).",
         descTh:"Kitazato มี 2 mode: Doctor และ Ripper เริ่มใน Doctor mode\nDoctor: โอกาส 70% ทำให้ติด Bleed 1 stack ต่อการโจมตีด้วยสกิล ศัตรูที่ถูกกำจัดจะส่ง Bleed ต่อให้ศัตรูที่ HP สูงสุด\nRipper: ทุก Bleed 3 stack → Rending 1 stack เมื่อใช้สกิล\nBleed: ดาเมจ Almighty 1% HP สูงสุด + กายภาพ 4% ATK ต่อเทิร์น ติด 4 เทิร์น สะสมสูงสุด 10 stack\nRending: ดาเมจกายภาพตาม ATK และระดับสกิล Nightfall (ไม่ CRIT และไม่ลด Down Point)"},
-      {stage:1, name:'Abdominal Incisions',
+      {name:'Abdominal Incisions',
         desc:"Doctor mode: first skill damage to each foe inflicts 5 more Bleed stacks. Ripper mode: skill damage scales with debuff count (max +80% at 10+ debuffs). Bleed's Almighty damage ×1.5.",
         descTh:"Doctor mode: การดาเมจสกิลครั้งแรกต่อศัตรูแต่ละตัว ทำให้ติด Bleed เพิ่ม 5 stack Ripper mode: ดาเมจสกิลเพิ่มตามจำนวน debuff (สูงสุด +80% ที่ 10+ debuff) ดาเมจ Almighty จาก Bleed ×1.5"},
-      {stage:2, name:'Forbidden Transfusion',
+      {name:'Forbidden Transfusion',
         desc:"Increase Rending's Attack multiplier by 35% of Kitazato's Attack. Restore HP by 2% of Rending damage dealt (up to Lv×15+300 per turn).",
         descTh:"เพิ่มตัวคูณ Attack ของ Rending ด้วย 35% ของ ATK Kitazato ฟื้นฟู HP 2% ของดาเมจ Rending ที่ดีล (สูงสุด Lv×15+300 ต่อเทิร์น)"},
-      {stage:3, name:'Master of the Scalpel',
+      {name:'Master of the Scalpel',
         desc:"Increase the skill levels of Moonlit Scalpel/Midnight Surgery and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Moonlit Scalpel/Midnight Surgery และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Bloody Bacchanal',
+      {name:'Bloody Bacchanal',
         desc:"Highlight Enhanced: Increase Highlight damage by 8% for each Bleed stack inflicted on the target.",
         descTh:"Highlight เสริม: เพิ่มดาเมจ Highlight 8% ต่อ Bleed stack ที่ทำให้ศัตรูติด"},
-      {stage:5, name:'Razor-Sharp Focus',
+      {name:'Razor-Sharp Focus',
         desc:"Increase the skill levels of Crimson Operation/Pathology and Nightfall by 3.",
         descTh:"เพิ่มระดับสกิล Crimson Operation/Pathology และ Nightfall ขึ้น 3 ระดับ"},
-      {stage:6, name:'Great Doctor',
+      {name:'Great Doctor',
         desc:"Increase max Bleed stacks to 13. Each foe always starts with 3 Bleed stacks. When using Midnight Surgery (Ripper mode), do not remove target's Bleed stacks. Rending evolves to Killing Frenzy: +100% damage, deals 50% damage to all other foes, and activates with all skills.",
         descTh:"เพิ่ม Bleed stack สูงสุดเป็น 13 ศัตรูทุกตัวเริ่มด้วย Bleed 3 stack เมื่อใช้ Midnight Surgery ใน Ripper mode ไม่ลบ Bleed ของเป้าหมาย Rending พัฒนาเป็น Killing Frenzy: +100% ดาเมจ ดีล 50% ต่อศัตรูอื่นทุกตัว และเปิดใช้ได้จากทุกสกิล"},
     ],
@@ -1899,8 +2054,8 @@ const CHARACTERS = [
       {hp:4122, atk:1252, def:606, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Bloodletter', rarity:5, img:'p5x/weapon/bloodletter.png',
+    weapons:[
+      {name:'Bloodletter', stars:5,
         hp:2458, atk:747, def:361,
         bonusStats:{atk:30},
         abilityName:'Bloodletter',
@@ -1908,21 +2063,20 @@ const CHARACTERS = [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'Increase ailment accuracy by 15%.',
           'Increase pierce rate of Rending damage by 25.0%/32.5%/32.5%/40.0%/40.0%/47.5%/47.5%.',
-          'Increase damage dealt to foes inflicted with Bleed by 25.0%/32.5%/32.5%/40.0%/40.0%/47.5%/47.5%.',
-        ],
+          'Increase damage dealt to foes inflicted with Bleed by 25.0%/32.5%/32.5%/40.0%/40.0%/47.5%/47.5%.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เพิ่ม ailment accuracy 15%',
           'เพิ่ม pierce rate ของดาเมจ Rending 25.0%/32.5%/32.5%/40.0%/40.0%/47.5%/47.5%',
           'เพิ่มดาเมจต่อศัตรูที่ติด Bleed 25.0%/32.5%/32.5%/40.0%/40.0%/47.5%/47.5%',
         ]},
-      {name:'Undying Embers', rarity:4, img:'p5x/weapon/undying-embers.png',
+      {name:'Undying Embers', stars:4,
         hp:1966, atk:597, def:289,
         bonusStats:{atk:24},
         abilityName:'Undying Embers',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'Whenever inflicting Bleed on foes, permanently increase Attack by 1.8%/2.4%/2.4%/3.0%/3.0%/3.6%/3.6%. Stacks up to 10 times.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Whenever inflicting Bleed on foes, permanently increase Attack by 1.8%/2.4%/2.4%/3.0%/3.0%/3.6%/3.6%. Stacks up to 10 times.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -1931,7 +2085,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Phoebe', codename:'Phoebe', role:'Elucidator', element:'-', rarity:5,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best ATK support weapon',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon',
     statPrio:['ATK%','SPD','HP%'], note:"Elucidator. Cocktail system: allies generate Mixers → Cocktails (Tailor-Made/Standard/Basic by attribute match). Cocktails amplify skill effects. Stat Buff shares 20% of Phantom Thief's stats. Invigorating Blend grants attribute DMG buff + CRIT DMG at 2+ Standard Cocktails.",
     realName:'Yumi Shiina', persona:'Urania',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -1993,14 +2147,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Moonlit Feather', stars:5, hp:2279, atk:733, def:401, bonusStats:{atk:30},
         abilityName:'Wine & Revelry',
-        ability:"Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. For each Cocktail spent, randomly grant 1 of the following effects to the party: Increase Attack by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 turns), Increase damage by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 turns), Increase critical rate by 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 turns). These effects do not stack. If Tailor-Made multiply effect by 120%; Standard by 100%; Basic by 50%. For every 2 Cocktails gained, reduce Yumi's cooldown time by 1 turn.",
+        ability:["Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. For each Cocktail spent, randomly grant 1 of the following effects to the party: Increase Attack by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 turns), Increase damage by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 turns), Increase critical rate by 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 turns). These effects do not stack. If Tailor-Made multiply effect by 120%; Standard by 100%; Basic by 50%. For every 2 Cocktails gained, reduce Yumi's cooldown time by 1 turn."],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
-          'ต่อ Cocktail ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 เทิร์น), เพิ่มดาเมจ 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 เทิร์น), เพิ่ม CRIT Rate 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 เทิร์น) เอฟเฟกต์เหล่านี้ไม่สะสม Tailor-Made ×120%, Standard ×100%, Basic ×50% ต่อ Cocktail ที่ได้รับทุก 2 stack ลดเวลาคูลดาวน์ของ Yumi 1 เทิร์น',
-        ]},
+          'ต่อ Cocktail ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 เทิร์น), เพิ่มดาเมจ 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 เทิร์น), เพิ่ม CRIT Rate 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 เทิร์น) เอฟเฟกต์เหล่านี้ไม่สะสม Tailor-Made ×120%, Standard ×100%, Basic ×50% ต่อ Cocktail ที่ได้รับทุก 2 stack ลดเวลาคูลดาวน์ของ Yumi 1 เทิร์น',]},
       {name:'Starrynight Soothsayer', stars:4, hp:1823, atk:587, def:320, bonusStats:{atk:24},
         abilityName:'Seductive Kiss',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a skill, increase main target's damage by 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% for 2 turns. If this skill spends Cocktails, increase damage by 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% more.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a skill, increase main target's damage by 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% for 2 turns. If this skill spends Cocktails, increase damage by 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% more."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้สกิล เพิ่มดาเมจของเป้าหมายหลัก 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% 2 เทิร์น หากสกิลนี้ใช้ Cocktail เพิ่มดาเมจ 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% เพิ่มเติม',
@@ -2008,7 +2161,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Marian', codename:'Marian', role:'Medic', element:'Bless', rarity:5,
-    cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best HP% Bless healing weapon (Angel Heart)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best HP% Bless healing weapon (Angel Heart)',
     statPrio:['HP%','Healing Effect%','DEF%'], note:'Bless Medic. All skills scale with Minami\'s max HP. Diagnosis stacks (up to 2) amplify Compassionate Cure\'s healing targets and grant party max HP buffs. Guardian of Life revives 1 ally once per battle.',
     realName:'Minami Miyashita', persona:'Thalia',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'wk',
@@ -2034,25 +2187,25 @@ const CHARACTERS = [
         descTh:"เมื่อเริ่มต้นการต่อสู้ เพิ่ม HP สูงสุดของปาร์ตี้ 10.0% ของ HP สูงสุด Minami (สูงสุด 1500)"},
     ],
     awareness:[
-      {stage:0, name:"Nurse's Oath",
+      {name:"Nurse's Oath",
         desc:"At the start of battle, gain 1 Diagnosis stack. On Minami's action, if any ally's HP is below 70%, gain 1 Diagnosis stack (max 2 stacks).",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Diagnosis 1 stack ในแอ็คชันของ Minami หาก HP ของพันธมิตรใดต่ำกว่า 70% รับ Diagnosis 1 stack (สูงสุด 2 stack)"},
-      {stage:1, name:'Angel in White',
+      {name:'Angel in White',
         desc:"When healing allies above max HP, increase the target's pierce rate by 20% for 2 turns.",
         descTh:"เมื่อรักษาพันธมิตรเกิน HP สูงสุด เพิ่ม pierce rate ของเป้าหมาย 20% 2 เทิร์น"},
-      {stage:2, name:'Clinical Care',
+      {name:'Clinical Care',
         desc:"When using Healing Grace, heal 1 more ally. If the target's HP is below 50%, increase healing effect by 20%.",
         descTh:"เมื่อใช้ Healing Grace รักษาพันธมิตรเพิ่มอีก 1 คน หาก HP เป้าหมายต่ำกว่า 50% เพิ่มผลการรักษา 20%"},
-      {stage:3, name:'Practical Care',
+      {name:'Practical Care',
         desc:"Increase the skill levels of Healing Grace and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Healing Grace และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Nursing Practice',
+      {name:'Nursing Practice',
         desc:"Highlight Enhanced: The duration of the max HP increase and healing effect at end of action are extended by 1 turn.",
         descTh:"Highlight เสริม: ขยายระยะเวลาการเพิ่ม HP สูงสุดและการรักษาเมื่อสิ้นสุดแอ็คชันออกไป 1 เทิร์น"},
-      {stage:5, name:'Undying Devotion',
+      {name:'Undying Devotion',
         desc:"Increase the skill levels of Nurse's Light and Compassionate Cure by 3.",
         descTh:"เพิ่มระดับสกิล Nurse's Light และ Compassionate Cure ขึ้น 3 ระดับ"},
-      {stage:6, name:'Guardian of Life',
+      {name:'Guardian of Life',
         desc:"Restore a KO'd ally's HP equal to 40% of Minami's max HP + 1200. This effect can be activated once per battle.",
         descTh:"ฟื้นฟู HP ของพันธมิตรที่ KO เท่ากับ 40% ของ HP สูงสุด Minami + 1200 เอฟเฟกต์นี้เปิดใช้ได้ครั้งเดียวต่อการต่อสู้"},
     ],
@@ -2067,29 +2220,28 @@ const CHARACTERS = [
       {hp:4587, atk:1008, def:746, spd:0},
     ],
     hiddenAbility: 'Healing Effect +20.9%',
-    weapons: [
-      {name:'Angel Heart', rarity:5, img:'p5x/weapon/angel-heart.png',
+    weapons:[
+      {name:'Angel Heart', stars:5,
         hp:2735, atk:601, def:445,
         bonusStats:{hp:30},
         abilityName:'Angel Heart',
         ability:[
           'Increase max HP by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When Minami has Diagnosis, increase healing effect by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0%.',
-          "When spending Diagnosis, increase party's damage by 25.0%/33.0%/33.0%/41.0%/41.0%/49.0%/49.0% for 1 turn.",
-        ],
+          "When spending Diagnosis, increase party's damage by 25.0%/33.0%/33.0%/41.0%/41.0%/49.0%/49.0% for 1 turn.",],
         abilityTh:[
           'เพิ่ม HP สูงสุด 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อ Minami มี Diagnosis เพิ่มผลการรักษา 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0%',
           'เมื่อใช้ Diagnosis เพิ่มดาเมจของปาร์ตี้ 25.0%/33.0%/33.0%/41.0%/41.0%/49.0%/49.0% 1 เทิร์น',
         ]},
-      {name:'Hymn of Life', rarity:4, img:'p5x/weapon/hymn-of-life.png',
+      {name:'Hymn of Life', stars:4,
         hp:2188, atk:481, def:356,
         bonusStats:{},
         abilityName:'Hymn of Life',
         ability:[
-          'Increase healing effect by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.',
-          'Increase continuous healing effect by 28.5%/37.0%/37.0%/45.5%/45.5%/54.0%/54.0%.',
-          'After using a healing skill, 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% chance to grant Blessing to the main target.',
+          "Increase healing effect by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.",
+          "Increase continuous healing effect by 28.5%/37.0%/37.0%/45.5%/45.5%/54.0%/54.0%.",
+          "After using a healing skill, 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% chance to grant Blessing to the main target.",
         ],
         abilityTh:[
           'เพิ่มผลการรักษา 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%',
@@ -2098,7 +2250,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Resolve 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
+  {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     realName:'Makoto Yuki', affiliation:'S.E.E.S.', persona:'Orpheus',
     weakRes:{ Fire:'res', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'wk', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -2128,25 +2280,25 @@ const CHARACTERS = [
         descTh:"เมื่อได้รับเอฟเฟกต์ buff, การฟื้นฟู หรือ shield จากพันธมิตร (ยกเว้นเอฟเฟกต์ที่มีผลต่อศัตรูด้วย) เพิ่ม CRIT DMG 7.2% เป็นเวลา 2 เทิร์น สะสมได้สูงสุด 3 ครั้ง"},
     ],
     awareness:[
-      {stage:0, name:'Pathfinder',
+      {name:'Pathfinder',
         desc:'Makoto has 2 Theurgy: Cadenza and Ardhanari. At the start of battle, if Makoto\'s Theurgy Gauge is below 35, fill up to 35.\nWhen receiving buff, healing, or shield skill effects from an ally (excluding effects that also target foes), gain 1 Moon Phase stack (up to 1 stack per turn). This effect lasts for 2 turns, and stacks up to 4 times.\nWith Moon Phase, increase pierce rate by 4%/8%/12% (effect changes at Lv. 1/50/70, respectively).',
         descTh:'Makoto มี Theurgy 2 แบบ: Cadenza และ Ardhanari เมื่อเริ่มต้นการต่อสู้ หาก Theurgy Gauge ของ Makoto ต่ำกว่า 35 ให้เติมจนถึง 35\nเมื่อได้รับเอฟเฟกต์ buff, การฟื้นฟู หรือ shield จากพันธมิตร (ยกเว้นเอฟเฟกต์ที่มีผลต่อศัตรูด้วย) รับ Moon Phase 1 stack (สูงสุด 1 stack ต่อเทิร์น) เอฟเฟกต์นี้คงอยู่ 2 เทิร์น สะสมสูงสุด 4 ครั้ง\nเมื่อมี Moon Phase เพิ่มอัตรา pierce 4%/8%/12% (เปลี่ยนที่ Lv. 1/50/70)'},
-      {stage:1, name:'Result of Coincidence',
+      {name:'Result of Coincidence',
         desc:'Additional effects are added to the following skills.\nMelody of Flames: This skill deals 1 more hit of Fire damage.\nNocturne of Battle: Increase party\'s pierce rate by 10% for 2 turns.\nScarlet Hades: When this skill is activated with 4 Moon Phase stacks, increase Makoto\'s critical rate by 16%.',
         descTh:'เพิ่มเอฟเฟกต์ให้กับสกิลต่อไปนี้\nMelody of Flames: สกิลนี้โจมตีธาตุไฟเพิ่มอีก 1 ครั้ง\nNocturne of Battle: เพิ่มอัตรา pierce ของปาร์ตี้ 10% เป็นเวลา 2 เทิร์น\nScarlet Hades: เมื่อใช้สกิลนี้ด้วย Moon Phase stack 4 อัน เพิ่ม CRIT Rate ของ Makoto 16%'},
-      {stage:2, name:'Immovable Soul',
+      {name:'Immovable Soul',
         desc:'When Makoto has 4 Moon Phase stacks on his action, automatically activate Nocturne of Battle 1 time.\nCooldown time: 1 turn.',
         descTh:'เมื่อ Makoto มี Moon Phase stack 4 อันในเทิร์นของตน จะเปิดใช้ Nocturne of Battle อัตโนมัติ 1 ครั้ง\nCooldown: 1 เทิร์น'},
-      {stage:3, name:'Under the Full Moon',
+      {name:'Under the Full Moon',
         desc:'Increase the skill levels of Scarlet Hades and Combat Tactics by 3.',
         descTh:'เพิ่มระดับสกิล Scarlet Hades และ Combat Tactics ขึ้น 3'},
-      {stage:4, name:'Thorny Path',
+      {name:'Thorny Path',
         desc:'Additional effects are added to the following Theurgy.\nCadenza: Increase party\'s damage by 10% more for 2 turns.\nArdhanari: This skill deals 2 more hits of Fire damage.',
         descTh:'เพิ่มเอฟเฟกต์ให้กับ Theurgy ต่อไปนี้\nCadenza: เพิ่มความเสียหายของปาร์ตี้ 10% เพิ่มเติมเป็นเวลา 2 เทิร์น\nArdhanari: สกิลนี้โจมตีธาตุไฟเพิ่มอีก 2 ครั้ง'},
-      {stage:5, name:'Soul Flames',
+      {name:'Soul Flames',
         desc:'Increase the skill levels of Melody of Flames and Nocturne of Battle by 3.',
         descTh:'เพิ่มระดับสกิล Melody of Flames และ Nocturne of Battle ขึ้น 3'},
-      {stage:6, name:'Burn My Dread',
+      {name:'Burn My Dread',
         desc:'When Makoto activates a Theurgy, the effects of the other Theurgy are activated at the same time.\nIncrease skill damage dealt by spending Full Moon stacks with Scarlet Hades by 35%.\nThe first time that Makoto takes fatal damage, he enters a special near-death state and survives with 1 HP, and will be KO\'d at the end of the turn. If Makoto\'s HP is restored above 25%, this state is removed.',
         descTh:'เมื่อ Makoto เปิดใช้ Theurgy เอฟเฟกต์ของ Theurgy อีกตัวจะถูกเปิดใช้พร้อมกัน\nเพิ่มความเสียหายจากการใช้ Full Moon stack ด้วย Scarlet Hades 35%\nครั้งแรกที่ Makoto โดนโจมตีถึงตาย จะเข้าสู่สภาวะใกล้ตายพิเศษและรอดด้วย HP 1 และจะถูก KO เมื่อสิ้นสุดเทิร์น หาก HP ของ Makoto ถูกฟื้นฟูเกิน 25% สภาวะนี้จะถูกยกเลิก'},
     ],
@@ -2161,17 +2313,16 @@ const CHARACTERS = [
       {hp:3623, atk:1319, def:657, spd:98},
     ],
     hiddenAbility: 'ATK +29%',
-    weapons: [
+    weapons:[
       {
-        name: 'Deus Xiphos', rarity: 5, img: 'p5x/weapon/deus-xiphos.png',
+        name: 'Deus Xiphos', stars:5,
         hp: 2160, atk: 786, def: 392,
         bonusStats: {atk:30},
         abilityName: 'Hour of Reversal',
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'For every 3 Moon Phase or Full Moon stacks gained, increase critical rate by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0% for 2 turns.',
-          'When Makoto deals 4 or more hits of damage with 1 skill or Theurgy, increase that skill or Theurgy\'s damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',
-        ],
+          'When Makoto deals 4 or more hits of damage with 1 skill or Theurgy, increase that skill or Theurgy\'s damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',],
         abilityTh: [
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'ทุกๆ การสะสม Moon Phase หรือ Full Moon 3 stack เพิ่ม CRIT Rate 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0% เป็นเวลา 2 เทิร์น',
@@ -2179,13 +2330,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Translucent Blade', rarity: 4, img: 'p5x/weapon/translucent-blade.png',
+        name: 'Translucent Blade', stars:4,
         hp: 1729, atk: 629, def: 314,
         bonusStats: {atk:12},
         abilityName: 'Silent Resolve',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When Makoto grants a buff to an ally, increase party\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2%, and also increase Makoto\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% more for 2 turns.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Makoto grants a buff to an ally, increase party\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2%, and also increase Makoto\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% more for 2 turns.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -2221,25 +2372,25 @@ const CHARACTERS = [
         descTh:"ระหว่างการต่อสู้ เพิ่ม Attack ของ Tropical Motoha 24 จุดต่อ HP สูงสุด 100 จุดที่เกิน 8000 (สูงสุด 1920)"},
     ],
     awareness:[
-      {stage:0, name:'Summer Starts Here!',
+      {name:'Summer Starts Here!',
         desc:"When receiving healing, gain +25% damage for 2 turns. After receiving healing 5 times total, gain Tropical Heart (Blessing healing counts once per turn). While Tropical Heart is active, Surf 'n' Shine can be used with no cooldown by spending Tropical Heart; afterwards there is a 1-turn lockout before Tropical Heart can be gained again. HP-spending skills will not KO Tropical Motoha.",
         descTh:"เมื่อรับการรักษา เพิ่มดาเมจ +25% 2 เทิร์น หลังรับการรักษารวม 5 ครั้ง รับ Tropical Heart (การรักษาจาก Blessing นับครั้งเดียวต่อเทิร์น) ขณะมี Tropical Heart สามารถใช้ Surf 'n' Shine โดยไม่มี cooldown โดยใช้ Tropical Heart หลังจากนั้นต้องรอ 1 เทิร์นก่อนรับ Tropical Heart ใหม่ สกิลที่ใช้ HP จะไม่ทำให้ Tropical Motoha ถูก KO"},
-      {stage:1, name:'Exciting Summer!',
+      {name:'Exciting Summer!',
         desc:"When Summer Hype is active, increase CRIT Rate by 10% and CRIT DMG by 25%. On Tropical Motoha's action, increase Tropical Heart's healing counter by 1 and gain 1 Blessing.",
         descTh:"เมื่อ Summer Hype ใช้งานอยู่ เพิ่ม CRIT Rate 10% และ CRIT DMG 25% ในแอ็คชันของ Tropical Motoha เพิ่ม healing counter ของ Tropical Heart 1 และรับ 1 Blessing"},
-      {stage:2, name:'Stay Cool!',
+      {name:'Stay Cool!',
         desc:"When Tropical Motoha receives healing, increase CRIT DMG by 20% for 2 turns (stacks up to 2 times). During battle, increase her max HP by 1200.",
         descTh:"เมื่อ Tropical Motoha รับการรักษา เพิ่ม CRIT DMG 20% 2 เทิร์น (สะสมสูงสุด 2 ครั้ง) ระหว่างการต่อสู้ เพิ่ม HP สูงสุด 1200"},
-      {stage:3, name:"Catch the Wave!",
+      {name:"Catch the Wave!",
         desc:"Increase the skill levels of Summer 'Splosion and Surf 'n' Shine by 3.",
         descTh:"เพิ่มระดับสกิล Summer 'Splosion และ Surf 'n' Shine ขึ้น 3 ระดับ"},
-      {stage:4, name:'The Fun Never Ends!',
+      {name:'The Fun Never Ends!',
         desc:"Highlight Enhanced: After using a Highlight, increase the next Surf 'n' Shine's damage by 80%.",
         descTh:"Highlight เสริม: หลังใช้ Highlight เพิ่มดาเมจ Surf 'n' Shine ถัดไป 80%"},
-      {stage:5, name:'Another Perfect Day!',
+      {name:'Another Perfect Day!',
         desc:"Increase the skill levels of Blue Sunrise and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Blue Sunrise และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Everlasting Summer!',
+      {name:'Everlasting Summer!',
         desc:"Tropical Heart is not spent after using Surf 'n' Shine. Summer Hype enhances to Summer Blowout: Blue Sunrise bonus damage activates 3 times, Summer 'Splosion restores 20% more max HP, and Surf 'n' Shine damage multiplier +50%.",
         descTh:"Tropical Heart ไม่ถูกใช้หลังใช้ Surf 'n' Shine Summer Hype เพิ่มพลังเป็น Summer Blowout: ดาเมจโบนัสของ Blue Sunrise เปิดใช้ 3 ครั้ง Summer 'Splosion ฟื้นฟู HP สูงสุดเพิ่มอีก 20% และตัวคูณดาเมจของ Surf 'n' Shine +50%"},
     ],
@@ -2254,8 +2405,8 @@ const CHARACTERS = [
       {hp:4388, atk:1185, def:606, spd:0},
     ],
     hiddenAbility: 'HP% +29%',
-    weapons: [
-      {name:'Colorful Coast', rarity:5, img:'p5x/weapon/colorful-coast.png',
+    weapons:[
+      {name:'Colorful Coast', stars:5,
         hp:2616, atk:707, def:361,
         bonusStats:{edm:24},
         abilityName:'Colorful Coast',
@@ -2263,21 +2414,20 @@ const CHARACTERS = [
           'Increase Bless damage by 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%.',
           'When Summer Hype is active, increase critical damage by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%.',
           "When using Surf 'n' Shine while Summer Hype is active, increase that skill's damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0% and gain 1 Sunlight stack.",
-          'When using a skill or Highlight, spend 1 Sunlight stack to increase the skill\'s damage by the same amount. Damage increases from Summer Hype and Sunlight will not stack.',
-        ],
+          'When using a skill or Highlight, spend 1 Sunlight stack to increase the skill\'s damage by the same amount. Damage increases from Summer Hype and Sunlight will not stack.',],
         abilityTh:[
           'เพิ่มดาเมจแสง 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%',
           'เมื่อ Summer Hype ใช้งานอยู่ เพิ่ม CRIT DMG 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%',
           "เมื่อใช้ Surf 'n' Shine ขณะ Summer Hype ใช้งานอยู่ เพิ่มดาเมจสกิลนั้น 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0% และรับ Sunlight 1 stack",
           'เมื่อใช้สกิลหรือ Highlight ใช้ Sunlight 1 stack เพิ่มดาเมจสกิลนั้นในจำนวนเดียวกัน การเพิ่มดาเมจจาก Summer Hype และ Sunlight ไม่สะสมกัน',
         ]},
-      {name:'Bubble Puff Star', rarity:4, img:'p5x/weapon/bubble-puff-star.png',
+      {name:'Bubble Puff Star', stars:4,
         hp:2093, atk:566, def:289,
         bonusStats:{atk:24},
         abilityName:'Bubble Puff Star',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When receiving healing while Summer Hype is active, increase damage by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 2 turns. Stacks up to 2 times.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When receiving healing while Summer Hype is active, increase damage by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 2 turns. Stacks up to 2 times.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -2309,25 +2459,25 @@ const CHARACTERS = [
         descTh:"เมื่อเริ่มต้นการต่อสู้ เพิ่ม Attack 42.0% เป็นเวลา 2 เทิร์น เมื่อ Firecracker Yaoling หรือพันธมิตรเปิดใช้ Technical ระยะเวลาของเอฟเฟกต์นี้จะถูกรีเซ็ต และเอฟเฟกต์เพิ่มจะกลายเป็น 51.0%"},
     ],
     awareness:[
-      {stage:0, name:"New Year's Blast",
+      {name:"New Year's Blast",
         desc:"Firecracker Yaoling's melee attack can evolve to Yanhua Slash. When evolved, deal heavy Fire damage to targets, and can activate Fire Technical. Also, when Fireburn is activated, the damage increase effect becomes 20%.",
         descTh:"melee attack ของ Firecracker Yaoling สามารถพัฒนาเป็น Yanhua Slash ได้ เมื่อพัฒนาแล้ว สร้างความเสียหายธาตุไฟสูงให้เป้าหมาย และสามารถเปิดใช้ Fire Technical ได้ นอกจากนี้ เมื่อ Fireburn ถูกเปิดใช้ เอฟเฟกต์เพิ่มความเสียหายจะกลายเป็น 20%"},
-      {stage:1, name:"Lunar Lanterns",
+      {name:"Lunar Lanterns",
         desc:"Reduce the first cooldown time for Orange Blossom Blade by 1 turn. Also, extend the duration of Flaming Sword Dance by 1 turn, and Yanhua Slash can be activated up to 2 times. Also, when Flaming Sword Dance is active, enhance Scarlet Surprise and Firework Finale.\nScarlet Surprise: When enhanced, increase the critical damage of Yanhua Slash by 40% more.\nFirework Finale: When enhanced, Yanhua Slash inflicts 1 more Year-End Flames stack.",
         descTh:"ลด cooldown แรกของ Orange Blossom Blade ลง 1 เทิร์น นอกจากนี้ ขยายระยะเวลาของ Flaming Sword Dance 1 เทิร์น และสามารถเปิดใช้ Yanhua Slash ได้สูงสุด 2 ครั้ง เมื่อ Flaming Sword Dance ทำงาน จะ enhance Scarlet Surprise และ Firework Finale\nScarlet Surprise: เมื่อ enhance เพิ่ม CRIT DMG ของ Yanhua Slash อีก 40%\nFirework Finale: เมื่อ enhance Yanhua Slash จะสะสม Year-End Flames เพิ่มอีก 1 stack"},
-      {stage:2, name:"Festival Colors",
+      {name:"Festival Colors",
         desc:"When Firecracker Yaoling is present, for each foe that appears, permanently inflict 1 special limit-breaking Burn stack. When this Burn is removed, 1 more stack is immediately inflicted. This effect's cooldown time is 2 turns, calculated individually for each foe.\nDuring battle, when 1 foe is inflicted with Burn, increase Firecracker Yaoling's critical rate by 10%. Also, for each additional foe inflicted with Burn, increase by 3% more (up to a maximum of 16%).",
         descTh:"เมื่อ Firecracker Yaoling อยู่ในปาร์ตี้ สำหรับแต่ละศัตรูที่ปรากฏ จะทำให้ติด Burn stack พิเศษ 1 ครั้งถาวร เมื่อ Burn นี้ถูกลบ จะสะสมอีก 1 stack ทันที cooldown ของเอฟเฟกต์นี้คือ 2 เทิร์น คำนวณแยกกันสำหรับแต่ละศัตรู\nระหว่างการต่อสู้ เมื่อศัตรู 1 ตัวติด Burn เพิ่ม CRIT Rate ของ Firecracker Yaoling 10% และสำหรับแต่ละศัตรูที่ติด Burn เพิ่มขึ้นอีก 3% (สูงสุด 16%)"},
-      {stage:3, name:"Cleansing Blaze",
+      {name:"Cleansing Blaze",
         desc:"Increase the skill levels of Firework Finale and Orange Blossom Blade by 3.",
         descTh:"เพิ่มระดับสกิล Firework Finale และ Orange Blossom Blade ขึ้น 3"},
-      {stage:4, name:"Grand Lion Dance",
+      {name:"Grand Lion Dance",
         desc:"Highlight Enhanced: Increase Firecracker Yaoling's critical damage by 15% more for 2 turns. Also, extend the duration of all buffs gained from this Highlight by 2 turns.",
         descTh:"Highlight Enhanced: เพิ่ม CRIT DMG ของ Firecracker Yaoling อีก 15% เป็นเวลา 2 เทิร์น นอกจากนี้ ขยายระยะเวลาของ buff ทั้งหมดที่ได้รับจาก Highlight นี้ 2 เทิร์น"},
-      {stage:5, name:"Lucky Red",
+      {name:"Lucky Red",
         desc:"Increase the skill levels of Scarlet Surprise and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Scarlet Surprise และ Thief Tactics ขึ้น 3"},
-      {stage:6, name:"Sky Lantern Festival",
+      {name:"Sky Lantern Festival",
         desc:"Flaming Sword Dance becomes permanent. Yanhua Slash evolves to Liuxing Slash, increasing damage dealt by 80%. Flaming Sword Dance is not removed even after Liuxing Slash is activated.\nAlso, Scarlet Surprise permanently maintains the critical rate increase and enhanced effects on Liuxing Slash. The duration of Firework Finale's Burn and enhanced effects on Liuxing Slash are extended by 1 turn.",
         descTh:"Flaming Sword Dance กลายเป็นถาวร Yanhua Slash พัฒนาเป็น Liuxing Slash เพิ่มความเสียหาย 80% และ Flaming Sword Dance จะไม่ถูกยกเลิกแม้หลังจากใช้ Liuxing Slash\nนอกจากนี้ Scarlet Surprise จะรักษาเอฟเฟกต์เพิ่ม CRIT Rate และ enhance บน Liuxing Slash อย่างถาวร ระยะเวลาของ Burn และ enhance ของ Firework Finale บน Liuxing Slash จะขยายออก 1 เทิร์น"},
     ],
@@ -2342,17 +2492,16 @@ const CHARACTERS = [
       {hp:3756, atk:1330, def:657, spd:95},
     ],
     hiddenAbility: 'ATK +29%',
-    weapons: [
+    weapons:[
       {
-        name: "New Year's Light", rarity: 5, img: 'p5x/weapon/new-year-light.png',
+        name: "New Year's Light", stars:5,
         hp: 2240, atk: 793, def: 392,
         bonusStats: {atk:30, crit:16},
         abilityName: "New Year's Light",
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When Flaming Sword Dance is active, increase critical rate by 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0%.',
-          'When a Fire Technical is activated, increase that damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',
-        ],
+          'When a Fire Technical is activated, increase that damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',],
         abilityTh: [
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อ Flaming Sword Dance ทำงาน เพิ่ม CRIT Rate 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0%',
@@ -2360,13 +2509,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Cleansing Blade', rarity: 4, img: 'p5x/weapon/cleansing-blade.png',
+        name: 'Cleansing Blade', stars:4,
         hp: 1792, atk: 634, def: 314,
         bonusStats: {atk:12},
         abilityName: 'Cleansing Blade',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When using Yanhua Slash, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When using Yanhua Slash, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -2375,7 +2524,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Valor 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP%','Fire DMG%','ATK%'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP% over ATK%.',
+  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP%','Fire DMG%','ATK%'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP% over ATK%.',
     realName:'Kiyoshi Kurotani', persona:'Syke',
     weakRes:{ Fire:'res', Ice:'normal', Electric:'normal', Wind:'wk', Nuclear:'normal', Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -2399,25 +2548,25 @@ const CHARACTERS = [
         descTh:"เพิ่มความเสียหายธาตุไฟตาม HP สูงสุด เพิ่ม 1% ทุกๆ 300 HP (สูงสุดที่ 9000 HP)"},
     ],
     awareness:[
-      {stage:0, name:'Make Sparks Fly',
+      {name:'Make Sparks Fly',
         desc:"When using a skill, gain 1 Chosen One stack.\nChosen One: Increase the party's Fire damage by 5%. When Kurotani uses a skill, deal damage to Kurotani equal to 4% of his current HP. Lasts 2 turns and stacks up to 5 times.\nThe duration of Chosen One is handled individually for each stack.\nWhile active, change Kurotani's ranged attacks to Fire.",
         descTh:"เมื่อใช้สกิล รับ Chosen One 1 stack\nChosen One: เพิ่มความเสียหายธาตุไฟของปาร์ตี้ 5% เมื่อ Kurotani ใช้สกิล รับความเสียหายเท่ากับ 4% ของ HP ปัจจุบัน คงอยู่ 2 เทิร์น สะสมสูงสุด 5 ครั้ง\nระยะเวลาของ Chosen One นับแยกกันในแต่ละ stack\nขณะที่ทำงาน เปลี่ยนการโจมตีระยะไกลของ Kurotani เป็นธาตุไฟ"},
-      {stage:1, name:'Uncontrollable Power',
+      {name:'Uncontrollable Power',
         desc:"On Kurotani's action, for each stack of Chosen One, 12% chance to inflict Burn on 1 random foe.",
         descTh:"ในเทิร์นของ Kurotani ต่อ Chosen One stack มีโอกาส 12% ทำให้ศัตรูแบบสุ่ม 1 ตัวติด Burn"},
-      {stage:2, name:'Flaming Phenomenon',
+      {name:'Flaming Phenomenon',
         desc:"On Kurotani's action, for each Burning foe, increase Kurotani's damage by 8% for 1 turn. Counts up to 3 foes.",
         descTh:"ในเทิร์นของ Kurotani ต่อศัตรูที่ติด Burn 1 ตัว เพิ่มความเสียหายของ Kurotani 8% เป็นเวลา 1 เทิร์น นับสูงสุด 3 ตัว"},
-      {stage:3, name:'Repent, Sinner',
+      {name:'Repent, Sinner',
         desc:"Increase the skill levels of Ring of Fire and Cleansing Flame by 2.",
         descTh:"เพิ่มระดับสกิล Ring of Fire และ Cleansing Flame ขึ้น 2"},
-      {stage:4, name:'Untold Story',
+      {name:'Untold Story',
         desc:"Highlight Enhanced: Increase all foes' Fire damage taken by 30.8%.",
         descTh:"Highlight Enhanced: เพิ่มความเสียหายธาตุไฟที่ศัตรูทุกตัวรับ 30.8%"},
-      {stage:5, name:'Exorcism',
+      {name:'Exorcism',
         desc:"Increase the skill levels of Crimson Summon and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Crimson Summon และ Thief Tactics ขึ้น 2"},
-      {stage:6, name:'Contagious Passion',
+      {name:'Contagious Passion',
         desc:"Increase the party's Fire damage by 30% for every 10 Chosen One stacks gained for 2 turns.",
         descTh:"เพิ่มความเสียหายธาตุไฟของปาร์ตี้ 30% ต่อการสะสม Chosen One ทุกๆ 10 stack เป็นเวลา 2 เทิร์น"},
     ],
@@ -2432,17 +2581,16 @@ const CHARACTERS = [
       {hp:3416, atk:722, def:481, spd:99},
     ],
     hiddenAbility: 'HP% +21.8%',
-    weapons: [
+    weapons:[
       {
-        name: 'Baptism by Fire', rarity: 5, img: 'p5x/weapon/baptism-by-fire.png',
+        name: 'Baptism by Fire', stars:5,
         hp: 2814, atk: 595, def: 396,
         bonusStats: {hp:30},
         abilityName: 'Baptism by Fire',
         ability: [
           'Increase max HP by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'When inflicting Burn on a foe, increase target\'s damage taken by 18.0%/23.0%/23.0%/28.0%/28.0%/33.0%/33.0% for 2 turns.',
-          'For each Chosen One stack, increase Kurotani\'s damage by 6.0%/7.5%/7.5%/9.0%/9.0%/10.5%/10.5%.',
-        ],
+          'For each Chosen One stack, increase Kurotani\'s damage by 6.0%/7.5%/7.5%/9.0%/9.0%/10.5%/10.5%.',],
         abilityTh: [
           'เพิ่ม HP สูงสุด 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เมื่อทำให้ศัตรูติด Burn เพิ่มความเสียหายที่เป้าหมายรับ 18.0%/23.0%/23.0%/28.0%/28.0%/33.0%/33.0% เป็นเวลา 2 เทิร์น',
@@ -2450,13 +2598,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Death Stinger', rarity: 4, img: 'p5x/weapon/death-stinger.png',
+        name: 'Death Stinger', stars:4,
         hp: 2252, atk: 476, def: 317,
         bonusStats: {hp:12},
         abilityName: 'Death Stinger',
-        ability: [
-          'Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'Increase Sacred Flame damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.',
+        ability:[
+          "Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Increase Sacred Flame damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.",
         ],
         abilityTh: [
           'เพิ่ม HP สูงสุด 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -2465,7 +2613,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Mont (Frostgale)',   codename:'mont-frostgale', role:'Assassin',   element:'Wind',           element2:'Ice', rarity:5, cards:['Courage 4pc','Valor 2pc'], weapon:'Best Wind/Ice ATK weapon',               statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Dual-element Wind/Ice Assassin variant. Unique frostgale mechanics merge both elements.',
+  {name:'Mont (Frostgale)',   codename:'mont-frostgale', role:'Assassin',   element:'Wind',           element2:'Ice', rarity:5, cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Wind/Ice ATK weapon',               statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Dual-element Wind/Ice Assassin variant. Unique frostgale mechanics merge both elements.',
     realName:'Frostgale Kotone', persona:'Terpsichore',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'res', Nuclear:'normal', Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'wk' },
     skills:[
@@ -2489,25 +2637,25 @@ const CHARACTERS = [
         descTh:"[Spring] ขณะอยู่ใน Spring mode ทุกครั้งที่พันธมิตรโจมตีด้วยธาตุลม เพิ่ม Attack ของปาร์ตี้ 8.1% เป็นเวลา 2 เทิร์น สะสมสูงสุด 5 ครั้ง\n[Winter] ขณะอยู่ใน Winter mode ทุกครั้งที่ Frostgale Kotone ได้รับ shield เพิ่ม DEF ของปาร์ตี้ 9.0% เป็นเวลา 2 เทิร์น สะสมสูงสุด 4 ครั้ง"},
     ],
     awareness:[
-      {stage:0, name:'Swan on the Ice',
+      {name:'Swan on the Ice',
         desc:"Frostgale Kotone has 2 modes: Spring and Winter. During battle, she can freely change between modes while Spring's/Winter's Edge is not active. At the start of battle, she will be in Spring mode, but if there are more Ice allies than Wind allies in the party, she will be in Winter mode.\nFor every 1 Spring's Vestige or Winter's Vestige stack gained, permanently increase Attack by 5% (stacks up to 7 times).",
         descTh:"Frostgale Kotone มี 2 mode: Spring และ Winter สามารถเปลี่ยน mode ได้อิสระระหว่างการต่อสู้ขณะที่ Spring's/Winter's Edge ไม่ทำงาน เริ่มต้นในโหมด Spring แต่หากมีพันธมิตรธาตุน้ำแข็งมากกว่าลมในปาร์ตี้ จะเริ่มใน Winter mode\nต่อ Spring's Vestige หรือ Winter's Vestige stack ที่ได้รับ 1 stack เพิ่ม Attack ถาวร 5% สะสมสูงสุด 7 ครั้ง"},
-      {stage:1, name:'Etched in Ice',
+      {name:'Etched in Ice',
         desc:"[Spring] Each time Spring's Edge is activated, gain 1 Spring's Vestige stack. When Spring's Edge ends, increase Resonance damage by 8% for each Spring's Vestige stack (up to 40%).\n[Winter] Each time Winter's Edge is activated, gain 1 Winter's Vestige stack. When Winter's Edge ends, increase Resonance damage by 8% for each Winter's Vestige stack (up to 40%).",
         descTh:"[Spring] ทุกครั้งที่เปิดใช้ Spring's Edge รับ Spring's Vestige 1 stack เมื่อ Spring's Edge สิ้นสุด เพิ่มความเสียหาย Resonance 8% ต่อ Spring's Vestige stack (สูงสุด 40%)\n[Winter] ทุกครั้งที่เปิดใช้ Winter's Edge รับ Winter's Vestige 1 stack เมื่อ Winter's Edge สิ้นสุด เพิ่มความเสียหาย Resonance 8% ต่อ Winter's Vestige stack (สูงสุด 40%)"},
-      {stage:2, name:"Swan's Gaze",
+      {name:"Swan's Gaze",
         desc:"[Spring] While Spring's Edge is active, decrease all foes' Defense by 40%, and decrease party's SP costs for skills by 25%.\n[Winter] While Winter's Edge is active, increase party's Ice damage by 30%, and decrease SP costs for skills by 25%.",
         descTh:"[Spring] ขณะ Spring's Edge ทำงาน ลด DEF ของศัตรูทุกตัว 40% และลดค่า SP ของสกิลปาร์ตี้ 25%\n[Winter] ขณะ Winter's Edge ทำงาน เพิ่มความเสียหายธาตุน้ำแข็งของปาร์ตี้ 30% และลดค่า SP ของสกิล 25%"},
-      {stage:3, name:'Triple Axel',
+      {name:'Triple Axel',
         desc:"Increase the skill levels of Zephyr / Sapphire Storm and Ailes au Vent / Frozen Wings by 3.",
         descTh:"เพิ่มระดับสกิล Zephyr/Sapphire Storm และ Ailes au Vent/Frozen Wings ขึ้น 3"},
-      {stage:4, name:'Queen of Ice and Wind',
+      {name:'Queen of Ice and Wind',
         desc:"[Spring] When activating a Highlight, if Spring's Edge is active, gain 1 more Spring's Vestige stack (can exceed maximum). If Spring's Edge is not active, increase Highlight damage by 35%.\n[Winter] When activating a Highlight, if Winter's Edge is active, gain 1 more Winter's Vestige stack (can exceed maximum). If Winter's Edge is not active, increase Highlight damage by 35%.",
         descTh:"[Spring] เมื่อเปิดใช้ Highlight หาก Spring's Edge ทำงาน รับ Spring's Vestige เพิ่ม 1 stack (เกินสูงสุดได้) หาก Spring's Edge ไม่ทำงาน เพิ่มความเสียหาย Highlight 35%\n[Winter] เมื่อเปิดใช้ Highlight หาก Winter's Edge ทำงาน รับ Winter's Vestige เพิ่ม 1 stack (เกินสูงสุดได้) หาก Winter's Edge ไม่ทำงาน เพิ่มความเสียหาย Highlight 35%"},
-      {stage:5, name:'Seasonal Highlight',
+      {name:'Seasonal Highlight',
         desc:"Increase the skill levels of Éclat de Vent / Iceburst and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Éclat de Vent/Iceburst และ Thief Tactics ขึ้น 3"},
-      {stage:6, name:'Dance of Love',
+      {name:'Dance of Love',
         desc:"[Spring] After activating the Resonance when Spring's Edge ends, extend the duration of Spring's Edge by 1 turn. Regain up to 2 spent Spring's Vestige stacks, and regain up to 2 stacks that exceeded the maximum limit. Afterwards, the Resonance can be activated again (duration cannot be extended again). Also increase Resonance pierce rate by 4% for each Spring's Vestige stack (up to 20%).\n[Winter] After activating the Resonance when Winter's Edge ends, extend the duration of Winter's Edge by 1 turn. Regain up to 2 spent Winter's Vestige stacks, and regain up to 2 stacks that exceeded the maximum limit. Afterwards, the Resonance can be activated again. Also increase Resonance pierce rate by 4% for each Winter's Vestige stack (up to 20%).",
         descTh:"[Spring] หลังจากเปิดใช้ Resonance เมื่อ Spring's Edge สิ้นสุด ขยาย Spring's Edge อีก 1 เทิร์น คืน Spring's Vestige stack ที่ใช้ไปสูงสุด 2 stack และคืน stack ที่เกินสูงสุดสูงสุด 2 stack จากนั้น Resonance สามารถเปิดใช้ได้อีกครั้ง (ไม่สามารถขยายซ้ำได้) เพิ่ม pierce rate ของ Resonance 4% ต่อ Spring's Vestige stack (สูงสุด 20%)\n[Winter] หลังจากเปิดใช้ Resonance เมื่อ Winter's Edge สิ้นสุด ขยาย Winter's Edge อีก 1 เทิร์น คืน Winter's Vestige stack ที่ใช้ไปสูงสุด 2 stack และคืน stack ที่เกินสูงสุดสูงสุด 2 stack จากนั้น Resonance สามารถเปิดใช้ได้อีกครั้ง เพิ่ม pierce rate ของ Resonance 4% ต่อ Winter's Vestige stack (สูงสุด 20%)"},
     ],
@@ -2522,17 +2670,16 @@ const CHARACTERS = [
       {hp:3856, atk:1274, def:628, spd:98},
     ],
     hiddenAbility: 'CRIT DMG +184.9%',
-    weapons: [
+    weapons:[
       {
-        name: "Lame de l'Amour", rarity: 5, img: "p5x/weapon/lame-de-l-amour.png",
+        name: "Lame de l'Amour", stars:5,
         hp: 2299, atk: 760, def: 374,
         bonusStats: {atk:30},
         abilityName: "Lame de l'Amour",
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           "Each time Frostgale Kotone gains a Spring's Vestige or Winter's Vestige stack, increase critical rate by 5.4%/7.0%/7.0%/8.6%/8.6%/10.2%/10.2% for 2 turns. This effect can stack up to 3 times.",
-          "When activating Spring's Edge or Winter's Edge, increase Wind or Ice damage by 27.0%/35.0%/35.0%/43.0%/43.0%/51.0%/51.0% for 2 turns.",
-        ],
+          "When activating Spring's Edge or Winter's Edge, increase Wind or Ice damage by 27.0%/35.0%/35.0%/43.0%/43.0%/51.0%/51.0% for 2 turns.",],
         abilityTh: [
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           "ทุกครั้งที่ Frostgale Kotone ได้รับ Spring's Vestige หรือ Winter's Vestige stack เพิ่ม CRIT Rate 5.4%/7.0%/7.0%/8.6%/8.6%/10.2%/10.2% เป็นเวลา 2 เทิร์น สะสมสูงสุด 3 ครั้ง",
@@ -2540,7 +2687,7 @@ const CHARACTERS = [
         ],
       },
       {
-        name: "Lame de l'Aube", rarity: 4, img: "p5x/weapon/lame-de-l-aube.png",
+        name: "Lame de l'Aube", stars:4,
         hp: 1839, atk: 608, def: 299,
         bonusStats: {atk:12},
         abilityName: "Lame de l'Aube",
@@ -2556,7 +2703,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Wind (Tempest)', codename:'wind-tempest', role:'Strategist', element:'Wind', rarity:5,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best CRIT DMG/Support weapon (Windplum Dance)',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best CRIT DMG/Support weapon (Windplum Dance)',
     statPrio:['CRIT DMG%','CRIT Rate%','SPD'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP management unlocks full Blossoming Season potential.',
     realName:'Tempest Riko', persona:'Chiyome',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'res', Nuclear:'normal',
@@ -2582,25 +2729,25 @@ const CHARACTERS = [
         descTh:"ระหว่างการต่อสู้ เพิ่ม CRIT DMG และ HP ตาม SP Recovery ของ Riko ที่ SP Recovery สูงสุด 450%: CRIT DMG +84%, HP +1800"},
     ],
     awareness:[
-      {stage:0, name:'Fragrant Gale',
+      {name:'Fragrant Gale',
         desc:"Increase Riko's max SP to 200 and SP Recovery by 60%. When using a skill to restore own SP, the amount is affected by SP Recovery.",
         descTh:"เพิ่ม SP สูงสุดของ Riko เป็น 200 และ SP Recovery +60% เมื่อใช้สกิลเพื่อคืน SP ตัวเอง ปริมาณที่ได้รับจะถูกคูณด้วย SP Recovery"},
-      {stage:1, name:'Colors of Dawn',
+      {name:'Colors of Dawn',
         desc:"Falling Petals now triggers on any damage (not just Wind). Target's CRIT DMG taken +30%. Arrival of Spring gives Sweeper allies 25% more ATK.",
         descTh:"Falling Petals ตอนนี้เปิดใช้กับดาเมจทุกธาตุ (ไม่ใช่แค่ลม) เป้าหมายรับ CRIT DMG +30% Arrival of Spring เพิ่ม ATK ให้พันธมิตร Sweeper 25% เพิ่มเติม"},
-      {stage:2, name:'East Wind',
+      {name:'East Wind',
         desc:"Increase Riko's max SP by 50 (also increases Blossoming Season cap). After Blossoming Season, immediately recover 50 SP. Vernal Splendor enhanced: double the CRIT DMG increase at 5 and 10 Blossom stacks.",
         descTh:"เพิ่ม SP สูงสุดของ Riko อีก 50 (เพิ่มขีดจำกัด Blossoming Season ด้วย) หลัง Blossoming Season คืน SP 50 ทันที Vernal Splendor เสริม: เพิ่ม CRIT DMG เป็น 2 เท่าที่ 5 และ 10 Blossom stack"},
-      {stage:3, name:'Swaying Boughs',
+      {name:'Swaying Boughs',
         desc:"Increase the skill levels of Arrival of Spring and Blossoming Season by 3.",
         descTh:"เพิ่มระดับสกิล Arrival of Spring และ Blossoming Season ขึ้น 3 ระดับ"},
-      {stage:4, name:'Sea Breeze',
+      {name:'Sea Breeze',
         desc:"Highlight Enhanced: buff now applies to all allies besides Riko. Main target's CRIT DMG +12% more. Restore 32 SP to all allies besides Riko.",
         descTh:"Highlight เสริม: buff ตอนนี้ใช้กับพันธมิตรทุกคนยกเว้น Riko CRIT DMG ของเป้าหมายหลัก +12% เพิ่มเติม คืน SP 32 ให้พันธมิตรทั้งหมดยกเว้น Riko"},
-      {stage:5, name:'Rage of Spring',
+      {name:'Rage of Spring',
         desc:"Increase the skill levels of Storm of Petals and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Storm of Petals และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Full Blossom',
+      {name:'Full Blossom',
         desc:"Blossoming Season affects all allies besides Riko. When main target uses a skill, immediately activate Storm of Petals once (once per Blossoming Season). Falling Petals duration +1 turn. While Riko is on field: for every 1% CRIT Rate over 100% on any ally, increase that damage's CRIT DMG by 2%.",
         descTh:"Blossoming Season ส่งผลต่อพันธมิตรทั้งหมดยกเว้น Riko เมื่อเป้าหมายหลักใช้สกิล เปิดใช้ Storm of Petals 1 ครั้งทันที (1 ครั้งต่อการใช้ Blossoming Season) Falling Petals ยาวขึ้น 1 เทิร์น ขณะ Riko อยู่ในสนาม: ต่อ CRIT Rate 1% เกิน 100% ของพันธมิตรใดก็ตาม เพิ่ม CRIT DMG ของดาเมจนั้น 2%"},
     ],
@@ -2615,27 +2762,26 @@ const CHARACTERS = [
       {hp:4022, atk:1086, def:709, spd:0},
     ],
     hiddenAbility: 'SP Recovery +188.5%',
-    weapons: [
-      {name:'Windplum Dance', rarity:5, img:'p5x/weapon/windplum-dance.png',
+    weapons:[
+      {name:'Windplum Dance', stars:5,
         hp:2398, atk:647, def:423,
         bonusStats:{},
         abilityName:'Windplum Dance',
         ability:[
           'Increase critical damage by 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%.',
           "After using a skill on an ally, increase all allies' CRIT DMG (besides Riko) by 13.2%/17.2%/17.2%/21.2%/21.2%/25.2%/25.2% for 2 turns.",
-          'When main target deals damage with a skill, increase damage by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% per 50 SP spent for 2 turns.',
-        ],
+          'When main target deals damage with a skill, increase damage by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% per 50 SP spent for 2 turns.',],
         abilityTh:[
           'เพิ่ม CRIT DMG 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%',
           'หลังใช้สกิลบนพันธมิตร เพิ่ม CRIT DMG ของพันธมิตรทุกคน (ยกเว้น Riko) 13.2%/17.2%/17.2%/21.2%/21.2%/25.2%/25.2% เป็นเวลา 2 เทิร์น',
           'เมื่อเป้าหมายหลักดีลดาเมจด้วยสกิล เพิ่มดาเมจ 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% ต่อ SP 50 หน่วยที่ใช้ เป็นเวลา 2 เทิร์น',
         ]},
-      {name:"Sparrow's Leap", rarity:4, img:"p5x/weapon/sparrows-leap.png",
+      {name:"Sparrow's Leap", stars:4,
         hp:1918, atk:518, def:338,
         bonusStats:{atk:24},
         abilityName:"Sparrow's Leap",
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
           "When Riko restores SP with a skill, increase CRIT DMG by 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% for 2 turns. Stacks up to 2 times.",
         ],
         abilityTh:[
@@ -2645,7 +2791,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Moko (Seaside)', codename:'moko-seaside', role:'Medic', element:'Psychokinesis', rarity:5,
-    cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
     statPrio:['ATK%','Healing Bonus%','HP%'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
     realName:'Seaside Tomoko', persona:'Prosymna',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -2671,25 +2817,25 @@ const CHARACTERS = [
         descTh:"เมื่อเปิดใช้ Hale Summer Days เพิ่ม HP สูงสุดของเป้าหมายหลัก 1800 เป็นเวลา 2 เทิร์น ฟื้นฟู HP ของพันธมิตรที่มี HP ต่ำสุด 60% ของการรักษาจากสกิล"},
     ],
     awareness:[
-      {stage:0, name:'Summer Reminiscence',
+      {name:'Summer Reminiscence',
         desc:"After an ally acts, if any foe has 3+ Sparks stacks, activate Resonance: for every 3 Sparks on all foes, deal Psy = 19% ATK to all, decrease target damage -30% for 1 turn, heal party = 9% ATK + 300/600/900 (Lv.1/50/70+). Up to 5 rounds. Damage scales: 150%/120%/100% for 1/2/3+ foes. No Down Point damage. Defeated foe's Sparks pass to random foes.",
         descTh:"หลังพันธมิตรใช้แอ็คชัน หากศัตรูมี Sparks 3+ stack เปิดใช้ Resonance: ต่อ Sparks 3 stack บนศัตรูทุกตัว ดีลดาเมจพลังจิต 19% ของ ATK ต่อทุกตัว ลดดาเมจเป้าหมาย -30% 1 เทิร์น ฮีลปาร์ตี้ 9% ATK + 300/600/900 (Lv.1/50/70+) สูงสุด 5 รอบ ดาเมจ: 150%/120%/100% สำหรับ 1/2/3+ ตัว ไม่มี Down Point ศัตรูที่ตายส่ง Sparks ต่อแบบสุ่ม"},
-      {stage:1, name:'Flash of Summer',
+      {name:'Flash of Summer',
         desc:"Each SR effect on a foe → DEF -15% for 3 turns (stacks 3). Hale Summer Days healing now applies to all allies.",
         descTh:"ทุก SR effect บนศัตรู → DEF -15% 3 เทิร์น (สะสม 3) Hale Summer Days ฮีลพันธมิตรทุกคนแทน"},
-      {stage:2, name:'Gentle Sunbeams',
+      {name:'Gentle Sunbeams',
         desc:"Every 2 SR activations → 1 Sparks on random foe. Each Sparks inflicted → party ATK permanently +2% (up to 15 stacks).",
         descTh:"ทุก 2 ครั้งที่ SR เปิดใช้ → Sparks 1 stack บนศัตรูสุ่ม ทุกครั้งที่ทำให้ติด Sparks → ATK ปาร์ตี้ถาวร +2% (สูงสุด 15 stack)"},
-      {stage:3, name:'Sentimental Seabreeze',
+      {name:'Sentimental Seabreeze',
         desc:"Increase the skill levels of Have a Cold Drink and Hale Summer Days by 3.",
         descTh:"เพิ่มระดับสกิล Have a Cold Drink และ Hale Summer Days ขึ้น 3 ระดับ"},
-      {stage:4, name:'Sparkling Summer Night',
+      {name:'Sparkling Summer Night',
         desc:"Highlight Enhanced: Deal bonus damage (2 hits) and inflict 1 Sparks stack per hit.",
         descTh:"Highlight เสริม: ดีลดาเมจโบนัส (2 ครั้ง) และทำให้ติด Sparks 1 stack ต่อครั้ง"},
-      {stage:5, name:'Lingering Glow',
+      {name:'Lingering Glow',
         desc:"Increase the skill levels of Sparkling Memories and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Sparkling Memories และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Heartfelt Days',
+      {name:'Heartfelt Days',
         desc:"Summer Reminiscence gains: CRIT Rate +35% when dealing SR damage. Each SR effect on a foe → permanently +5% damage taken (stacks 3). At max stacks: CRIT DMG taken +20% more.",
         descTh:"Summer Reminiscence เพิ่ม: CRIT Rate +35% เมื่อดีลดาเมจ SR ทุก SR effect บนศัตรู → ดาเมจที่รับถาวร +5% (สะสม 3) ที่ stack สูงสุด: CRIT DMG ที่รับ +20% เพิ่มเติม"},
     ],
@@ -2704,22 +2850,21 @@ const CHARACTERS = [
       {hp:3922, atk:1208, def:642, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Bubble Babies', rarity:5, img:'p5x/weapon/bubble-babies.png',
+    weapons:[
+      {name:'Bubble Babies', stars:5,
         hp:2339, atk:720, def:383,
         bonusStats:{heal:22},
         abilityName:'Bubble Babies',
         ability:[
           'Increase healing by 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%.',
           'Increase Summer Reminiscence damage multiplier and healing by 18.5%/24.0%/24.0%/29.5%/29.5%/35.0%/35.0%.',
-          'When activating Summer Reminiscence, increase target\'s damage taken by 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% for 3 turns (stacks 2). Decrease target\'s DEF and ailment resistance by 12% for 3 turns.',
-        ],
+          'When activating Summer Reminiscence, increase target\'s damage taken by 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% for 3 turns (stacks 2). Decrease target\'s DEF and ailment resistance by 12% for 3 turns.',],
         abilityTh:[
           'เพิ่มการรักษา 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%',
           'เพิ่มตัวคูณดาเมจและการรักษา Summer Reminiscence 18.5%/24.0%/24.0%/29.5%/29.5%/35.0%/35.0%',
           "เมื่อเปิดใช้ Summer Reminiscence เพิ่มดาเมจที่รับของเป้าหมาย 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% 3 เทิร์น (สะสม 2) ลด DEF และ ailment resistance เป้าหมาย 12% 3 เทิร์น",
         ]},
-      {name:"Ocean's Tidings", rarity:4, img:"p5x/weapon/oceans-tidings.png",
+      {name:"Ocean's Tidings", stars:4,
         hp:1871, atk:576, def:306,
         bonusStats:{atk:24},
         abilityName:"Ocean's Tidings",
@@ -2761,25 +2906,25 @@ const CHARACTERS = [
         descTh:"ลดค่า SP ของปาร์ตี้ 15.0%"},
     ],
     awareness:[
-      {stage:0, name:"Morgana's Favor",
+      {name:"Morgana's Favor",
         desc:"When using a different skill than the previous one, gain 1 Chivalry stack (up to 3). When an ally with <70% HP uses a skill/Highlight/Theurgy, activate Resonance: spend 1 Chivalry to heal party by 10% of Morgana's Attack + 150/225/300 (changes at Lv.1/50/70).",
         descTh:"เมื่อใช้สกิลต่างจากครั้งก่อน รับ Chivalry 1 stack (สูงสุด 3) เมื่อพันธมิตรที่มี HP <70% ใช้สกิล/Highlight/Theurgy เปิดใช้ Resonance: ใช้ Chivalry 1 stack ฮีลปาร์ตี้ 10% ของ Attack Morgana + 150/225/300 (เปลี่ยนที่ Lv.1/50/70)"},
-      {stage:1, name:'Marvelous Pride',
+      {name:'Marvelous Pride',
         desc:"Chivalry also restores HP to allies with less than 50% HP remaining by 30% of Morgana's Attack.",
         descTh:"Chivalry ยังฟื้นฟู HP ให้พันธมิตรที่มี HP <50% อีก 30% ของ Attack Morgana"},
-      {stage:2, name:'Black Cat Charm',
+      {name:'Black Cat Charm',
         desc:"When using Healing Breeze, increase HP recovery for the main target by 33%.",
         descTh:"เมื่อใช้ Healing Breeze เพิ่มการฟื้นฟู HP ของเป้าหมายหลัก 33%"},
-      {stage:3, name:'Grooming',
+      {name:'Grooming',
         desc:"Increase the skill levels of Healing Breeze and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Healing Breeze และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Aftercare',
+      {name:'Aftercare',
         desc:"Highlight Enhanced: When a KO'd ally is revived, restore bonus HP equal to 60% of Morgana's Attack + 800.",
         descTh:"Highlight เสริม: เมื่อพันธมิตรที่ KO ถูกฟื้นฟู คืน HP โบนัส 60% ของ Attack Morgana + 800"},
-      {stage:5, name:'Airplane Ears Mode',
+      {name:'Airplane Ears Mode',
         desc:"Increase the skill levels of Missile Whirlwind and Gentle Fist by 3.",
         descTh:"เพิ่มระดับสกิล Missile Whirlwind และ Gentle Fist ขึ้น 3 ระดับ"},
-      {stage:6, name:'Look, Treasure!',
+      {name:'Look, Treasure!',
         desc:"Remove Gentle Fist's decreased accuracy effect. Increase target's damage taken by 15% for 2 turns.",
         descTh:"ลบผลลด accuracy ของ Gentle Fist ออก เพิ่มดาเมจที่รับของเป้าหมาย 15% เป็นเวลา 2 เทิร์น"},
     ],
@@ -2794,8 +2939,8 @@ const CHARACTERS = [
       {hp:3657, atk:1219, def:716, spd:0},
     ],
     hiddenAbility: 'CRIT Rate +22.4%',
-    weapons: [
-      {name:'Golden Legacy', rarity:5, img:'p5x/weapon/golden-legacy.png',
+    weapons:[
+      {name:'Golden Legacy', stars:5,
         hp:2180, atk:727, def:427,
         bonusStats:{},
         abilityName:'Golden Legacy',
@@ -2803,34 +2948,33 @@ const CHARACTERS = [
           'Increase critical rate by 18.0%/18.0%/23.4%/23.4%/28.8%/28.8%/34.2%.',
           'If a foe is critically hit with a skill, deal 10.0%/13.3%/13.3%/16.7%/16.7%/20.0%/20.0% of max HP as bonus damage (up to 100.0%/133.3%/133.3%/166.7%/166.7%/200.0%/200.0% of Attack).',
           'When using a healing skill, restore 9.0%/11.8%/11.8%/14.6%/14.6%/17.4%/17.4% of the target\'s max HP.',
-          'If a skill misses, immediately gain Chivalry.',
-        ],
+          'If a skill misses, immediately gain Chivalry.',],
         abilityTh:[
           'เพิ่ม CRIT Rate 18.0%/18.0%/23.4%/23.4%/28.8%/28.8%/34.2%',
           'หากสกิล CRIT ต่อศัตรู ดีลดาเมจโบนัส 10.0%/13.3%/13.3%/16.7%/16.7%/20.0%/20.0% ของ HP สูงสุด (สูงสุด 100%/133.3%/.../200% ของ Attack)',
           'เมื่อใช้สกิลฮีล ฟื้นฟู HP เป้าหมาย 9.0%/11.8%/11.8%/14.6%/14.6%/17.4%/17.4% ของ HP สูงสุด',
           'หากสกิลพลาด รับ Chivalry ทันที',
         ]},
-      {name:'Shamshir', rarity:4, img:'p5x/weapon/shamshir.png',
+      {name:'Shamshir', stars:4,
         hp:1744, atk:581, def:341,
         bonusStats:{atk:24},
         abilityName:'Shamshir',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When healing an ally with 80% or more HP, grant Moonlight. Moonlight: HP +10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% and ATK +4.0%/5.3%/5.3%/6.7%/6.7%/8.0%/8.0% for 2 turns.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When healing an ally with 80% or more HP, grant Moonlight. Moonlight: HP +10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% and ATK +4.0%/5.3%/5.3%/6.7%/6.7%/8.0%/8.0% for 2 turns.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อฮีลพันธมิตรที่มี HP 80%+ ให้ Moonlight Moonlight: HP +10%/13%/.../19% และ ATK +4%/5.3%/.../8% เป็นเวลา 2 เทิร์น',
         ]},
-      {name:'Headhunter Ladle', rarity:4, img:'p5x/weapon/headhunter-ladle.png',
+      {name:'Headhunter Ladle', stars:4,
         hp:1903, atk:539, def:341,
         bonusStats:{},
         abilityName:'Headhunter Ladle',
         ability:[
-          'Increase critical rate by 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%.',
-          'When attacking with a skill, restore HP equal to 6.3%/8.0%/8.0%/9.7%/9.7%/11.4%/11.4% of Attack to the ally with the lowest HP.',
-          '2.0%/3.0%/3.0%/4.0%/4.0%/5.0%/5.0% chance to inflict Forget on target foe for 1 turn.',
+          "Increase critical rate by 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%.",
+          "When attacking with a skill, restore HP equal to 6.3%/8.0%/8.0%/9.7%/9.7%/11.4%/11.4% of Attack to the ally with the lowest HP.",
+          "2.0%/3.0%/3.0%/4.0%/4.0%/5.0%/5.0% chance to inflict Forget on target foe for 1 turn.",
         ],
         abilityTh:[
           'เพิ่ม CRIT Rate 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%',
@@ -2840,7 +2984,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Yui', codename:'Bui', role:'Sweeper', element:'Electric', rarity:5,
-    cards:['Courage 4pc','Resolve 2pc'], weapon:'Best follow-up/Electric weapon (Cyber Jammers)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best follow-up/Electric weapon (Cyber Jammers)',
     statPrio:['CRIT Rate%','ATK%','CRIT DMG%'], note:'Electric Sweeper. Follow-up attack specialist — Player 2 mechanic grants ally follow-ups, Jolly Cooperation Resonance procs on every ally skill use.',
     realName:'Yui', persona:'Apseudes',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
@@ -2866,25 +3010,25 @@ const CHARACTERS = [
         descTh:"เมื่อพันธมิตรมี Player 2 เพิ่ม CRIT Rate ของพันธมิตรนั้นและ Yui 12.0% และ Attack 12.0%"},
     ],
     awareness:[
-      {stage:0, name:'Jolly Cooperation',
+      {name:'Jolly Cooperation',
         desc:"When an ally deals damage with a skill, 35% chance to activate a Resonance dealing Electric follow-up damage equal to 80% of Attack. After a follow-up, increase target's next Electric damage taken by 15% for 2 turns.",
         descTh:"เมื่อพันธมิตรดีลดาเมจด้วยสกิล มีโอกาส 35% เปิดใช้ Resonance ดีลดาเมจไฟฟ้า follow-up 80% ของ Attack หลัง follow-up เพิ่มดาเมจไฟฟ้าที่รับของเป้าหมาย 15% เป็นเวลา 2 เทิร์น"},
-      {stage:1, name:'Payappa',
+      {name:'Payappa',
         desc:"Increase critical rate of follow-up attacks by 20%. Increase critical rate by 10% after landing a follow-up on Shocked foes.",
         descTh:"เพิ่ม CRIT Rate ของ follow-up attack 20% เพิ่ม CRIT Rate 10% หลัง follow-up โจมตีศัตรูที่ติด Shock"},
-      {stage:2, name:'Welcome Rain',
+      {name:'Welcome Rain',
         desc:"After performing a follow-up attack on a foe, increase Attack of Yui and allies with Player 2 by 10% for 2 turns. Stacks up to 3 times.",
         descTh:"หลัง follow-up โจมตีศัตรู เพิ่ม Attack ของ Yui และพันธมิตรที่มี Player 2 ขึ้น 10% เป็นเวลา 2 เทิร์น สะสมสูงสุด 3 ครั้ง"},
-      {stage:3, name:'Rainbow Maker',
+      {name:'Rainbow Maker',
         desc:"Increase the skill levels of Sparky Surprise and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Sparky Surprise และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Virtual Fertilizer',
+      {name:'Virtual Fertilizer',
         desc:"Highlight Enhanced: Increase critical damage of follow-up attacks by 40% for 2 turns.",
         descTh:"Highlight เสริม: เพิ่ม CRIT DMG ของ follow-up attack 40% เป็นเวลา 2 เทิร์น"},
-      {stage:5, name:'Flower Garden',
+      {name:'Flower Garden',
         desc:"Increase the skill levels of Electric Bomb and Meta Dynamite by 3.",
         descTh:"เพิ่มระดับสกิล Electric Bomb และ Meta Dynamite ขึ้น 3 ระดับ"},
-      {stage:6, name:'Humongously Huge Harvest',
+      {name:'Humongously Huge Harvest',
         desc:"If only 1 foe is present, increase Yui's follow-up attack by 110% of Attack. Follow-up attacks also deal 25% of Attack damage to all other foes.",
         descTh:"หากมีศัตรูเพียง 1 ตัว เพิ่ม follow-up attack ของ Yui 110% ของ Attack follow-up attack ยังดีลดาเมจ 25% ของ Attack ต่อศัตรูอื่นทุกตัวด้วย"},
     ],
@@ -2899,28 +3043,27 @@ const CHARACTERS = [
       {hp:3790, atk:1274, def:628, spd:0},
     ],
     hiddenAbility: 'CRIT Rate +22.4%',
-    weapons: [
-      {name:'Cyber Jammers', rarity:5, img:'p5x/weapon/cyber-jammers.png',
+    weapons:[
+      {name:'Cyber Jammers', stars:5,
         hp:2259, atk:760, def:374,
         bonusStats:{},
         abilityName:'Cyber Jammers',
         ability:[
           'Increase critical rate by 18.1%/18.1%/23.5%/23.5%/28.9%/28.9%/34.3%.',
           'Increase follow-up damage by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%.',
-          'When a follow-up is activated by an ally with Player 2, or by an ally dealing Electric damage with a skill, increase follow-up damage by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more.',
-        ],
+          'When a follow-up is activated by an ally with Player 2, or by an ally dealing Electric damage with a skill, increase follow-up damage by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more.',],
         abilityTh:[
           'เพิ่ม CRIT Rate 18.1%/18.1%/23.5%/23.5%/28.9%/28.9%/34.3%',
           'เพิ่มดาเมจ follow-up 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%',
           'เมื่อ follow-up ถูกเปิดใช้โดยพันธมิตรที่มี Player 2 หรือพันธมิตรที่ดีลดาเมจไฟฟ้าด้วยสกิล เพิ่มดาเมจ follow-up 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% เพิ่มเติม',
         ]},
-      {name:'Meta Directors', rarity:4, img:'p5x/weapon/meta-directors.png',
+      {name:'Meta Directors', stars:4,
         hp:1808, atk:608, def:299,
         bonusStats:{},
         abilityName:'Meta Directors',
         ability:[
-          'Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.',
-          'When performing a follow-up attack, increase Electric damage by 9.7%/12.6%/12.6%/15.5%/15.5%/18.4%/18.4% for 1 turn. Stacks up to 2 times.',
+          "Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.",
+          "When performing a follow-up attack, increase Electric damage by 9.7%/12.6%/12.6%/15.5%/15.5%/18.4%/18.4% for 1 turn. Stacks up to 2 times.",
         ],
         abilityTh:[
           'เพิ่ม CRIT Rate 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%',
@@ -2955,25 +3098,25 @@ const CHARACTERS = [
         descTh:"เพิ่ม Attack 45.0% ของ ailment accuracy"},
     ],
     awareness:[
-      {stage:0, name:'Veteran Technique',
+      {name:'Veteran Technique',
         desc:"Inflict Radiation on foes with elemental ailments for 2 turns. Radiation: Increase damage taken by 15%. Radiation counts as an elemental ailment.",
         descTh:"ทำให้ศัตรูที่มีสภาวะธาตุติด Radiation 2 เทิร์น Radiation: เพิ่มดาเมจที่รับ 15% Radiation นับเป็นสภาวะธาตุ"},
-      {stage:1, name:'Grandmotherly Care',
+      {name:'Grandmotherly Care',
         desc:"When foes with Radiation are also inflicted with Burn, Shock, Freeze, or Windswept, increase corresponding Fire, Electric, Ice, or Wind damage taken by 15%.",
         descTh:"เมื่อศัตรูที่มี Radiation ยังติด Burn, Shock, Freeze หรือ Windswept เพิ่มดาเมจ Fire, Electric, Ice หรือ Wind ที่รับตามลำดับ 15%"},
-      {stage:2, name:'From Now On',
+      {name:'From Now On',
         desc:"When an ally inflicts an elemental ailment, increase Chizuko's ailment accuracy by 10% for 2 turns. Stacks up to 3 times.",
         descTh:"เมื่อพันธมิตรทำให้ศัตรูติดสภาวะธาตุ เพิ่ม ailment accuracy ของ Chizuko 10% 2 เทิร์น สะสมสูงสุด 3 ครั้ง"},
-      {stage:3, name:'Jazz Session',
+      {name:'Jazz Session',
         desc:"Increase the skill levels of Diving Ray and Blunt Edge by 2.",
         descTh:"เพิ่มระดับสกิล Diving Ray และ Blunt Edge ขึ้น 2 ระดับ"},
-      {stage:4, name:'The Older, the Wiser',
+      {name:'The Older, the Wiser',
         desc:"Highlight Enhanced: Increase foes' Nuclear damage taken by 35.2% for 2 turns.",
         descTh:"Highlight เสริม: เพิ่มดาเมจนิวเคลียร์ที่รับของศัตรู 35.2% เป็นเวลา 2 เทิร์น"},
-      {stage:5, name:'Long-time Player',
+      {name:'Long-time Player',
         desc:"Increase the skill levels of Bullseye Bomber and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Bullseye Bomber และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Unending',
+      {name:'Unending',
         desc:"When an ally attacks a foe with Radiation, activate effects based on unique elemental ailments on the foe (effects stack): 1+: ATK +10%. 2+: Nuclear damage +10%. 3+: Pierce rate +8%.",
         descTh:"เมื่อพันธมิตรโจมตีศัตรูที่มี Radiation เปิดใช้เอฟเฟกต์ตามสภาวะธาตุต่างชนิดบนศัตรู (เอฟเฟกต์สะสม): 1+: ATK +10% 2+: ดาเมจนิวเคลียร์ +10% 3+: pierce rate +8%"},
     ],
@@ -2988,28 +3131,27 @@ const CHARACTERS = [
       {hp:2647, atk:842, def:541, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +26.1%',
-    weapons: [
-      {name:'Jolting Pulse', rarity:5, img:'p5x/weapon/jolting-pulse.png',
+    weapons:[
+      {name:'Jolting Pulse', stars:5,
         hp:2180, atk:694, def:445,
         bonusStats:{},
         abilityName:'Shakedown',
         ability:[
           'Increase ailment accuracy by 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%.',
           'After inflicting an elemental ailment on a foe, decrease the target\'s Defense by 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0% for 2 turns. This effect does not stack.',
-          'Every 2 turns, at the start of Chizuko\'s action, 80.0%/95.0%/95.0%/110.0%/110.0%/125.0%/125.0% base chance to inflict 1 foe with a random elemental ailment that it does not have.',
-        ],
+          'Every 2 turns, at the start of Chizuko\'s action, 80.0%/95.0%/95.0%/110.0%/110.0%/125.0%/125.0% base chance to inflict 1 foe with a random elemental ailment that it does not have.',],
         abilityTh:[
           'เพิ่ม ailment accuracy 36.0%/36.0%/47.0%/47.0%/58.0%/58.0%/69.0%',
           'หลังทำให้ศัตรูติดสภาวะธาตุ ลด DEF เป้าหมาย 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0% 2 เทิร์น เอฟเฟกต์นี้ไม่สะสม',
           'ทุก 2 เทิร์น ต้นแอ็คชัน Chizuko มีโอกาสฐาน 80.0%/95.0%/95.0%/110.0%/110.0%/125.0%/125.0% ทำให้ศัตรู 1 ตัวติดสภาวะธาตุสุ่มที่ยังไม่มี',
         ]},
-      {name:'Gravitational Force', rarity:4, img:'p5x/weapon/gravitational-force.png',
+      {name:'Gravitational Force', stars:4,
         hp:1744, atk:555, def:356,
         bonusStats:{atk:24},
         abilityName:'Quantum Radiation',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When a foe with an elemental ailment is present, decrease that foe\'s Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0%. Also, when inflicted with Radiation, decrease Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0% more.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When a foe with an elemental ailment is present, decrease that foe\'s Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0%. Also, when inflicted with Radiation, decrease Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0% more.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3018,7 +3160,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Riddle', codename:'Riddle', role:'Strategist', element:'Psychokinesis', rarity:5,
-    cards:['Integrity 4pc','Opulence 2pc'], weapon:'Best Psy ATK support weapon',
+    cards:['Reconciliation 4pc','Opulence 2pc'], weapon:'Best Psy ATK support weapon',
     statPrio:['ATK%','SPD','HP%'], note:'Psy Strategist. Childish Heart stacks → Off to Treasure Hunt ATK buff. Surprise Squad grants Affection enabling party follow-up CH generation. Mystery stacks amplify Highlight damage.',
     realName:'Haruna Nishimori', persona:'Diaera',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3044,25 +3186,25 @@ const CHARACTERS = [
         descTh:"เมื่อใช้ Childish Heart 3 stack ขึ้นไปพร้อมกัน เพิ่มผล Off to Treasure Hunt อีก 24.0%"},
     ],
     awareness:[
-      {stage:0, name:'Off to Treasure Hunt',
+      {name:'Off to Treasure Hunt',
         desc:"When using a skill, spend all Childish Heart stacks to increase party's Attack by 8% for each Childish Heart stack spent for 2 turns (max 5 stacks). When Haruna gains Childish Heart stacks, gain the same number of Mystery stacks. Mystery stacks are lost when Haruna uses a Highlight or after 2 turns, stacking up to 5 times.",
         descTh:"เมื่อใช้สกิล ใช้ Childish Heart ทั้งหมดเพื่อเพิ่ม ATK ปาร์ตี้ 8% ต่อ stack ที่ใช้ 2 เทิร์น (สูงสุด 5 stack) เมื่อ Haruna รับ Childish Heart ให้ได้รับ Mystery stack เท่ากัน Mystery stack หายเมื่อ Haruna ใช้ Highlight หรือหลัง 2 เทิร์น สะสมสูงสุด 5 stack"},
-      {stage:1, name:"Let's Go, Everyone!",
+      {name:"Let's Go, Everyone!",
         desc:"When an ally deals damage with a skill, increase Haruna's Attack by 20% (stacks up to 3 times). This effect ends when Haruna uses a skill. When Haruna's Attack is increased 2 times, increase party's damage by 15% for 1 turn.",
         descTh:"เมื่อพันธมิตรดีลดาเมจด้วยสกิล เพิ่ม ATK Haruna 20% (สะสมสูงสุด 3 ครั้ง) ผลนี้สิ้นสุดเมื่อ Haruna ใช้สกิล เมื่อ ATK Haruna เพิ่มขึ้น 2 ครั้ง เพิ่มดาเมจปาร์ตี้ 15% 1 เทิร์น"},
-      {stage:2, name:'Here to Help',
+      {name:'Here to Help',
         desc:"Let's Hold Hands increases the chance of gaining Childish Heart by 20%. When using Courageous Campaign and Childish Heart stacks are at maximum, increase Attack and critical damage by 24% for 2 turns.",
         descTh:"Let's Hold Hands เพิ่มโอกาสรับ Childish Heart 20% เมื่อใช้ Courageous Campaign และ Childish Heart เต็ม stack เพิ่ม ATK และ CRIT DMG 24% 2 เทิร์น"},
-      {stage:3, name:'Still Growing',
+      {name:'Still Growing',
         desc:"Increase the skill levels of Courageous Campaign and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Courageous Campaign และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:4, name:'Give It to Them',
+      {name:'Give It to Them',
         desc:"Highlight Enhanced: Extend damage increase duration by 2 turns.",
         descTh:"Highlight เสริม: ขยายระยะเวลาเพิ่มดาเมจออกไป 2 เทิร์น"},
-      {stage:5, name:'A Little Maintenance',
+      {name:'A Little Maintenance',
         desc:"Increase the skill levels of Surprise Squad and Ready for Adventure by 3.",
         descTh:"เพิ่มระดับสกิล Surprise Squad และ Ready for Adventure ขึ้น 3 ระดับ"},
-      {stage:6, name:'Puzzle Solver',
+      {name:'Puzzle Solver',
         desc:"When Childish Heart reaches 5 stacks, gain Curiosity. Curiosity: When Haruna deals damage with a skill, increase damage by 75%. This effect ends after dealing skill damage to foes.",
         descTh:"เมื่อ Childish Heart ถึง 5 stack รับ Curiosity Curiosity: เมื่อ Haruna ดีลดาเมจด้วยสกิล เพิ่มดาเมจ 75% ผลนี้สิ้นสุดหลังดีลดาเมจสกิลต่อศัตรู"},
     ],
@@ -3077,28 +3219,27 @@ const CHARACTERS = [
       {hp:3922, atk:1119, def:731, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Sweet Pickaxe', rarity:5, img:'p5x/weapon/sweet-pickaxe.png',
+    weapons:[
+      {name:'Sweet Pickaxe', stars:5,
         hp:2339, atk:667, def:436,
         bonusStats:{atk:30},
         abilityName:'Sweet Pickaxe',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'After spending Childish Heart, gain Whimsy based on number of stacks spent: When Haruna has Whimsy, increase Attack by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0%.',
-          'When allies deal damage with skills, spend 1 Whimsy, and increase the damage by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0%. Whimsy lasts for 2 turns.',
-        ],
+          'When allies deal damage with skills, spend 1 Whimsy, and increase the damage by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0%. Whimsy lasts for 2 turns.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'หลังใช้ Childish Heart รับ Whimsy ตามจำนวน stack ที่ใช้ เมื่อ Haruna มี Whimsy เพิ่ม Attack 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0%',
           'เมื่อพันธมิตรดีลดาเมจด้วยสกิล ใช้ Whimsy 1 stack และเพิ่มดาเมจ 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% Whimsy มีอายุ 2 เทิร์น',
         ]},
-      {name:'Chirpy Pickaxe', rarity:4, img:'p5x/weapon/chirpy-pickaxe.png',
+      {name:'Chirpy Pickaxe', stars:4,
         hp:1871, atk:534, def:349,
         bonusStats:{atk:24},
         abilityName:'Chirpy Pickaxe',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'After using a skill on an ally, for each Attack buff on the ally, increase Attack by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 2 turns. Stacks up to 3 times.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After using a skill on an ally, for each Attack buff on the ally, increase Attack by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 2 turns. Stacks up to 3 times.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3106,7 +3247,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Abundance 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.',
+  {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Love 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.',
     realName:'Lufel', persona:'Robroy',
     weakRes:{ Fire:'res', Ice:'normal', Electric:'normal', Wind:'wk', Nuclear:'normal', Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -3130,25 +3271,25 @@ const CHARACTERS = [
         descTh:"เพิ่มประสิทธิภาพการฟื้นฟูตาม HP สูงสุดของ Lufel เอฟเฟกต์สูงสุดที่ 12000 HP และจะเพิ่มประสิทธิภาพการฟื้นฟู 42.0%"},
     ],
     awareness:[
-      {stage:0, name:'Redheaded Hero',
+      {name:'Redheaded Hero',
         desc:"When using healing skills, grant Starfire I to the main target for 1 turn. After Starfire I ends, grant Starfire II for 1 turn.\nStarfire I: Increase Attack by 4% of Lufel's Attack (up to 160).\nStarfire II: Increase Attack by 8% of Lufel's Attack (up to 320).\n*Starfire does not stack, and only 1 stack is granted.",
         descTh:"เมื่อใช้สกิลฟื้นฟู ให้ Starfire I แก่เป้าหมายหลัก 1 เทิร์น หลังจาก Starfire I สิ้นสุด ให้ Starfire II 1 เทิร์น\nStarfire I: เพิ่ม Attack 4% ของ Attack ของ Lufel (สูงสุด 160)\nStarfire II: เพิ่ม Attack 8% ของ Attack ของ Lufel (สูงสุด 320)\n*Starfire ไม่สะสม และให้ได้เพียง 1 stack เท่านั้น"},
-      {stage:1, name:'Owl Eyes',
+      {name:'Owl Eyes',
         desc:"At the start of battle, inflict Burn on the foe with the highest remaining HP. Also, increase allies' elemental ailment accuracy by 33% when they have Starfire.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ ทำให้ศัตรูที่มี HP เหลือมากที่สุดติด Burn นอกจากนี้ เพิ่ม elemental ailment accuracy ของพันธมิตรที่มี Starfire 33%"},
-      {stage:2, name:'Nocturnal',
+      {name:'Nocturnal',
         desc:"When healing an ally who has Starfire II, increase healing effect by 10%.",
         descTh:"เมื่อฟื้นฟู HP ให้พันธมิตรที่มี Starfire II เพิ่มประสิทธิภาพการฟื้นฟู 10%"},
-      {stage:3, name:'Soaring Bird of Prey',
+      {name:'Soaring Bird of Prey',
         desc:"Increase the skill levels of Owl Fire and Owl Green by 2.",
         descTh:"เพิ่มระดับสกิล Owl Fire และ Owl Green ขึ้น 2"},
-      {stage:4, name:'Sheltering Wings of Light',
+      {name:'Sheltering Wings of Light',
         desc:"Highlight Enhanced: Increase party's Fire damage by 32% for 1 turn.",
         descTh:"Highlight Enhanced: เพิ่มความเสียหายธาตุไฟของปาร์ตี้ 32% เป็นเวลา 1 เทิร์น"},
-      {stage:5, name:'Preening',
+      {name:'Preening',
         desc:"Increase the skill levels of Healing Satellite and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Healing Satellite และ Thief Tactics ขึ้น 2"},
-      {stage:6, name:'Midnight Bonfire',
+      {name:'Midnight Bonfire',
         desc:"After Starfire II ends, gain Starfire III for 1 turn.\nStarfire III: Increase Attack by 8% of Lufel's Attack, increase Fire damage by 20%, and increase healing received by 10%.",
         descTh:"หลังจาก Starfire II สิ้นสุด รับ Starfire III 1 เทิร์น\nStarfire III: เพิ่ม Attack 8% ของ Attack ของ Lufel เพิ่มความเสียหายธาตุไฟ 20% และเพิ่มการรับการฟื้นฟู 10%"},
     ],
@@ -3163,29 +3304,28 @@ const CHARACTERS = [
       {hp:3007, atk:842, def:508, spd:95},
     ],
     hiddenAbility: 'HP% +21.8%',
-    weapons: [
+    weapons:[
       {
-        name: 'Fallen Angel Wing', rarity: 5, img: 'p5x/weapon/fallen-angel-wing.png',
+        name: 'Fallen Angel Wing', stars:5,
         hp: 2478, atk: 694, def: 418,
         bonusStats: {heal:22},
         abilityName: 'Fallen Angel Wing',
         ability: [
           'Increase healing effect by 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%.',
-          'For each Starfire stack on allies, increase healing received by 4.5%/5.9%/5.9%/7.3%/7.3%/8.7%/8.7%, and increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',
-        ],
+          'For each Starfire stack on allies, increase healing received by 4.5%/5.9%/5.9%/7.3%/7.3%/8.7%/8.7%, and increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.',],
         abilityTh: [
           'เพิ่มประสิทธิภาพการฟื้นฟู 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%',
           'ต่อ Starfire stack ที่พันธมิตรมี เพิ่มการรับการฟื้นฟู 4.5%/5.9%/5.9%/7.3%/7.3%/8.7%/8.7% และเพิ่ม Attack 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%',
         ],
       },
       {
-        name: 'Lava Flame', rarity: 4, img: 'p5x/weapon/lava-flame.png',
+        name: 'Lava Flame', stars:4,
         hp: 1982, atk: 555, def: 335,
         bonusStats: {atk:12},
         abilityName: 'Lava Flame',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'If Starfire is active, increase healing effect by 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% per stack of Starfire.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "If Starfire is active, increase healing effect by 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% per stack of Starfire.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3195,7 +3335,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Leon', codename:'Leon', role:'Guardian', element:'Nuclear', rarity:4,
-    cards:['Peace 4pc','Valor 2pc'], weapon:'Best ATK support weapon (Final Buster)',
+    cards:['Peace 4pc','Triumph 2pc'], weapon:'Best ATK support weapon (Final Buster)',
     statPrio:['ATK%','HP%','DEF%'], note:'Nuclear Guardian/buffer. Power of Friendship stacks amplify ally ATK and CRIT DMG. Justice Barrier converts ally HP into a shield; Energy Recharge returns that HP when the shield expires. ATK scales all shield/buff values.',
     realName:'Leo Kamiyama', persona:'Erytheia',
     weakRes:{ Fire:'wk', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'res',
@@ -3221,25 +3361,25 @@ const CHARACTERS = [
         descTh:"เพิ่ม CRIT DMG ของพันธมิตร 45.0% เมื่อมี Power of Friendship 2 stack"},
     ],
     awareness:[
-      {stage:0, name:'Hyper Hero Time!',
+      {name:'Hyper Hero Time!',
         desc:"Grant 1 Power of Friendship stack to allies when their HP falls to 75% or less. Stacks up to 2 times. When allies have Power of Friendship, increase Attack by 6% of Kamiyama's Attack (up to 120/180/240 at Lv.1/50/70) for 1 turn.",
         descTh:"มอบ Power of Friendship 1 stack ให้พันธมิตรเมื่อ HP ลดลงถึง 75% หรือต่ำกว่า สะสมสูงสุด 2 ครั้ง เมื่อพันธมิตรมี Power of Friendship เพิ่ม Attack 6% ของ Attack Kamiyama (สูงสุด 120/180/240 ที่ Lv.1/50/70) 1 เทิร์น"},
-      {stage:1, name:'Intense Link',
+      {name:'Intense Link',
         desc:"Increase allies' Defense by 10% when they have Power of Friendship.",
         descTh:"เพิ่ม DEF ของพันธมิตร 10% เมื่อมี Power of Friendship"},
-      {stage:2, name:'Undying Justice',
+      {name:'Undying Justice',
         desc:"After using skills on allies, increase own Attack by 25%.",
         descTh:"หลังใช้สกิลต่อพันธมิตร เพิ่ม Attack ของตัวเอง 25%"},
-      {stage:3, name:'Serious Action',
+      {name:'Serious Action',
         desc:"Increase the skill levels of Atomic Smash and Justice Barrier by 2.",
         descTh:"เพิ่มระดับสกิล Atomic Smash และ Justice Barrier ขึ้น 2 ระดับ"},
-      {stage:4, name:"Hero's Journey Home",
+      {name:"Hero's Journey Home",
         desc:"Highlight Enhanced: Increase target's critical damage by 25% for 2 turns.",
         descTh:"Highlight เสริม: เพิ่ม CRIT DMG ของเป้าหมาย 25% 2 เทิร์น"},
-      {stage:5, name:'Self-Discipline',
+      {name:'Self-Discipline',
         desc:"Increase the skill levels of Ultima Booster and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Ultima Booster และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Turning the Tables',
+      {name:'Turning the Tables',
         desc:"When using a skill on an ally with HP below 60%, increase critical damage by 25% for 1 turn.",
         descTh:"เมื่อใช้สกิลต่อพันธมิตรที่มี HP ต่ำกว่า 60% เพิ่ม CRIT DMG 25% 1 เทิร์น"},
     ],
@@ -3254,29 +3394,28 @@ const CHARACTERS = [
       {hp:2791, atk:834, def:524, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Final Buster', rarity:5, img:'p5x/weapon/final-buster.png',
+    weapons:[
+      {name:'Final Buster', stars:5,
         hp:2299, atk:687, def:432,
         bonusStats:{atk:30},
         abilityName:'Final Buster',
         ability:[
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'After using a skill on an ally, grant target 1 of the following buffs: Increase Attack by 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0% (1 turn). Increase critical damage by 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0% (1 turn).',
-          'If target has 2 or more Power of Friendship stacks, grant both buffs, and increase shield effects Kamiyama grants by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% more for 1 turn.',
-        ],
+          'If target has 2 or more Power of Friendship stacks, grant both buffs, and increase shield effects Kamiyama grants by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% more for 1 turn.',],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'หลังใช้สกิลต่อพันธมิตร มอบ 1 ใน buff ต่อไปนี้ให้เป้าหมาย: เพิ่ม Attack 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0% (1 เทิร์น) หรือเพิ่ม CRIT DMG 16.0%/21.0%/21.0%/26.0%/26.0%/31.0%/31.0% (1 เทิร์น)',
           'หากเป้าหมายมี Power of Friendship 2+ stack มอบ buff ทั้งคู่ และเพิ่ม shield ที่ Kamiyama มอบ 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% 1 เทิร์น',
         ]},
-      {name:'Justice Lance', rarity:4, img:'p5x/weapon/justice-lance.png',
+      {name:'Justice Lance', stars:4,
         hp:1839, atk:550, def:346,
         bonusStats:{},
         abilityName:'Justice Lance',
         ability:[
-          'Increase shield by 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%.',
-          'After using a skill on an ally, increase Attack by 9.0%/11.7%/11.7%/14.4%/14.4%/17.1%/17.1% for 1 turn.',
-          'For every 20% HP the target loses, increase Attack by 20%.',
+          "Increase shield by 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%.",
+          "After using a skill on an ally, increase Attack by 9.0%/11.7%/11.7%/14.4%/14.4%/17.1%/17.1% for 1 turn.",
+          "For every 20% HP the target loses, increase Attack by 20%.",
         ],
         abilityTh:[
           'เพิ่ม shield 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%',
@@ -3286,7 +3425,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Closer', codename:'Closer', role:'Sweeper', element:'Electric', rarity:4,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best Electric DMG weapon (Quasar)',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Electric DMG weapon (Quasar)',
     statPrio:['ATK%','Electric DMG%','CRIT Rate%'], note:'4★ Electric Sweeper. Shock-focused AoE DPS — spreads Shock, exploits Technicals, and stacks Electric damage debuffs on enemies.',
     realName:'Motoha Arai', persona:'Awilda',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
@@ -3312,25 +3451,25 @@ const CHARACTERS = [
         descTh:"เพิ่มดาเมจไฟฟ้าที่รับของเป้าหมายหลักจากสกิล Motoha 20.0% เป็นเวลา 2 เทิร์น สะสมสูงสุด 2 ครั้ง"},
     ],
     awareness:[
-      {stage:0, name:'Strike Zone',
+      {name:'Strike Zone',
         desc:"When Motoha deals Electric damage, 15% chance to inflict Shock on the target. When dealing damage to Shocked foes, increase Attack by 30%.",
         descTh:"เมื่อ Motoha ดีลดาเมจไฟฟ้า มีโอกาส 15% ที่จะทำให้ศัตรูติด Shock เมื่อดีลดาเมจต่อศัตรูที่ติด Shock เพิ่ม Attack 30%"},
-      {stage:1, name:'Shocking Double Play',
+      {name:'Shocking Double Play',
         desc:"Wrathful Thunder deals 1 more hit. Damage to same foe reduced to 15%.",
         descTh:"Wrathful Thunder ดีลเพิ่ม 1 ครั้ง ดาเมจต่อศัตรูตัวเดิมลดเหลือ 15%"},
-      {stage:2, name:'Innings Change',
+      {name:'Innings Change',
         desc:"Decrease damage taken from Shocked foes by 20%.",
         descTh:"ลดดาเมจที่รับจากศัตรูที่ติด Shock 20%"},
-      {stage:3, name:'Cheerful and Considerate',
+      {name:'Cheerful and Considerate',
         desc:"Increase the skill levels of Wrathful Thunder and Blitz Mine by 2.",
         descTh:"เพิ่มระดับสกิล Wrathful Thunder และ Blitz Mine ขึ้น 2 ระดับ"},
-      {stage:4, name:'Extra Run',
+      {name:'Extra Run',
         desc:"Highlight Enhanced: Increase all foes' Electric damage taken by 20% for 2 turns.",
         descTh:"Highlight เสริม: เพิ่มดาเมจไฟฟ้าที่รับของศัตรูทุกตัว 20% เป็นเวลา 2 เทิร์น"},
-      {stage:5, name:'Past Dreams',
+      {name:'Past Dreams',
         desc:"Increase the skill levels of Electroshark and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Electroshark และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Key to Victory',
+      {name:'Key to Victory',
         desc:"Increase Shocked foes' Electric damage taken by 20%, and increase Electric critical damage taken by 20%.",
         descTh:"เพิ่มดาเมจไฟฟ้าที่รับของศัตรูที่ติด Shock 20% และเพิ่ม CRIT DMG ไฟฟ้าที่รับ 20%"},
     ],
@@ -3345,28 +3484,27 @@ const CHARACTERS = [
       {hp:2598, atk:882, def:551, spd:0},
     ],
     hiddenAbility: 'ATK% +21.8%',
-    weapons: [
-      {name:'Quasar', rarity:5, img:'p5x/weapon/quasar.png',
+    weapons:[
+      {name:'Quasar', stars:5,
         hp:2141, atk:727, def:454,
         bonusStats:{edm:24},
         abilityName:'Quasar',
         ability:[
           'Increase Electric damage by 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%.',
           'After using a skill, gain 1 Thundercloud stack: increase own Attack by 11.0%/16.0%/16.0%/21.0%/21.0%/26.0%/26.0% for 2 turns (+1 stack if any Shocked foes, up to 3 stacks).',
-          'When Thundercloud is at max stacks, increase party\'s Electric damage by 10.0%/14.6%/14.6%/19.2%/19.2%/23.8%/23.8%.',
-        ],
+          'When Thundercloud is at max stacks, increase party\'s Electric damage by 10.0%/14.6%/14.6%/19.2%/19.2%/23.8%/23.8%.',],
         abilityTh:[
           'เพิ่มดาเมจไฟฟ้า 24.2%/24.2%/31.5%/31.5%/38.8%/38.8%/46.1%',
           'หลังใช้สกิล รับ Thundercloud 1 stack: เพิ่ม Attack ตัวเอง 11.0%/16.0%/16.0%/21.0%/21.0%/26.0%/26.0% เป็นเวลา 2 เทิร์น (+1 stack หากมีศัตรูติด Shock สูงสุด 3 stack)',
           'เมื่อ Thundercloud ครบสูงสุด เพิ่มดาเมจไฟฟ้าของปาร์ตี้ 10.0%/14.6%/14.6%/19.2%/19.2%/23.8%/23.8%',
         ]},
-      {name:'Crime and Punishment', rarity:4, img:'p5x/weapon/crime-and-punishment.png',
+      {name:'Crime and Punishment', stars:4,
         hp:1712, atk:581, def:363,
         bonusStats:{atk:24},
         abilityName:'Crime and Punishment',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'If there are any Shocked foes, increase Attack by 20%/26%/26%/32%/32%/38%/38%.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "If there are any Shocked foes, increase Attack by 20%/26%/26%/32%/32%/38%/38%.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3375,7 +3513,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Mont', codename:'Mont', role:'Assassin', element:'Ice', rarity:4,
-    cards:['Courage 4pc','Valor 2pc'], weapon:'Best Ice ATK weapon',
+    cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Ice ATK weapon',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'4★ Ice Assassin. Ice Crystal mechanic with Resonance follow-up attacks and execute damage.',
     realName:'Montagne Kotone', persona:'Terpsichore',
     weakRes:{ Fire:'normal', Ice:'res', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3401,25 +3539,25 @@ const CHARACTERS = [
         descTh:"เมื่อ Kotone กำจัดศัตรู รับ Ice Crystal 4 stack"},
     ],
     awareness:[
-      {stage:0, name:'Blade Dancer',
+      {name:'Blade Dancer',
         desc:"On ally's action, gain 1 Ice Crystal stack (up to 12). After using a skill, when Ice Crystal reaches 10 stacks, activate a Resonance spending 10 stacks to deal 65% follow-up Ice damage to the main target (guaranteed crit). When using Frost Lily or Winter Storm, if Resonance activates, gain Parhelion. Parhelion strengthens Durandal of Ice.",
         descTh:"เมื่อพันธมิตรใช้แอ็คชัน รับ Ice Crystal 1 stack (สูงสุด 12) หลังใช้สกิล เมื่อ Ice Crystal ครบ 10 stack เปิดใช้ Resonance ใช้ 10 stack สร้างดาเมจน้ำแข็งตาม 65% ของ Attack ต่อเป้าหมาย (CRIT แน่นอน) เมื่อใช้ Frost Lily หรือ Winter Storm หาก Resonance ทำงาน รับ Parhelion ซึ่งเสริม Durandal of Ice"},
-      {stage:1, name:'Camel Spin',
+      {name:'Camel Spin',
         desc:"At the end of Kotone's turn, gain a shield equal to 15% of Attack for 1 turn.",
         descTh:"เมื่อสิ้นสุดเทิร์น Kotone รับ shield เท่ากับ 15% ของ Attack เป็นเวลา 1 เทิร์น"},
-      {stage:2, name:'Ice Princess',
+      {name:'Ice Princess',
         desc:"Increase Resonance damage based on foe's missing HP (up to 50%).",
         descTh:"เพิ่มดาเมจ Resonance ตาม HP ที่หายของศัตรู (สูงสุด 50%)"},
-      {stage:3, name:'Heart of Ice',
+      {name:'Heart of Ice',
         desc:"Increase the skill levels of Frost Lily and Winter Storm by 2.",
         descTh:"เพิ่มระดับสกิล Frost Lily และ Winter Storm ขึ้น 2 ระดับ"},
-      {stage:4, name:'Resilience',
+      {name:'Resilience',
         desc:"Highlight Enhanced: Increase Highlight damage up to 60%.",
         descTh:"Highlight เสริม: เพิ่มดาเมจ Highlight สูงสุด 60%"},
-      {stage:5, name:'Axel Jump',
+      {name:'Axel Jump',
         desc:"Increase the skill levels of Durandal of Ice and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Durandal of Ice และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Opening Ceremony',
+      {name:'Opening Ceremony',
         desc:"At the start of battle, gain 4 Ice Crystal stacks. Increase the maximum number of Ice Crystal stacks to 15.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ รับ Ice Crystal 4 stack และเพิ่มจำนวน stack สูงสุดของ Ice Crystal เป็น 15"},
     ],
@@ -3434,28 +3572,27 @@ const CHARACTERS = [
       {hp:2622, atk:922, def:497, spd:0},
     ],
     hiddenAbility: 'ATK% +21.8%',
-    weapons: [
-      {name:'Queen of Winter', rarity:5, img:'p5x/weapon/queen-of-winter.png',
+    weapons:[
+      {name:'Queen of Winter', stars:5,
         hp:2160, atk:760, def:410,
         bonusStats:{atk:30},
         abilityName:'Hiver Éternel',
         ability:[
           'Increase critical damage by 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%.',
           'Activate Blade Dancer at 8+ Ice Crystal stacks and increase its damage by 46.0%/68.0%/68.0%/90.0%/90.0%/112.0%/112.0%.',
-          'Increase the power of Durandal of Ice at 8+ Ice Crystal stacks.',
-        ],
+          'Increase the power of Durandal of Ice at 8+ Ice Crystal stacks.',],
         abilityTh:[
           'เพิ่ม CRIT DMG 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%',
           'เปิดใช้ Blade Dancer เมื่อมี Ice Crystal 8+ stack และเพิ่มดาเมจ 46.0%/68.0%/68.0%/90.0%/90.0%/112.0%/112.0%',
           'เพิ่มพลังของ Durandal of Ice เมื่อมี Ice Crystal 8+ stack',
         ]},
-      {name:'Edelweiss', rarity:4, img:'p5x/weapon/edelweiss.png',
+      {name:'Edelweiss', stars:4,
         hp:1729, atk:608, def:328,
         bonusStats:{atk:24},
         abilityName:'Don Glacial',
         ability:[
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'Each time Kotone gains Ice Crystal stacks, increase Ice damage by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 1 turn. Stacks up to 10 times.',
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Each time Kotone gains Ice Crystal stacks, increase Ice damage by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 1 turn. Stacks up to 10 times.",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3464,7 +3601,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Soy', codename:'Soy', role:'Guardian', element:'Ice', rarity:4,
-    cards:['Abundance 4pc','Virtue 2pc'], weapon:'Best HP/Ice Guardian weapon',
+    cards:['Love 4pc','Virtue 2pc'], weapon:'Best HP/Ice Guardian weapon',
     statPrio:['HP%','Healing Bonus%','DEF%'], note:'4★ Ice Guardian. HP-scaling tank with party HP buff and mitigation via Desperado.',
     realName:'Shun Kano', persona:'Mandrin',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3490,13 +3627,13 @@ const CHARACTERS = [
         descTh:"เมื่อ Shun ถูกโจมตีขณะ Icy Defense ใช้งานอยู่ มีโอกาส 30% ที่จะเปิดใช้งาน Desperado"},
     ],
     awareness:[
-      {stage:0, name:'Wild Runner', desc:"Increase chance of being targeted by attacks, and when attacked, activate Desperado. At the end of Shun's turn, Desperado ends, and he restores 30% HP.", descTh:"เพิ่มโอกาสที่จะถูกโจมตี เมื่อถูกโจมตีจะเปิดใช้งาน Desperado ในตอนท้ายเทิร์น Shun Desperado สิ้นสุดลงและฟื้นฟู HP 30%"},
-      {stage:1, name:'Steely Endurance', desc:"When Desperado is active, decrease damage taken by 8%.", descTh:"เมื่อ Desperado ใช้งานอยู่ ลดดาเมจที่รับ 8%"},
-      {stage:2, name:'Bloodspray', desc:"When remaining HP is below 50%, increase healing effect by 25%.", descTh:"เมื่อ HP เหลือต่ำกว่า 50% เพิ่มผลการรักษา 25%"},
-      {stage:3, name:'Man of Integrity', desc:"Increase the skill levels of Icicle Hatchet and Smash Hit by 2.", descTh:"เพิ่มระดับสกิล Icicle Hatchet และ Smash Hit ขึ้น 2 ระดับ"},
-      {stage:4, name:"A Man's Back", desc:"Highlight Enhanced: Decrease party's damage taken by 16% for 2 turns.", descTh:"Highlight เสริม: ลดดาเมจที่ปาร์ตี้รับ 16% เป็นเวลา 2 เทิร์น"},
-      {stage:5, name:'Masterful Cutting Skills', desc:"Increase the skill levels of Icy Defense and Thief Tactics by 2.", descTh:"เพิ่มระดับสกิล Icy Defense และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Robbing and Smuggling', desc:"When attacking a foe while Desperado is active, deal bonus damage equal to 10% of Shun's max HP, and restore HP equal to damage dealt.", descTh:"เมื่อโจมตีศัตรูขณะ Desperado ใช้งานอยู่ ดีลดาเมจโบนัส 10% ของ HP สูงสุดของ Shun และฟื้นฟู HP เท่ากับดาเมจที่ดีล"},
+      {name:'Wild Runner', desc:"Increase chance of being targeted by attacks, and when attacked, activate Desperado. At the end of Shun's turn, Desperado ends, and he restores 30% HP.", descTh:"เพิ่มโอกาสที่จะถูกโจมตี เมื่อถูกโจมตีจะเปิดใช้งาน Desperado ในตอนท้ายเทิร์น Shun Desperado สิ้นสุดลงและฟื้นฟู HP 30%"},
+      {name:'Steely Endurance', desc:"When Desperado is active, decrease damage taken by 8%.", descTh:"เมื่อ Desperado ใช้งานอยู่ ลดดาเมจที่รับ 8%"},
+      {name:'Bloodspray', desc:"When remaining HP is below 50%, increase healing effect by 25%.", descTh:"เมื่อ HP เหลือต่ำกว่า 50% เพิ่มผลการรักษา 25%"},
+      {name:'Man of Integrity', desc:"Increase the skill levels of Icicle Hatchet and Smash Hit by 2.", descTh:"เพิ่มระดับสกิล Icicle Hatchet และ Smash Hit ขึ้น 2 ระดับ"},
+      {name:"A Man's Back", desc:"Highlight Enhanced: Decrease party's damage taken by 16% for 2 turns.", descTh:"Highlight เสริม: ลดดาเมจที่ปาร์ตี้รับ 16% เป็นเวลา 2 เทิร์น"},
+      {name:'Masterful Cutting Skills', desc:"Increase the skill levels of Icy Defense and Thief Tactics by 2.", descTh:"เพิ่มระดับสกิล Icy Defense และ Thief Tactics ขึ้น 2 ระดับ"},
+      {name:'Robbing and Smuggling', desc:"When attacking a foe while Desperado is active, deal bonus damage equal to 10% of Shun's max HP, and restore HP equal to damage dealt.", descTh:"เมื่อโจมตีศัตรูขณะ Desperado ใช้งานอยู่ ดีลดาเมจโบนัส 10% ของ HP สูงสุดของ Shun และฟื้นฟู HP เท่ากับดาเมจที่ดีล"},
     ],
     baseStats: {hp:290, atk:56, def:38, spd:102},
     baseStatsLv80: [
@@ -3509,28 +3646,27 @@ const CHARACTERS = [
       {hp:3488, atk:682, def:466, spd:0},
     ],
     hiddenAbility: 'HP% +21.8%',
-    weapons: [
-      {name:'Permafrost', rarity:5, img:'p5x/weapon/permafrost.png',
+    weapons:[
+      {name:'Permafrost', stars:5,
         hp:2874, atk:562, def:383,
         bonusStats:{hp:30},
         abilityName:'Permafrost',
         ability:[
           'Increase max HP by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           "When activating Desperado's healing effect, 52.0%/68.0%/68.0%/84.0%/84.0%/100.0%/100.0% chance to grant the same effect to the ally with the lowest remaining HP.",
-          "When taking an attack, decrease the attacker's Defense by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0% for 1 turn.",
-        ],
+          "When taking an attack, decrease the attacker's Defense by 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0% for 1 turn.",],
         abilityTh:[
           'เพิ่ม HP สูงสุด 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           "เมื่อเปิดใช้งานการรักษาของ Desperado มีโอกาส 52.0%/68.0%/68.0%/84.0%/84.0%/100.0%/100.0% ที่จะมอบผลเดียวกันให้พันธมิตรที่ HP เหลือน้อยที่สุด",
           "เมื่อถูกโจมตี ลด DEF ของผู้โจมตี 30.0%/39.0%/39.0%/48.0%/48.0%/57.0%/57.0% เป็นเวลา 1 เทิร์น",
         ]},
-      {name:"Demon's Bite", rarity:4, img:'p5x/weapon/demons-bite.png',
+      {name:"Demon's Bite", stars:4,
         hp:2299, atk:449, def:306,
         bonusStats:{hp:24},
         abilityName:"Demon's Bite",
         ability:[
-          'Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'While Desperado is active, increase max HP by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0% more, Defense by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%, and ailment resistance by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%.',
+          "Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "While Desperado is active, increase max HP by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0% more, Defense by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%, and ailment resistance by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%.",
         ],
         abilityTh:[
           'เพิ่ม HP สูงสุด 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3539,7 +3675,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Yuki', codename:'Yuki', role:'Guardian', element:'Bless', rarity:4,
-    cards:['Valor 4pc','Courage 2pc'], weapon:'Best DEF% Bless weapon (Karmic Cycle)',
+    cards:['Triumph 4pc','Courage 2pc'], weapon:'Best DEF% Bless weapon (Karmic Cycle)',
     statPrio:['DEF%','HP%','SPD'], note:'Bless Guardian. All damage and shields scale with DEF. Oath grants shields, DEF buffs, and enables Gavel stacks from Blessing. Cross-Examination converts DEF into party damage bonus.',
     realName:'Yukimi Fujikawa', persona:'Stix',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'wk',
@@ -3565,25 +3701,25 @@ const CHARACTERS = [
         descTh:"เมื่อสิ้นสุดแอ็คชันของ Yukimi มอบ shield 69.0% ของ DEF Yukimi ให้พันธมิตรที่มี HP ต่ำกว่า 30% และมอบ Blessing 1 stack Blessing คงอยู่ 2 เทิร์น เปิดใช้ได้ครั้งเดียวต่อการต่อสู้"},
     ],
     awareness:[
-      {stage:0, name:'Scales of Fairness',
+      {name:'Scales of Fairness',
         desc:"At the start of battle, grant Oath to 1 random ally. At the end of Yukimi's action, grant a shield equal to 24% of Yukimi's Defense to an ally with Oath. Only 1 ally can have Oath at a time.",
         descTh:"เมื่อเริ่มต้นการต่อสู้ มอบ Oath ให้พันธมิตรสุ่ม 1 คน เมื่อสิ้นสุดแอ็คชันของ Yukimi มอบ shield 24% ของ DEF Yukimi ให้พันธมิตรที่มี Oath พันธมิตรมี Oath ได้ครั้งละ 1 คนเท่านั้น"},
-      {stage:1, name:'Legal Proceedings',
+      {name:'Legal Proceedings',
         desc:"When an ally has Oath, increase their Defense by 15%.",
         descTh:"เมื่อพันธมิตรมี Oath เพิ่ม DEF 15%"},
-      {stage:2, name:'Law-Abiding Spirit',
+      {name:'Law-Abiding Spirit',
         desc:"When an ally with Oath takes an action, gain 1 Blessing stack.",
         descTh:"เมื่อพันธมิตรที่มี Oath ใช้แอ็คชัน รับ Blessing 1 stack"},
-      {stage:3, name:'Right Person Right Place',
+      {name:'Right Person Right Place',
         desc:"Increase the skill levels of Sword of Condemnation and Sacral Glow by 2.",
         descTh:"เพิ่มระดับสกิล Sword of Condemnation และ Sacral Glow ขึ้น 2 ระดับ"},
-      {stage:4, name:'Legal Qualifications',
+      {name:'Legal Qualifications',
         desc:"Highlight Enhanced: Grant 2 Blessing stacks to all allies.",
         descTh:"Highlight เสริม: มอบ Blessing 2 stack ให้พันธมิตรทุกคน"},
-      {stage:5, name:'Execution of Justice',
+      {name:'Execution of Justice',
         desc:"Increase the skill levels of Absolute Judgment and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Absolute Judgment และ Thief Tactics ขึ้น 2 ระดับ"},
-      {stage:6, name:'Extenuating Circumstances',
+      {name:'Extenuating Circumstances',
         desc:"Increase damage by 10% for Yukimi and allies with Oath. Increase Bless damage by 2% for each Blessing stack on Yukimi and allies with Oath (up to 20%).",
         descTh:"เพิ่มดาเมจ 10% สำหรับ Yukimi และพันธมิตรที่มี Oath เพิ่มดาเมจแสง 2% ต่อ Blessing stack บน Yukimi และพันธมิตรที่มี Oath (สูงสุด 20%)"},
     ],
@@ -3598,28 +3734,27 @@ const CHARACTERS = [
       {hp:2839, atk:682, def:637, spd:0},
     ],
     hiddenAbility: 'DEF% +32.6%',
-    weapons: [
-      {name:'Karmic Cycle', rarity:5, img:'p5x/weapon/karmic-cycle.png',
+    weapons:[
+      {name:'Karmic Cycle', stars:5,
         hp:2339, atk:562, def:524,
         bonusStats:{def:45},
         abilityName:'Karmic Cycle',
         ability:[
           'Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%.',
           'When spending Gavel stacks with Absolute Judgment, add 1 to number of stacks spent.',
-          'Also steal 13.0%/20.0%/20.0%/27.0%/27.0%/34.0%/34.0% of target\'s Defense for 2 turns based on own Defense (up to 520/800/800/1080/1080/1360/1360).',
-        ],
+          'Also steal 13.0%/20.0%/20.0%/27.0%/27.0%/34.0%/34.0% of target\'s Defense for 2 turns based on own Defense (up to 520/800/800/1080/1080/1360/1360).',],
         abilityTh:[
           'เพิ่ม DEF 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%',
           'เมื่อใช้ Gavel stack ด้วย Absolute Judgment เพิ่มจำนวน stack ที่ใช้ 1',
           'ขโมย DEF เป้าหมาย 13.0%/20.0%/20.0%/27.0%/27.0%/34.0%/34.0% ตาม DEF ของตัวเอง 2 เทิร์น (สูงสุด 520/800/800/1080/1080/1360/1360)',
         ]},
-      {name:'Heavy Metal Pain', rarity:4, img:'p5x/weapon/heavy-metal-pain.png',
+      {name:'Heavy Metal Pain', stars:4,
         hp:1871, atk:449, def:419,
         bonusStats:{def:35},
         abilityName:'Heavy Metal Pain',
         ability:[
-          'Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.',
-          'When granting a shield to an ally with less than 50% HP, increase shield by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0%.',
+          "Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.",
+          "When granting a shield to an ally with less than 50% HP, increase shield by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0%.",
         ],
         abilityTh:[
           'เพิ่ม DEF 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%',
@@ -3629,7 +3764,7 @@ const CHARACTERS = [
   },
   {name:'Key',                codename:'Key',            role:'Saboteur',   element:'Fire',           rarity:4, cards:['Hindrance 4pc','Strife 2pc'],    weapon:'Best Fire debuff weapon',                       statPrio:['ATK%','SPD','DEF%'],                             note:'4★ Fire Saboteur. Applies debuffs to reduce enemy Fire resistance.'},
   {name:'Moko', codename:'Moko', role:'Medic', element:'Psychokinesis', rarity:4,
-    cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
     statPrio:['ATK%','Healing Bonus%','HP%'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
     realName:'Tomoko Noge', persona:'Prosymna',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3655,25 +3790,25 @@ const CHARACTERS = [
         descTh:"เมื่อเปิดใช้ Hale Summer Days เพิ่ม HP สูงสุดของเป้าหมายหลัก 1800 เป็นเวลา 2 เทิร์น ฟื้นฟู HP ของพันธมิตรที่มี HP ต่ำสุด 60% ของการรักษาจากสกิล"},
     ],
     awareness:[
-      {stage:0, name:'Summer Reminiscence',
+      {name:'Summer Reminiscence',
         desc:"After an ally acts, if any foe has 3+ Sparks stacks, activate Resonance: for every 3 Sparks on all foes, deal Psy = 19% ATK to all, decrease target damage -30% for 1 turn, heal party = 9% ATK + 300/600/900 (Lv.1/50/70+). Up to 5 rounds. Damage scales: 150%/120%/100% for 1/2/3+ foes. No Down Point damage. Defeated foe's Sparks pass to random foes.",
         descTh:"หลังพันธมิตรใช้แอ็คชัน หากศัตรูมี Sparks 3+ stack เปิดใช้ Resonance: ต่อ Sparks 3 stack บนศัตรูทุกตัว ดีลดาเมจพลังจิต 19% ของ ATK ต่อทุกตัว ลดดาเมจเป้าหมาย -30% 1 เทิร์น ฮีลปาร์ตี้ 9% ATK + 300/600/900 (Lv.1/50/70+) สูงสุด 5 รอบ ดาเมจ: 150%/120%/100% สำหรับ 1/2/3+ ตัว ไม่มี Down Point ศัตรูที่ตายส่ง Sparks ต่อแบบสุ่ม"},
-      {stage:1, name:'Flash of Summer',
+      {name:'Flash of Summer',
         desc:"Each SR effect on a foe → DEF -15% for 3 turns (stacks 3). Hale Summer Days healing now applies to all allies.",
         descTh:"ทุก SR effect บนศัตรู → DEF -15% 3 เทิร์น (สะสม 3) Hale Summer Days ฮีลพันธมิตรทุกคนแทน"},
-      {stage:2, name:'Gentle Sunbeams',
+      {name:'Gentle Sunbeams',
         desc:"Every 2 SR activations → 1 Sparks on random foe. Each Sparks inflicted → party ATK permanently +2% (up to 15 stacks).",
         descTh:"ทุก 2 ครั้งที่ SR เปิดใช้ → Sparks 1 stack บนศัตรูสุ่ม ทุกครั้งที่ทำให้ติด Sparks → ATK ปาร์ตี้ถาวร +2% (สูงสุด 15 stack)"},
-      {stage:3, name:'Sentimental Seabreeze',
+      {name:'Sentimental Seabreeze',
         desc:"Increase the skill levels of Have a Cold Drink and Hale Summer Days by 3.",
         descTh:"เพิ่มระดับสกิล Have a Cold Drink และ Hale Summer Days ขึ้น 3 ระดับ"},
-      {stage:4, name:'Sparkling Summer Night',
+      {name:'Sparkling Summer Night',
         desc:"Highlight Enhanced: Deal bonus damage (2 hits) and inflict 1 Sparks stack per hit.",
         descTh:"Highlight เสริม: ดีลดาเมจโบนัส (2 ครั้ง) และทำให้ติด Sparks 1 stack ต่อครั้ง"},
-      {stage:5, name:'Lingering Glow',
+      {name:'Lingering Glow',
         desc:"Increase the skill levels of Sparkling Memories and Thief Tactics by 3.",
         descTh:"เพิ่มระดับสกิล Sparkling Memories และ Thief Tactics ขึ้น 3 ระดับ"},
-      {stage:6, name:'Heartfelt Days',
+      {name:'Heartfelt Days',
         desc:"Summer Reminiscence gains: CRIT Rate +35% when dealing SR damage. Each SR effect on a foe → permanently +5% damage taken (stacks 3). At max stacks: CRIT DMG taken +20% more.",
         descTh:"Summer Reminiscence เพิ่ม: CRIT Rate +35% เมื่อดีลดาเมจ SR ทุก SR effect บนศัตรู → ดาเมจที่รับถาวร +5% (สะสม 3) ที่ stack สูงสุด: CRIT DMG ที่รับ +20% เพิ่มเติม"},
     ],
@@ -3688,22 +3823,21 @@ const CHARACTERS = [
       {hp:3922, atk:1208, def:642, spd:0},
     ],
     hiddenAbility: 'ATK% +29%',
-    weapons: [
-      {name:'Bubble Babies', rarity:5, img:'p5x/weapon/bubble-babies.png',
+    weapons:[
+      {name:'Bubble Babies', stars:5,
         hp:2339, atk:720, def:383,
         bonusStats:{heal:22},
         abilityName:'Bubble Babies',
         ability:[
           'Increase healing by 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%.',
           'Increase Summer Reminiscence damage multiplier and healing by 18.5%/24.0%/24.0%/29.5%/29.5%/35.0%/35.0%.',
-          'When activating Summer Reminiscence, increase target\'s damage taken by 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% for 3 turns (stacks 2). Decrease target\'s DEF and ailment resistance by 12% for 3 turns.',
-        ],
+          'When activating Summer Reminiscence, increase target\'s damage taken by 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% for 3 turns (stacks 2). Decrease target\'s DEF and ailment resistance by 12% for 3 turns.',],
         abilityTh:[
           'เพิ่มการรักษา 22.0%/22.0%/28.5%/28.5%/35.0%/35.0%/41.5%',
           'เพิ่มตัวคูณดาเมจและการรักษา Summer Reminiscence 18.5%/24.0%/24.0%/29.5%/29.5%/35.0%/35.0%',
           "เมื่อเปิดใช้ Summer Reminiscence เพิ่มดาเมจที่รับของเป้าหมาย 8.5%/11.0%/11.0%/13.5%/13.5%/16.0%/16.0% 3 เทิร์น (สะสม 2) ลด DEF และ ailment resistance เป้าหมาย 12% 3 เทิร์น",
         ]},
-      {name:"Ocean's Tidings", rarity:4, img:"p5x/weapon/oceans-tidings.png",
+      {name:"Ocean's Tidings", stars:4,
         hp:1871, atk:576, def:306,
         bonusStats:{atk:24},
         abilityName:"Ocean's Tidings",
@@ -3717,7 +3851,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Sepia',              codename:'Sepia',          role:'Assassin',   element:'Curse',          rarity:4, cards:['Integrity 4pc','Opulence 2pc'],  weapon:'Best Curse ATK weapon',                         statPrio:['ATK%','SPD','HP%'],                              note:'4★ Curse Assassin. High-speed burst damage with Curse element.',
+  {name:'Sepia',              codename:'Sepia',          role:'Assassin',   element:'Curse',          rarity:4, cards:['Reconciliation 4pc','Opulence 2pc'],  weapon:'Best Curse ATK weapon',                         statPrio:['ATK%','SPD','HP%'],                              note:'4★ Curse Assassin. High-speed burst damage with Curse element.',
     realName:'Toshiya Sumi', persona:'Gorgyra',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'wk', Wind:'normal', Nuclear:'normal', Curse:'res', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -3741,25 +3875,25 @@ const CHARACTERS = [
         descTh:"ต่อ Verse of Hate, Verse of Healing หรือ Verse of Passion stack ที่ใช้ เพิ่มความเสียหายของ Sonnet of Fate 10.0%"},
     ],
     awareness:[
-      {stage:0, name:'Sonnet of Fate',
+      {name:'Sonnet of Fate',
         desc:"Each time an ally deals damage, gain 1 Verse stack.\nAt 14+ Verse stacks, activate a Resonance and spend 14 Verse stacks to deal follow-up Curse damage to the last foe Sumi targeted, equal to 65%/98%/130% of Attack (effect changes at Lv. 1/50/70, respectively).\n*Verse of Hate, Verse of Healing, and Verse of Passion all also count as Verse stacks.",
         descTh:"ทุกครั้งที่พันธมิตรสร้างความเสียหาย รับ 1 Verse stack\nเมื่อมี Verse stack 14 ขึ้นไป เปิดใช้ Resonance และใช้ 14 stack เพื่อสร้างความเสียหาย Curse ตาม ศัตรูตัวล่าสุดที่ Sumi โจมตี เท่ากับ 65%/98%/130% ของ Attack (เปลี่ยนที่ Lv. 1/50/70)\n*Verse of Hate, Verse of Healing และ Verse of Passion นับเป็น Verse stack ด้วย"},
-      {stage:1, name:'Fishing Pond Master',
+      {name:'Fishing Pond Master',
         desc:"After using a skill, increase damage of the next Sonnet of Fate by 40%.",
         descTh:"หลังจากใช้สกิล เพิ่มความเสียหายของ Sonnet of Fate ครั้งถัดไป 40%"},
-      {stage:2, name:'Flight and Conflict',
+      {name:'Flight and Conflict',
         desc:"Increase Attack of Sonnet of Fate by 50%, and inflict Curse on foes hit.",
         descTh:"เพิ่ม Attack ของ Sonnet of Fate 50% และทำให้ศัตรูที่โดนโจมตีติด Curse"},
-      {stage:3, name:'Passion for Creation',
+      {name:'Passion for Creation',
         desc:"Increase the skill levels of Unexpected Tragedy and Absurd Comedy by 2.",
         descTh:"เพิ่มระดับสกิล Unexpected Tragedy และ Absurd Comedy ขึ้น 2"},
-      {stage:4, name:'Scream from the Soul',
+      {name:'Scream from the Soul',
         desc:"Highlight Enhanced: Increase damage of Sonnet of Fate the next 4 times.",
         descTh:"Highlight Enhanced: เพิ่มความเสียหายของ Sonnet of Fate 4 ครั้งถัดไป"},
-      {stage:5, name:'Throes of Creation',
+      {name:'Throes of Creation',
         desc:"Increase the skill levels of Tragicomedy of Love and Thief Tactics by 2.",
         descTh:"เพิ่มระดับสกิล Tragicomedy of Love และ Thief Tactics ขึ้น 2"},
-      {stage:6, name:'Life Advice',
+      {name:'Life Advice',
         desc:"After using a skill, the Verse of Hate, Verse of Healing, or Verse of Passion gained activates 3 more times next turn.\nIf 2 or more different types of Verses are stacked, increase Sonnet of Fate damage by 67%.",
         descTh:"หลังจากใช้สกิล Verse of Hate, Verse of Healing หรือ Verse of Passion ที่ได้รับจะทำงานเพิ่มอีก 3 ครั้งในเทิร์นถัดไป\nหาก Verse ต่างประเภท 2 ชนิดขึ้นไปสะสมอยู่ เพิ่มความเสียหายของ Sonnet of Fate 67%"},
     ],
@@ -3774,17 +3908,16 @@ const CHARACTERS = [
       {hp:2743, atk:898, def:503, spd:98},
     ],
     hiddenAbility: 'ATK% +21.8%',
-    weapons: [
+    weapons:[
       {
-        name: "Babel's Verdict", rarity: 5, img: 'p5x/weapon/babel-verdict.png',
+        name: "Babel's Verdict", stars:5,
         hp: 2259, atk: 740, def: 414,
         bonusStats: {atk:30},
         abilityName: "Babel's Verdict",
         ability: [
           'Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%.',
           'Increase damage of Sonnet of Fate by 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0%.',
-          'After gaining a Verse, 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% chance to gain Verse of Zenith.\nVerse of Zenith has all the effects of Verse of Hate, Verse of Healing, and Verse of Passion.',
-        ],
+          'After gaining a Verse, 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% chance to gain Verse of Zenith.\nVerse of Zenith has all the effects of Verse of Hate, Verse of Healing, and Verse of Passion.',],
         abilityTh: [
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'เพิ่มความเสียหายของ Sonnet of Fate 33.0%/43.0%/43.0%/53.0%/53.0%/63.0%/63.0%',
@@ -3792,13 +3925,13 @@ const CHARACTERS = [
         ],
       },
       {
-        name: 'Scarlet Scepter', rarity: 4, img: 'p5x/weapon/scarlet-scepter.png',
+        name: 'Scarlet Scepter', stars:4,
         hp: 1808, atk: 592, def: 331,
         bonusStats: {atk:12},
         abilityName: 'Scarlet Scepter',
-        ability: [
-          'Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.',
-          'When gaining Verse of Hate, Verse of Healing, or Verse of Passion, increase damage by 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% based on the number of current Verses for 1 turn.',
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When gaining Verse of Hate, Verse of Healing, or Verse of Passion, increase damage by 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% based on the number of current Verses for 1 turn.",
         ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
@@ -3808,7 +3941,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Puppet', codename:'Puppet', role:'Elucidator', element:'-', rarity:4,
-    cards:['Abundance 4pc','Peace 2pc'], weapon:'Best DEF/HP support weapon',
+    cards:['Love 4pc','Peace 2pc'], weapon:'Best DEF/HP support weapon',
     statPrio:['DEF%','HP%','SPD'], note:"Elucidator. Seashell stack system: granting shields adds Seashell stacks, which amplify future shields (Whispering Waves) and boost allies' DEF (I'll Protect You!). Stat Buff shares 15% of Phantom Thief's stats. Tide of Dreams grants damage up at 4+ Seashell stacks.",
     realName:'Miyu Sahara', persona:'Nemertes',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3870,14 +4003,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Ephemerality', stars:5, hp:2339, atk:641, def:476, bonusStats:{def:45},
         abilityName:'Ephemerality',
-        ability:"Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%. After using a skill, grant 1 Seashell stack to the main target. For every stack of Seashell granted, increase Attack by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% and Defense by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% for 2 turns.",
+        ability:["Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%. After using a skill, grant 1 Seashell stack to the main target. For every stack of Seashell granted, increase Attack by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% and Defense by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% for 2 turns."],
         abilityTh:[
           'เพิ่ม Defense 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%',
-          'หลังใช้สกิล มอบ Seashell 1 stack ให้เป้าหมายหลัก ต่อ Seashell 1 stack ที่มอบให้ เพิ่ม Attack 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% และ Defense 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% เป็นเวลา 2 เทิร์น',
-        ]},
+          'หลังใช้สกิล มอบ Seashell 1 stack ให้เป้าหมายหลัก ต่อ Seashell 1 stack ที่มอบให้ เพิ่ม Attack 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% และ Defense 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% เป็นเวลา 2 เทิร์น',]},
       {name:'Submarine Sonar', stars:4, hp:1871, atk:513, def:381, bonusStats:{},
         abilityName:'Submarine Sonar',
-        ability:"Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%. Increase Defense of shielded allies by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.",
+        ability:["Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%. Increase Defense of shielded allies by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%."],
         abilityTh:[
           'เพิ่ม shield 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%',
           'เพิ่ม Defense ของพันธมิตรที่มี shield 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%',
@@ -3885,7 +4017,7 @@ const CHARACTERS = [
     ],
   },
   {name:'Okyann', codename:'Okyann', role:'Elucidator', element:'-', rarity:4,
-    cards:['Opulence 4pc','Integrity 2pc'], weapon:'Best ATK support weapon (Retro Disco Style)',
+    cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Retro Disco Style)',
     statPrio:['ATK%','SPD','HP%'], note:"Elucidator. Beat stack system triggers Resonance (Pulsating Rhythm ATK/DEF/ailment accuracy buff). Retro Dance Number amplifies damage dealt to ailment-inflicted foes ×1.5. Stat Buff shares 15% of Phantom Thief's stats.",
     realName:'Kayo Tomiyama', persona:'Cleodora',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3947,14 +4079,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Retro Disco Style', stars:5, hp:2339, atk:694, def:423, bonusStats:{atk:30},
         abilityName:'Retro Disco Style',
-        ability:"Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. After granting Pulsating Rhythm, 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% chance to gain 1 Beat stack. Increase buffs from Pulsating Rhythm by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more.",
+        ability:["Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. After granting Pulsating Rhythm, 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% chance to gain 1 Beat stack. Increase buffs from Pulsating Rhythm by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more."],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
-          'หลังมอบ Pulsating Rhythm โอกาส 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% ที่จะได้รับ Beat 1 stack เพิ่ม buff จาก Pulsating Rhythm 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%',
-        ]},
+          'หลังมอบ Pulsating Rhythm โอกาส 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% ที่จะได้รับ Beat 1 stack เพิ่ม buff จาก Pulsating Rhythm 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%',]},
       {name:'Emerald Charmer', stars:4, hp:1871, atk:555, def:338, bonusStats:{atk:24},
         abilityName:'Emerald Charmer',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a support skill, 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% chance to gain 1 Beat stack.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a support skill, 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% chance to gain 1 Beat stack."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้สกิล support โอกาส 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% ที่จะได้รับ Beat 1 stack',
@@ -4055,10 +4186,137 @@ const BOSS_PRESETS = [
 ]
 
 const STAT_TARGETS = {
-  dps:      {atk:[120,25], crit:[70,20], cdmg:[200,20], edm:[60,15], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0]},
-  support:  {atk:[60,10],  crit:[30,5],  cdmg:[0,0],    edm:[0,0],   hp:[80,20],def:[0,0],heal:[0,0], spd:[80,25]},
+  dps:      {atk:[120,25], crit:[70,20], cdmg:[200,20], edm:[60,15], hp:[0,0],   def:[0,0],  heal:[0,0],  spd:[0,0]},
+  support:  {atk:[60,10],  crit:[30,5],  cdmg:[0,0],    edm:[0,0],   hp:[80,20], def:[0,0],  heal:[0,0],  spd:[80,25]},
   medic:    {atk:[20,5],   crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[100,30],def:[40,15],heal:[60,30],spd:[30,10]},
-  saboteur: {atk:[80,20],  crit:[30,10], cdmg:[0,0],    edm:[0,0],   hp:[0,0],  def:[20,5], heal:[0,0], spd:[70,25]},
+  saboteur: {atk:[80,20],  crit:[30,10], cdmg:[0,0],    edm:[0,0],   hp:[0,0],   def:[20,5], heal:[0,0],  spd:[70,25]},
+}
+
+// Endgame stat targets keyed by character codename
+const CHAR_STAT_TARGETS = {
+  // ── SWEEPER / ASSASSIN ──
+  'Joker':           {atk:[150,25], crit:[80,22], cdmg:[280,22], edm:[60,12], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Panther':         {atk:[120,20], crit:[75,20], cdmg:[180,18], edm:[80,22], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Skull':           {atk:[150,22], crit:[80,22], cdmg:[250,22], edm:[60,14], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Violet':          {atk:[150,25], crit:[90,25], cdmg:[280,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Fox':             {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[70,22], hp:[80,18],  def:[100,25],heal:[0,0],  spd:[0,0]},
+  'Queen':           {atk:[120,25], crit:[70,18], cdmg:[0,0],    edm:[70,22], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Crow':            {atk:[150,25], crit:[85,22], cdmg:[300,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Howler':          {atk:[120,20], crit:[75,20], cdmg:[180,18], edm:[80,22], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'J&C':             {atk:[120,22], crit:[75,20], cdmg:[280,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Noir':            {atk:[120,22], crit:[75,20], cdmg:[250,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Messa':           {atk:[120,22], crit:[75,20], cdmg:[0,0],    edm:[60,20], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'makoto':          {atk:[150,25], crit:[80,22], cdmg:[280,22], edm:[70,12], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'closer-tropical': {atk:[80,15],  crit:[50,12], cdmg:[0,0],    edm:[0,0],   hp:[160,25],def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'rin-firecracker': {atk:[120,20], crit:[75,20], cdmg:[180,18], edm:[80,22], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'KEY':             {atk:[60,12],  crit:[0,0],   cdmg:[0,0],    edm:[70,20], hp:[150,25],def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'mont-frostgale':  {atk:[150,25], crit:[85,22], cdmg:[280,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Bui':             {atk:[120,22], crit:[85,25], cdmg:[200,22], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Closer':          {atk:[100,22], crit:[70,18], cdmg:[0,0],    edm:[60,15], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Mont':            {atk:[100,22], crit:[75,20], cdmg:[180,20], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Sepia':           {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[70,15], def:[0,0],   heal:[0,0],  spd:[80,18]},
+  'Fleuret':         {atk:[100,22], crit:[75,20], cdmg:[200,20], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  // ── ELUCIDATOR ──
+  'Oracle':          {atk:[120,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[100,25]},
+  'Wind':            {atk:[100,18], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[120,25]},
+  'Ange':            {atk:[120,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[100,25]},
+  'Phoebe':          {atk:[120,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[100,25]},
+  'Okyann':          {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[70,15], def:[0,0],   heal:[0,0],  spd:[80,20]},
+  'Puppet':          {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[100,22],def:[100,25],heal:[0,0],  spd:[70,15]},
+  // ── STRATEGIST ──
+  'Chord':           {atk:[120,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[100,25]},
+  'wind-tempest':    {atk:[0,0],    crit:[70,20], cdmg:[250,25], edm:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[80,18]},
+  'Turbo':           {atk:[80,15],  crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[120,25]},
+  'Riddle':          {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[100,22]},
+  'Luce':            {atk:[80,18],  crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[60,12], def:[0,0],   heal:[0,0],  spd:[80,20]},
+  // ── SABOTEUR ──
+  'Rin':             {atk:[100,20], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[0,0],   def:[50,15], heal:[0,0],  spd:[100,25]},
+  'Matoi':           {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[120,25],def:[80,20], heal:[0,0],  spd:[80,20]},
+  'Vino':            {atk:[80,18],  crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[60,12], def:[0,0],   heal:[0,0],  spd:[80,20]},
+  'Key':             {atk:[80,20],  crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[0,0],   def:[40,12], heal:[0,0],  spd:[80,20]},
+  // ── MEDIC ──
+  'Marian':          {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[150,30],def:[60,15], heal:[70,25],spd:[0,0]},
+  'Moko':            {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[60,22],spd:[0,0]},
+  'moko-seaside':    {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[60,22],spd:[0,0]},
+  'Mona':            {atk:[100,22], crit:[50,12], cdmg:[0,0],    edm:[0,0],   hp:[80,15], def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Cattle':          {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[130,25],def:[50,15], heal:[70,25],spd:[0,0]},
+  // ── GUARDIAN ──
+  'Cherish':         {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[150,25],def:[80,20], heal:[50,15],spd:[0,0]},
+  'Leon':            {atk:[100,22], crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[100,18],def:[50,15], heal:[0,0],  spd:[0,0]},
+  'Soy':             {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[130,25],def:[70,18], heal:[60,18],spd:[0,0]},
+  'Yuki':            {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[100,20],def:[120,25],heal:[0,0],  spd:[60,15]},
+}
+
+// Maps a Space card's passive name → which stats it benefits and by how much
+const PASSIVE_STAT_MAP = {
+  'Power':          {atk:15},
+  'Ruin':           {atk:10, edm:8},
+  'Tenacity':       {atk:8},
+  'Courage':        {cdmg:15, edm:10},
+  'Triumph':        {crit:15},
+  'Love':           {heal:15},
+  'Reconciliation': {spd:10},
+  'Oppression':     {atk:10, edm:10},
+  'Pleasure':       {edm:12},
+  'Strife':         {edm:12, atk:8},
+  'Renewal':        {edm:12},
+  'Opulence':       {edm:12},
+  'Victory':        {edm:10},
+  'Truth':          {edm:10},
+  'Hindrance':      {edm:8},
+  'Virtue':         {crit:10, edm:8},
+  'Control':        {def:8,   hp:5},
+  'Labor':          {hp:8,    atk:5, def:5},
+  'Peace':          {def:12},
+  'Futility':       {},
+  'Prosperity':     {},
+  'Disappointment': {},
+  'Transformation': {},
+  'Prudence':       {atk:8},
+  'Defeat':         {edm:8},
+  'Worry':          {},
+}
+
+// Sub stat label → internal stat key
+const SUB_STAT_KEY = {
+  'CRIT Rate%':   'crit',
+  'CRIT DMG%':    'cdmg',
+  'ATK%':         'atk',
+  'ATK':          'atk',
+  'HP%':          'hp',
+  'HP':           'hp',
+  'DEF%':         'def',
+  'DEF':          'def',
+  'Elem DMG%':    'edm',
+  'Ailment Acc%': null,
+  'Pierce Rate%': null,
+  'SP Recovery%': null,
+  'Speed':        'spd',
+}
+
+function scoreSpaceCard(card, charTargets) {
+  if (!charTargets) return 0
+  let score = 0
+  card.passives.forEach(p => {
+    const weights = PASSIVE_STAT_MAP[p.name] || {}
+    Object.entries(weights).forEach(([k, w]) => {
+      const target = charTargets[k]
+      if (target && target[1] > 0) score += (target[1] / 25) * w
+    })
+  })
+  return score
+}
+
+function getSubStatPriority(charTargets, slotId) {
+  const pool = CARD_SUB_STATS[slotId] || CARD_SUB_STATS._other
+  return Object.entries(pool)
+    .map(([label, tiers]) => {
+      const key = SUB_STAT_KEY[label]
+      const weight = key && charTargets?.[key] ? charTargets[key][1] : 0
+      return { label, key, weight, best: tiers[0] }
+    })
+    .filter(s => s.weight > 0)
+    .sort((a, b) => b.weight - a.weight)
 }
 
 function getRoleArchetype(role) {
@@ -4097,6 +4355,7 @@ export default function P5XPage() {
   const [charName, setCharName] = useState('')
   const [legendOpen, setLegendOpen] = useState(false)
   const [selectedWeaponIdx, setSelectedWeaponIdx] = useState(null)
+  const [weaponRefine, setWeaponRefine] = useState(6)
   const [showExport, setShowExport] = useState(false)
   const [showImport, setShowImport] = useState(false)
   const [importText, setImportText] = useState('')
@@ -4104,13 +4363,15 @@ export default function P5XPage() {
   const [copyOk, setCopyOk] = useState(false)
   const [charTab, setCharTab] = useState('build')
   const [ascension, setAscension] = useState(6)
-  const [lang, setLang] = useState('en')
+  const [lang, setLang] = useState('th')
   const [dmg, setDmg] = useState({
     extraAtk:0, atkConst:0, extraCritRate:0, extraCritDmg:0,
     dmgMult:0, extraEdm:0, dmgTaken:0,
     enemyDef:363.2, addDefCoeff:158.4, pierce:0, defReduction:0, windswept:false,
     skillCoeff:100, weakness:'normal', finalDmgBonus:0, otherCoeff:100,
   })
+  const [mobileTab, setMobileTab] = useState('chars')
+  useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
@@ -4132,6 +4393,13 @@ export default function P5XPage() {
   const grouped5gold    = filtered.filter(c => c.rarity === 5 && !RAINBOW_CHARS.has(c.codename))
   const grouped4 = filtered.filter(c => c.rarity === 4)
   const grouped3 = filtered.filter(c => c.rarity <= 3)
+
+  function resolveRefine(text) {
+    return text.replace(/([\d.]+%?)(?:\/([\d.]+%?)){6}/g, match => {
+      const parts = match.split('/')
+      return parts[weaponRefine] ?? match
+    })
+  }
 
   function setDmgField(key, val) {
     setDmg(prev => ({ ...prev, [key]: key === 'windswept' ? Boolean(val) : (Number(val) || 0) }))
@@ -4170,8 +4438,9 @@ export default function P5XPage() {
   let scoreData = null
   if (currentChar) {
     const arch = getRoleArchetype(currentChar.role)
-    const targets = STAT_TARGETS[arch]
-    const prioKeys = currentChar.statPrio.map(p => {
+    const charTargets = CHAR_STAT_TARGETS[currentChar.codename]
+    const targets = charTargets || STAT_TARGETS[arch]
+    const prioKeys = charTargets ? [] : currentChar.statPrio.map(p => {
       if (p.includes('DMG%') && !p.includes('CRIT')) return 'edm'
       return statMap[p] || null
     }).filter(Boolean)
@@ -4296,9 +4565,18 @@ export default function P5XPage() {
         <div className="edit-note">✏️ แก้ไข CHARACTERS และ CARD_SETS ใน P5XPage.jsx เพื่ออัพเดตข้อมูล</div>
       </header>
 
+      <div className="p5x-mobile-tabs">
+        <button className={'pmtab'+(mobileTab==='chars'?' active':'')} onClick={()=>setMobileTab('chars')}>
+          🎭 Characters
+        </button>
+        <button className={'pmtab'+(mobileTab==='detail'?' active':'')} onClick={()=>setMobileTab('detail')}>
+          📋 {currentChar ? currentChar.codename : 'Detail'}
+        </button>
+      </div>
+
       <div className="p5x-container">
         {/* LEFT: filters + char grid */}
-        <div className="p5x-left">
+        <div className={'p5x-left'+(mobileTab!=='chars'?' pmhide':'')}>
         <div className="section-box">
           <div className="section-title">📖 BUILD REFERENCE</div>
 
@@ -4362,7 +4640,7 @@ export default function P5XPage() {
         </div>{/* /p5x-left */}
 
         {/* RIGHT: sticky detail + stat calc */}
-        <div className="p5x-right">
+        <div className={'p5x-right'+(mobileTab!=='detail'?' pmhide':'')}>
         <div className="char-detail-sticky">
           {currentChar ? (
             <div className="char-info">
@@ -4511,7 +4789,7 @@ export default function P5XPage() {
                           {(currentChar.awareness || []).map((aw, i) => (
                             <div key={i} className="awareness-row">
                               <div className="aw-header">
-                                <span className="aw-stage">{aw.stage}</span>
+                                <span className="aw-stage">{aw.stage ?? i}</span>
                                 <span className="aw-name">{aw.name || aw.bonus || ''}</span>
                               </div>
                               {aw.desc && <div className="aw-desc">{lang === 'th' && aw.descTh ? aw.descTh : aw.desc}</div>}
@@ -4662,20 +4940,127 @@ export default function P5XPage() {
                 </div>
 
                 <div className="info-panel">
-                  <div className="info-label">⚔️ Recommended Weapon</div>
+                  <div className="info-label">🎴 Revelation Card — Main Stats แนะนำ</div>
+                  <div className="slot-guide">
+                    {CARD_SLOTS.map(slot => {
+                      const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                      let bestLabel = null, bestWeight = -1
+                      slot.mainStats.forEach(({label, key}) => {
+                        if (!key || !charTgt) return
+                        const w = (charTgt[key] || [0,0])[1]
+                        if (w > bestWeight) { bestWeight = w; bestLabel = label }
+                      })
+                      return (
+                        <div key={slot.id} className="slot-row">
+                          <span className="slot-name">{slot.id}</span>
+                          <div className="slot-options">
+                            {slot.mainStats.map(({label, max, unit}) => (
+                              <span key={label}
+                                className={'slot-opt' + (label === bestLabel ? ' slot-rec' : '')}>
+                                {label}{label === bestLabel ? ' ★' : ''}
+                                {max != null && <span className="slot-range">{max}{unit}</span>}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* ── SPACE CARD RECOMMENDER ────────────────────────────────── */}
+                <div className="info-panel">
+                  <div className="info-label">🃏 Space Card แนะนำ (จาก Passive)</div>
+                  {(() => {
+                    const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                    const ranked = REVELATION_CARDS.Space
+                      .map(card => ({ card, score: scoreSpaceCard(card, charTgt) }))
+                      .sort((a, b) => b.score - a.score)
+                      .slice(0, 3)
+                    return (
+                      <div className="rec-cards-list">
+                        {ranked.map(({card, score}, ri) => {
+                          const medals = ['🥇','🥈','🥉']
+                          return (
+                            <div key={card.name} className={'rec-card-item' + (ri === 0 ? ' rec-top' : '')}>
+                              <div className="rec-card-header">
+                                <span className="rec-medal">{medals[ri]}</span>
+                                <span className="rec-card-name">{card.name}</span>
+                                {score > 0 && <span className="rec-score">{score.toFixed(0)}pt</span>}
+                              </div>
+                              <div className="rec-passives">
+                                {card.passives.map(p => {
+                                  const pw = PASSIVE_STAT_MAP[p.name] || {}
+                                  const relevant = charTgt && Object.keys(pw).some(k => charTgt[k]?.[1] > 0)
+                                  return (
+                                    <span key={p.name} className={'rec-passive' + (relevant ? ' rec-passive-hit' : '')}>
+                                      {p.name}
+                                    </span>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })()}
+                </div>
+
+                {/* ── SUB STAT PRIORITY ─────────────────────────────────────── */}
+                <div className="info-panel">
+                  <div className="info-label">📋 Sub Stat Priority (Space / Sun·Moon·Star·Sky)</div>
+                  {(() => {
+                    const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                    const spaceRanked = getSubStatPriority(charTgt, 'Space')
+                    const otherRanked = getSubStatPriority(charTgt, 'Sun')
+                    if (!spaceRanked.length && !otherRanked.length) return (
+                      <div style={{color:'var(--p5x-muted)',fontSize:13}}>ไม่มีข้อมูล stat priority สำหรับตัวละครนี้</div>
+                    )
+                    return (
+                      <div className="sub-prio-wrap">
+                        {[{label:'Space (주)', items: spaceRanked}, {label:'Sun·Moon·Star·Sky', items: otherRanked}].map(({label, items}) => (
+                          <div key={label} className="sub-prio-col">
+                            <div className="sub-prio-title">{label}</div>
+                            {items.length === 0
+                              ? <div style={{color:'var(--p5x-muted)',fontSize:12}}>—</div>
+                              : items.slice(0, 5).map((s, i) => (
+                                <div key={s.label} className={'sub-prio-row' + (i === 0 ? ' sub-prio-top' : '')}>
+                                  <span className="sub-prio-rank">#{i+1}</span>
+                                  <span className="sub-prio-label">{s.label}</span>
+                                  <span className="sub-prio-val">max {s.best}/roll</span>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  })()}
+                </div>
+
+                <div className="info-panel">
+                  <div className="info-label" style={{display:'flex',alignItems:'center',gap:8}}>
+                    <span>⚔️ Recommended Weapon</span>
+                    <div className="refine-picker">
+                      {[0,1,2,3,4,5,6].map(r => (
+                        <button key={r} className={'refine-btn'+(weaponRefine===r?' active':'')} onClick={()=>setWeaponRefine(r)}>{r}★</button>
+                      ))}
+                    </div>
+                  </div>
                   {currentChar.weapons ? (
                     <div className="weapon-list">
                       {currentChar.weapons.map((w, wi) => {
                         const isWSelected = (selectedWeaponIdx ?? 0) === wi
                         return (
-                        <div key={wi} className={`weapon-card rarity${w.rarity}${isWSelected ? ' weapon-selected' : ''}`}
+                        <div key={wi} className={`weapon-card rarity${w.stars ?? w.rarity}${isWSelected ? ' weapon-selected' : ''}`}
                           onClick={() => setSelectedWeaponIdx(wi)}
                           style={{ cursor:'pointer' }}>
                           <div className="weapon-card-top">
                             <img src={import.meta.env.BASE_URL + w.img} alt={w.name} className="weapon-img" onError={e => e.target.style.display='none'} />
                             <div className="weapon-card-info">
                               <div className="weapon-name">{w.name}</div>
-                              <div className={`weapon-stars rarity${w.rarity}-star`}>{'★'.repeat(w.rarity)}</div>
+                              <div className={`weapon-stars rarity${w.stars ?? w.rarity}-star`}>{'★'.repeat(w.stars ?? w.rarity)}</div>
                               <div className="weapon-stats-row">
                                 <span className="wstat"><span className="wstat-label">HP</span>{w.hp}</span>
                                 <span className="wstat"><span className="wstat-label">ATK</span>{w.atk}</span>
@@ -4684,8 +5069,8 @@ export default function P5XPage() {
                             </div>
                           </div>
                           <div className="weapon-ability-name">{w.abilityName}</div>
-                          {(lang === 'th' && w.abilityTh ? w.abilityTh : w.ability).map((line, li) => (
-                            <div key={li} className="weapon-ability-line">{line}</div>
+                          {(lang === 'th' && w.abilityTh ? w.abilityTh : Array.isArray(w.ability) ? w.ability : (w.ability||'').split('\n').filter(Boolean)).map((line, li) => (
+                            <div key={li} className="weapon-ability-line">{resolveRefine(line)}</div>
                           ))}
                           {isWSelected && <div className="weapon-selected-badge">✓ Selected</div>}
                         </div>
@@ -4717,7 +5102,7 @@ export default function P5XPage() {
           ) : (
             <div className="char-empty-state">
               <div className="char-empty-icon">🃏</div>
-              <p>เลือกตัวละครเพื่อดูข้อมูล</p>
+              <p>เลือกตัวละครจากแท็บ Characters</p>
             </div>
           )}
 
@@ -4766,8 +5151,21 @@ export default function P5XPage() {
                 <div className="sum-box"><div className="sum-val">{Math.round(stats.spd)}</div><div className="sum-lbl">SPD</div></div>
               </div>
 
+              {scoreData && (
+                <div className="stat-target-card">
+                  <div className="stat-target-title">🎯 Stats เป้าหมาย (Endgame)</div>
+                  <div className="stat-target-chips">
+                    {scoreData.breakdown.map((b, i) => (
+                      <div key={i} className={'stat-chip' + (b.ratio >= 1 ? ' met' : b.ratio >= 0.75 ? ' close' : ' missing')}>
+                        {b.label} ≥ {b.ideal}{b.ratio >= 1 ? ' ✓' : ''}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="score-wrap">
-                <div className="score-title">🎯 Build Score (เทียบกับ Build ที่แนะนำ)</div>
+                <div className="score-title">📊 Build Score</div>
                 {scoreData ? <>
                   <div className="score-number" style={{ color: scoreData.gradeColor }}>{scoreData.scorePct}%</div>
                   <div className="score-label" style={{ color: scoreData.gradeColor }}>เกรด {scoreData.grade} — {scoreData.gradeNote}</div>
