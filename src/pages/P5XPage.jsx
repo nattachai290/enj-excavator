@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const CARD_SETS = [
   {name:'Courage',   bonus2:'Physical/Electric DMG +12%',        bonus4:'ถ้าเผชิญศัตรูเดี่ยว: Physical/Electric DMG +24% เพิ่ม',
@@ -4069,6 +4069,8 @@ export default function P5XPage() {
     enemyDef:363.2, addDefCoeff:158.4, pierce:0, defReduction:0, windswept:false,
     skillCoeff:100, weakness:'normal', finalDmgBonus:0, otherCoeff:100,
   })
+  const [mobileTab, setMobileTab] = useState('chars')
+  useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
@@ -4261,9 +4263,18 @@ export default function P5XPage() {
         <div className="edit-note">✏️ แก้ไข CHARACTERS และ CARD_SETS ใน P5XPage.jsx เพื่ออัพเดตข้อมูล</div>
       </header>
 
+      <div className="p5x-mobile-tabs">
+        <button className={'pmtab'+(mobileTab==='chars'?' active':'')} onClick={()=>setMobileTab('chars')}>
+          🎭 Characters
+        </button>
+        <button className={'pmtab'+(mobileTab==='detail'?' active':'')} onClick={()=>setMobileTab('detail')}>
+          📋 {currentChar ? currentChar.codename : 'Detail'}
+        </button>
+      </div>
+
       <div className="p5x-container">
         {/* LEFT: filters + char grid */}
-        <div className="p5x-left">
+        <div className={'p5x-left'+(mobileTab!=='chars'?' pmhide':'')}>
         <div className="section-box">
           <div className="section-title">📖 BUILD REFERENCE</div>
 
@@ -4327,7 +4338,7 @@ export default function P5XPage() {
         </div>{/* /p5x-left */}
 
         {/* RIGHT: sticky detail + stat calc */}
-        <div className="p5x-right">
+        <div className={'p5x-right'+(mobileTab!=='detail'?' pmhide':'')}>
         <div className="char-detail-sticky">
           {currentChar ? (
             <div className="char-info">
@@ -4689,7 +4700,7 @@ export default function P5XPage() {
           ) : (
             <div className="char-empty-state">
               <div className="char-empty-icon">🃏</div>
-              <p>เลือกตัวละครเพื่อดูข้อมูล</p>
+              <p>เลือกตัวละครจากแท็บ Characters</p>
             </div>
           )}
 

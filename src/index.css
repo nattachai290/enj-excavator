@@ -163,8 +163,15 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .char-empty-icon { font-size:2.5rem; opacity:0.4; }
 .char-empty-state p { font-size:0.82rem; }
 @media(min-width:900px) {
-  .p5x-container { grid-template-columns:1.3fr 1fr; gap:16px; align-items:start; }
-  .char-detail-sticky { position:sticky; top:50px; max-height:calc(100vh - 66px); overflow-y:auto; }
+  .p5x-page { display:flex; flex-direction:column; height:calc(100vh - 40px); overflow:hidden; }
+  .p5x-header { flex-shrink:0; }
+  .p5x-container { flex:1; overflow:hidden; grid-template-columns:1.3fr 1fr; gap:16px; align-items:stretch; padding-bottom:0; }
+  .p5x-left { overflow-y:auto; scrollbar-width:thin; scrollbar-color:#2a2a2a transparent; padding-bottom:20px; }
+  .p5x-right { overflow-y:auto; scrollbar-width:none; padding-bottom:20px; }
+  .p5x-right::-webkit-scrollbar { display:none; }
+  .p5x-mobile-tabs { display:none; }
+  .pmhide { display:block !important; }
+  .char-detail-sticky { position:static; max-height:none; overflow-y:visible; }
   .p5x-header h1 { font-size:2rem; }
   .p5x-header p { font-size:0.9rem; }
   .section-title { font-size:1rem; }
@@ -183,6 +190,11 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
   .sum-val { font-size:1rem; }
   .score-number { font-size:2.8rem; }
 }
+/* ── MOBILE TABS ── */
+.p5x-mobile-tabs { display:flex; background:#0a0a0a; border-bottom:2px solid var(--p5x-border); position:sticky; top:38px; z-index:25; }
+.pmtab { flex:1; padding:10px 6px; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; color:var(--p5x-muted); font-family:'Exo 2',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all .15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pmtab.active { color:var(--persona3); border-bottom-color:var(--persona); background:#111; }
+@media(max-width:899px) { .pmhide { display:none !important; } .p5x-container { gap:0 !important; } }
 .section-title { font-family:'Cinzel Decorative',serif; font-size:0.82rem; color:var(--persona); letter-spacing:1px; border-left:3px solid var(--persona); padding-left:9px; margin-bottom:10px; margin-top:4px; text-shadow:0 0 14px #d040ffaa; }
 .section-box { background:var(--p5x-card); border:1px solid var(--p5x-border); border-radius:14px; padding:12px 14px; margin-bottom:12px; box-shadow:0 2px 20px #5533aa22; }
 .filter-group-label { font-size:0.6rem; color:var(--p5x-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
