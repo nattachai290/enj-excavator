@@ -4247,6 +4247,78 @@ const CHAR_STAT_TARGETS = {
   'Yuki':            {atk:[0,0],    crit:[0,0],   cdmg:[0,0],    edm:[0,0],   hp:[100,20],def:[120,25],heal:[0,0],  spd:[60,15]},
 }
 
+// Maps a Space card's passive name → which stats it benefits and by how much
+const PASSIVE_STAT_MAP = {
+  'Power':          {atk:15},
+  'Ruin':           {atk:10, edm:8},
+  'Tenacity':       {atk:8},
+  'Courage':        {cdmg:15, edm:10},
+  'Triumph':        {crit:15},
+  'Love':           {heal:15},
+  'Reconciliation': {spd:10},
+  'Oppression':     {atk:10, edm:10},
+  'Pleasure':       {edm:12},
+  'Strife':         {edm:12, atk:8},
+  'Renewal':        {edm:12},
+  'Opulence':       {edm:12},
+  'Victory':        {edm:10},
+  'Truth':          {edm:10},
+  'Hindrance':      {edm:8},
+  'Virtue':         {crit:10, edm:8},
+  'Control':        {def:8,   hp:5},
+  'Labor':          {hp:8,    atk:5, def:5},
+  'Peace':          {def:12},
+  'Futility':       {},
+  'Prosperity':     {},
+  'Disappointment': {},
+  'Transformation': {},
+  'Prudence':       {atk:8},
+  'Defeat':         {edm:8},
+  'Worry':          {},
+}
+
+// Sub stat label → internal stat key
+const SUB_STAT_KEY = {
+  'CRIT Rate%':   'crit',
+  'CRIT DMG%':    'cdmg',
+  'ATK%':         'atk',
+  'ATK':          'atk',
+  'HP%':          'hp',
+  'HP':           'hp',
+  'DEF%':         'def',
+  'DEF':          'def',
+  'Elem DMG%':    'edm',
+  'Ailment Acc%': null,
+  'Pierce Rate%': null,
+  'SP Recovery%': null,
+  'Speed':        'spd',
+}
+
+function scoreSpaceCard(card, charTargets) {
+  if (!charTargets) return 0
+  let score = 0
+  card.passives.forEach(p => {
+    const weights = PASSIVE_STAT_MAP[p.name] || {}
+    Object.entries(weights).forEach(([k, w]) => {
+      const target = charTargets[k]
+      if (target && target[1] > 0) score += (target[1] / 25) * w
+    })
+  })
+  return score
+}
+
+function getSubStatPriority(charTargets, slotId) {
+  const pool = CARD_SUB_STATS[slotId] || CARD_SUB_STATS._other
+  return Object.entries(pool)
+    .map(([label, tiers]) => {
+      const key = SUB_STAT_KEY[label]
+      const weight = key && charTargets?.[key] ? charTargets[key][1] : 0
+      return { label, key, weight, best: tiers[0] }
+    })
+    .filter(s => s.weight > 0)
+    .sort((a, b) => b.weight - a.weight)
+}
+
 function getRoleArchetype(role) {
   if (role === 'Saboteur') return 'saboteur'
   if (role === 'Medic') return 'medic'
@@ -4894,6 +4966,77 @@ export default function P5XPage() {
                       )
                     })}
                   </div>
+                </div>
+
+                {/* ── SPACE CARD RECOMMENDER ────────────────────────────────── */}
+                <div className="info-panel">
+                  <div className="info-label">🃏 Space Card แนะนำ (จาก Passive)</div>
+                  {(() => {
+                    const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                    const ranked = REVELATION_CARDS.Space
+                      .map(card => ({ card, score: scoreSpaceCard(card, charTgt) }))
+                      .sort((a, b) => b.score - a.score)
+                      .slice(0, 3)
+                    return (
+                      <div className="rec-cards-list">
+                        {ranked.map(({card, score}, ri) => {
+                          const medals = ['🥇','🥈','🥉']
+                          return (
+                            <div key={card.name} className={'rec-card-item' + (ri === 0 ? ' rec-top' : '')}>
+                              <div className="rec-card-header">
+                                <span className="rec-medal">{medals[ri]}</span>
+                                <span className="rec-card-name">{card.name}</span>
+                                {score > 0 && <span className="rec-score">{score.toFixed(0)}pt</span>}
+                              </div>
+                              <div className="rec-passives">
+                                {card.passives.map(p => {
+                                  const pw = PASSIVE_STAT_MAP[p.name] || {}
+                                  const relevant = charTgt && Object.keys(pw).some(k => charTgt[k]?.[1] > 0)
+                                  return (
+                                    <span key={p.name} className={'rec-passive' + (relevant ? ' rec-passive-hit' : '')}>
+                                      {p.name}
+                                    </span>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })()}
+                </div>
+
+                {/* ── SUB STAT PRIORITY ─────────────────────────────────────── */}
+                <div className="info-panel">
+                  <div className="info-label">📋 Sub Stat Priority (Space / Sun·Moon·Star·Sky)</div>
+                  {(() => {
+                    const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                    const spaceRanked = getSubStatPriority(charTgt, 'Space')
+                    const otherRanked = getSubStatPriority(charTgt, 'Sun')
+                    if (!spaceRanked.length && !otherRanked.length) return (
+                      <div style={{color:'var(--p5x-muted)',fontSize:13}}>ไม่มีข้อมูล stat priority สำหรับตัวละครนี้</div>
+                    )
+                    return (
+                      <div className="sub-prio-wrap">
+                        {[{label:'Space (주)', items: spaceRanked}, {label:'Sun·Moon·Star·Sky', items: otherRanked}].map(({label, items}) => (
+                          <div key={label} className="sub-prio-col">
+                            <div className="sub-prio-title">{label}</div>
+                            {items.length === 0
+                              ? <div style={{color:'var(--p5x-muted)',fontSize:12}}>—</div>
+                              : items.slice(0, 5).map((s, i) => (
+                                <div key={s.label} className={'sub-prio-row' + (i === 0 ? ' sub-prio-top' : '')}>
+                                  <span className="sub-prio-rank">#{i+1}</span>
+                                  <span className="sub-prio-label">{s.label}</span>
+                                  <span className="sub-prio-val">max {s.best}/roll</span>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  })()}
                 </div>
 
                 <div className="info-panel">
