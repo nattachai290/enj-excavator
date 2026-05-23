@@ -385,6 +385,11 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .refine-btn { font-size:0.6rem; padding:1px 5px; border-radius:4px; border:1px solid #333; background:#111; color:#888; cursor:pointer; }
 .refine-btn.active { background:var(--persona3); color:#000; border-color:var(--persona3); font-weight:700; }
 .note-box { background:#0d0d0d; border-left:3px solid var(--green); border-radius:6px; padding:7px 10px; font-size:0.78rem; color:var(--gem); line-height:1.5; }
+.mech-text { border-left-color: var(--persona2); color: var(--p5x-text); }
+.rotation-list { margin:0; padding:0 0 0 18px; display:flex; flex-direction:column; gap:5px; }
+.rotation-step { font-size:0.77rem; color:var(--p5x-text); line-height:1.5; padding:3px 0; border-bottom:1px solid #1a1a1a; }
+.rotation-step:last-child { border-bottom:none; }
+.rotation-step::marker { color:var(--persona); font-weight:700; }
 .cs-toggle { font-size:0.65rem; color:var(--persona2); cursor:pointer; text-decoration:underline; margin-bottom:5px; display:inline-block; }
 .cs-legend { display:none; background:#080808; border:1px solid var(--p5x-border); border-radius:8px; padding:8px 10px; margin-bottom:8px; font-size:0.67rem; }
 .cs-legend.open { display:block; }

@@ -275,6 +275,14 @@ const REVELATION_CARDS = {
 const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
   {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
+    mechanics: "Will of Rebellion stacks build by hitting enemies below 60% HP (max 1 stack per enemy per battle). At 3 stacks, an Extra Action triggers automatically. Extra actions cut SP costs by 80% and end by consuming 3 stacks. Keep SP above 60% to activate the Meditate passive (+50% ATK on extra actions). Merciless Pursuit deals execution damage to enemies below 25% HP after an extra action.",
+    rotation: [
+      "Normal turn → Trickster's Plunder (AoE) to hit multiple enemies and gain stacks faster",
+      "Single-target fight → Phantom Omen instead for 2 stacks per use",
+      "At 3 stacks → Extra Action auto-triggers; use Arsène's Chains (SP cost -80%, +25% vs debuffed)",
+      "Keep SP > 60% at all times for Meditate passive (+50% ATK during extra actions)",
+      "Highlight when charged → gain 1–3 stacks and deal burst Curse AoE; resets momentum",
+    ],
     realName:'Ren Amamiya', persona:'Arsène',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'res', Bless:'wk', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -364,6 +372,14 @@ const CHARACTERS = [
     ],
   },
   {name:'Ann Takamaki',       codename:'Panther',        role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],     note:'Top Fire AoE DPS. Power 4pc boosts party ATK when stacked with Fire sub-DPS.',
+    mechanics: "Passion stacks build whenever Ann deals Fire damage to enemies. AoE skills can generate up to 4 stacks in one action against multiple targets. On Ann's own turn with 4+ stacks, all stacks are consumed to gain La Vie en Rose for 1 turn (ATK +30–50%). La Vie en Rose turn is the peak damage window. When it expires, Marriage of Flames passive automatically fires 2 Fire follow-up attacks.",
+    rotation: [
+      "Turn 1 → Crimson Rose (AoE, up to 4 Passion from multiple enemies) → La Vie en Rose on next action",
+      "La Vie en Rose active → Falling Sun (AoE, +30% skill DMG bonus; Burn chance)",
+      "On La Vie en Rose expiry → Marriage of Flames auto-fires 2 Fire follow-ups",
+      "Single target or enemy < 50% HP → Trifire instead for +30% execute-bonus damage",
+      "Highlight → use before a La Vie en Rose turn; boosts next turn's Fire skills by ~80%",
+    ],
     realName:'Ann Takamaki', persona:'Carmen',
     weakRes:{ Fire:'res', Ice:'wk', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -455,6 +471,14 @@ const CHARACTERS = [
   {name:'Ryuji Sakamoto', codename:'Skull', role:'Assassin', element:'Physical', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Physical/CRIT weapon (Revenge Axe)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'], note:'Physical Assassin. Low-HP berserker — ATK scales with missing HP, Rebound state enables CRIT-guaranteed burst. Uses HP as resource for skills.',
+    mechanics: "Low-HP berserker — missing HP grants up to +40% ATK (max at ≤20% HP). When Ryuji's HP is below 75% at the start of his action he gains Rebound: next skill deals +30% damage and +30% CRIT Rate. God Hand Burst under Rebound = guaranteed critical. Skills cost HP to unlock bonus damage — Pirate Tactics spends 20% max HP.",
+    rotation: [
+      "Turn 1 → Pirate Tactics (HP cost: 20% max HP) → drops HP below 75% to trigger Rebound",
+      "Under Rebound → God Hand Burst → enter Changing Gears (executes on next action)",
+      "Changing Gears resolves → God Hand Burst fires with guaranteed CRIT under Rebound",
+      "Use Highlight before the Burst turn for +58% next-skill damage bonus",
+      "Thunderbolt for AoE or Shock ailment when Rebound is not yet active",
+    ],
     realName:'Ryuji Sakamoto', persona:'Captain Kidd',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'res', Wind:'wk', Nuclear:'normal',
       Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -543,6 +567,15 @@ const CHARACTERS = [
   {name:'Kasumi Yoshizawa', codename:'Violet', role:'Assassin', element:'Bless', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best CRIT Bless weapon (Royal Étoile)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Bless Assassin. Masquerade mode unlocks Highlight usage and stacks Lead/Follow Step for massive CRIT DMG. Invitation grants Dance Partner to an ally whose skills trigger bonus Cinderella Glow hits.',
+    mechanics: "Lead Steps are gained from Cinderella Glow hits; Follow Step from using Invitation. At 2+ Steps on an ally's action, Kasumi can trigger Masquerade mode via Spellbound Cinders (3-turn cooldown). Inside Masquerade, Highlight is free (no gauge cost, can CRIT, +15% per Lead Step, +20% per Follow Step). Masquerade lasts until start of Kasumi's 2nd subsequent turn.",
+    rotation: [
+      "Turn 1 → Invitation → grant Dance Partner to main DPS; Kasumi gains Follow Step + ATK buff for both",
+      "Ally with Dance Partner uses skill → auto-triggers Cinderella Glow (+1 Lead Step)",
+      "Own turn → Cinderella Glow → +1 Lead Step (now at 2 total)",
+      "On next ally action with 2+ Steps → Spellbound Cinders → enter Masquerade",
+      "Masquerade active → Highlight (free, CRIT-capable, +15% per Lead Step) then Midnight Magic (+30% + CRIT DMG)",
+      "Repeat cycle every ~3 turns with Spellbound Cinders cooldown",
+    ],
     realName:'Kasumi Yoshizawa', persona:'Cendrillon',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
       Curse:'wk', Bless:'res', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -631,6 +664,14 @@ const CHARACTERS = [
   {name:'Futaba Sakura', codename:'Oracle', role:'Elucidator', element:'-', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Technomage Ultra FS)',
     statPrio:['ATK%','SPD','HP%'], note:'Elucidator. Stat Buff shares 20% of all stats with party. Virus changes foe affinities (Null→Resist, Resist→Normal, Normal→Weak) to create weakness targets. Data Storm buffs from Analysis Progress amplify weakness damage.',
+    mechanics: "Analysis Progress builds passively when allies use skills (+5%) or deal weakness damage (+25%). Programming Pro awareness starts every battle at 100%. At 100%, using Pentest Complete! or Vulnerability Found! activates Data Storm (party DMG +10–20%). Data Link requires Data Storm active and buffs a chosen DPS's ATK while applying Virus to shift enemy affinities one tier toward weakness.",
+    rotation: [
+      "Turn 1 → Pentest Complete! (DEF down all foes + Data Storm from 100% starting Progress)",
+      "Turn 2 → Data Link Established! (buff main DPS ATK + apply Virus for weakness creation)",
+      "Turn 3 → Vulnerability Found! (DMG taken up on key target, rebuilds Progress)",
+      "At 100% Progress again → repeat Pentest or Vulnerability to re-trigger Data Storm",
+      "Priority Data Link target: highest-ATK DPS who can exploit the shifted element weaknesses",
+    ],
     realName:'Futaba Sakura', persona:'Necronomicon',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
       Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -719,6 +760,15 @@ const CHARACTERS = [
   {name:'Ayaka Sakai', codename:'Chord', role:'Strategist', element:'Electric', rarity:5,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best ATK/Support weapon (Superstar)',
     statPrio:['ATK%','SPD','HP%'], note:'Top-tier Strategist. Catchy Hook instantly triggers ally Highlights — Costar mechanic amplifies the chosen DPS. ATK scales her own buff values.',
+    mechanics: "Core loop: grant Costar to the main DPS (Unison Notes, 3-turn duration), then use Catchy Hook to instantly fire that ally's Highlight with +78–90% bonus damage without consuming their cooldown. Hard Rock awareness auto-grants Costar to the highest-ATK ally at battle start. Each Catchy Hook use permanently stacks Ayaka's own ATK by 20% (cap 40%). Ayaka's Highlight gives the whole party +45% DMG for 4 actions.",
+    rotation: [
+      "Battle start → Hard Rock auto-grants Costar to highest ATK ally (usually main DPS)",
+      "Turn 1 → Catchy Hook → instantly fires Costar ally's Highlight (+78–90% bonus; Ayaka ATK +20%)",
+      "Turn 2 → Unison Notes → refresh Costar + ATK buff for next 3 turns",
+      "Turn 3 → Catchy Hook again (cooldown now 2 turns; Ayaka ATK +20% again)",
+      "Use Ayaka's own Highlight when Catchy Hook is on cooldown → party +45% DMG for 4 actions",
+      "Distortion for Electric damage + Shock when Costar ally is set and Catchy Hook not ready",
+    ],
     realName:'Ayaka Sakai', persona:'Calliope',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
       Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -890,6 +940,15 @@ const CHARACTERS = [
     ],
   },
   {name:'Yaoling Li',         codename:'Rin',            role:'Saboteur',   element:'Curse',          rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / SPD weapon',                       statPrio:['ATK%','SPD','DEF%'],                             note:'Best enemy debuffer — reduces enemy DEF. Hindrance 4pc amplifies debuffed targets.',
+    mechanics: "Every 10 SPD gives +1 Memory per turn (cap 18/turn at 180+ SPD). At 40 Memory stacks, 1 Meng Po Soup is generated. Using a skill with Soup active: 50% chance to inflict Forget on 1 foe and double-enhance that skill's effects. DEF debuffs on Underworld Ferry and Lion Dance scale directly with SPD — higher SPD = stronger debuffs. Best paired with Curse or Physical DPS who benefit most from enemy DEF reduction.",
+    rotation: [
+      "Turn 1 → Underworld Ferry (AoE DEF down per 10 SPD + 4 Memory per enemy hit)",
+      "Turn 2 → Flowers of Naihe with Meng Po Soup → Forget ailment + enhanced DMG taken up",
+      "Turn 3 → Lion Dance of Oblivion with Soup → Red Spider Lily doubled (huge DMG taken up)",
+      "Refresh Underworld Ferry every 2 turns to maintain DEF debuff uptime",
+      "Highlight when charged → massive DMG taken debuff + 30% Forget chance on all enemies",
+      "Priority: keep Red Spider Lily and DEF debuff overlapping for maximum debuff window",
+    ],
     realName:'Yaoling Li', persona:'Meng Po',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'wk', Wind:'normal', Nuclear:'normal', Curse:'res', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -1154,6 +1213,15 @@ const CHARACTERS = [
     ],
   },
   {name:'Yusuke Kitagawa',    codename:'Fox',            role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best DEF/Ice weapon',                           statPrio:['DEF%','Ice DMG%','HP%'],                         note:'DEF-scaling Ice Sweeper. Damage scales off Defense — stack DEF% over ATK%.',
+    mechanics: "All of Yusuke's skills and Highlight scale off DEF, not ATK — build DEF% in every card slot. Inspiration passive gives 65% chance to counterattack (Ice, 88% DEF) when hit by enemy skills. Keen Eye evolves the next Inspiration to Imagination: 100% proc, AoE, and generates a shield. Shields trigger Painter's Focus (+7.5% DMG per shield, max 6 stacks) and Artist's Intuition (+20% pierce for 1 turn).",
+    rotation: [
+      "Stack DEF% in all card main slots — Frozen Presence, Bone-Chilling Cold, and Highlight all scale off DEF",
+      "Turn 1 → Keen Eye → evolve next Inspiration to Imagination (AoE, 100% proc, gains shield)",
+      "Let enemy attacks trigger Inspiration/Imagination → passive counterattack without using a turn",
+      "Bone-Chilling Cold with shield active → +30% bonus damage on all 5 hits",
+      "Highlight when charged → +35% Inspiration proc rate for 3 turns; best when enemies attack often",
+      "Keep HP above 70% for Both Beauty and Vice awareness (+35% counterattack damage bonus)",
+    ],
     realName:'Yusuke Kitagawa', persona:'Goemon',
     weakRes:{ Fire:'wk', Ice:'res', Electric:'normal', Wind:'normal', Nuclear:'normal', Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
     skills:[
@@ -1245,6 +1313,15 @@ const CHARACTERS = [
   {name:'Makoto Niijima', codename:'Queen', role:'Sweeper', element:'Nuclear', rarity:5,
     cards:['Truth 4pc','Courage 2pc'], weapon:'Best Nuclear ATK weapon',
     statPrio:['ATK%','Nuclear DMG%','CRIT Rate%'], note:'Nuclear Sweeper/Medic hybrid. Crash Out boosts ATK +40% and evolves Nuclear Fury → Thermonuclear Fury. Chief Strategist scales ATK with ailment variety. Tenacity stacks from ailments on foes.',
+    mechanics: "Tenacity stacks from skills and ailments on enemies. At 5 stacks, Crash Out activates (ATK +40%, DEF +20%, Nuclear Fury → Thermonuclear Fury with multi-Technical hits per ailment). Chief Strategist grants +15% ATK per unique elemental ailment on enemies. Execution of Justice awareness starts every battle with 5 stacks — Crash Out activates immediately on turn 1.",
+    rotation: [
+      "Turn 1 → Crash Out activates at turn start (Execution of Justice gives 5 stacks from battle start)",
+      "Sanctioned Drift (multi-hit AoE, inflicts random ailments per hit, gains Tenacity per ailment type)",
+      "Crash Out active → Nuclear Fury evolves to Thermonuclear Fury (Technical hits per unique ailment)",
+      "President's Prowess → self-buff ATK + heal 1 ally HP + gain 3+ Tenacity stacks",
+      "Highlight → inflicts up to 4 ailments, gain Frenzied Voltage stacks for +20% per stack",
+      "Maximize unique ailment types on enemies for Chief Strategist ATK scaling (+15% each)",
+    ],
     realName:'Makoto Niijima', persona:'Johanna',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'res',
       Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'wk' },
@@ -1335,6 +1412,15 @@ const CHARACTERS = [
   {name:'Goro Akechi', codename:'Crow', role:'Sweeper', element:'Almighty', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best ATK/CRIT Almighty weapon (Gordian Kopis)',
     statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Almighty Sweeper. Alternating Bless/Curse skills maintain both Deduction (+party DMG) and Stratagem (DEF shred) simultaneously. Mastermind records ally damage into Arrow of Truth → Almighty burst via Rain of Justice.',
+    mechanics: "Alternating Bless/Curse skills every turn maintains both Deduction (party DMG up) and Stratagem (enemy DEF shred) simultaneously. Detective Advice rewards element-swapping with +25% ATK and +30% CRIT DMG for 1 turn. Mastermind assigns a DPS ally whose AoE damage gets recorded into Arrow of Truth stacks. Rain of Justice converts all stacks into an Almighty burst plus Arrow of Perjury follow-ups.",
+    rotation: [
+      "Turn 1 → Decisive Scheme (Curse) → gain Stratagem (DEF down 25%+) and Suspicion",
+      "Turn 2 → Flash of Intuition (Bless) → gain Deduction (party DMG up) + Detective Advice (+ATK/CRIT DMG)",
+      "Alternate Curse/Bless each turn → Detective Advice procs every swap for peak ATK/CRIT DMG",
+      "When Suspicion active and Arrow of Truth stacks collected → Rain of Justice (Almighty AoE + Arrow of Perjury)",
+      "Highlight → both Bless and Curse hit, +2 Arrow of Perjury hits for 4 turns; use before Rain of Justice",
+      "Assign Mastermind (High School Detective) to highest-ATK AoE DPS for maximum Arrow scaling",
+    ],
     realName:'Goro Akechi', persona:'Robin Hood',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
       Curse:'wk', Bless:'res', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -5211,6 +5297,24 @@ export default function P5XPage() {
                   <div className="info-label">💡 Playstyle Note</div>
                   <div className="note-box">{currentChar.note}</div>
                 </div>
+
+                {currentChar.mechanics && (
+                  <div className="info-panel">
+                    <div className="info-label">⚙️ Core Mechanics</div>
+                    <div className="note-box mech-text">{currentChar.mechanics}</div>
+                  </div>
+                )}
+
+                {currentChar.rotation && currentChar.rotation.length > 0 && (
+                  <div className="info-panel">
+                    <div className="info-label">🔄 Skill Rotation</div>
+                    <ol className="rotation-list">
+                      {currentChar.rotation.map((step, i) => (
+                        <li key={i} className="rotation-step">{step}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
               </div>}
             </div>
           ) : (
