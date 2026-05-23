@@ -1990,7 +1990,22 @@ const CHARACTERS = [
       {hp:3823, atk:1230, def:672, spd:0},
     ],
     hiddenAbility:'ATK% +29%',
-    weapons:[],
+    weapons:[
+      {name:'Moonlit Feather', stars:5, hp:2279, atk:733, def:401, bonusStats:{atk:30},
+        abilityName:'Wine & Revelry',
+        ability:"Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. For each Cocktail spent, randomly grant 1 of the following effects to the party: Increase Attack by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 turns), Increase damage by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 turns), Increase critical rate by 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 turns). These effects do not stack. If Tailor-Made multiply effect by 120%; Standard by 100%; Basic by 50%. For every 2 Cocktails gained, reduce Yumi's cooldown time by 1 turn.",
+        abilityTh:[
+          'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
+          'ต่อ Cocktail ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 เทิร์น), เพิ่มดาเมจ 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 เทิร์น), เพิ่ม CRIT Rate 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 เทิร์น) เอฟเฟกต์เหล่านี้ไม่สะสม Tailor-Made ×120%, Standard ×100%, Basic ×50% ต่อ Cocktail ที่ได้รับทุก 2 stack ลดเวลาคูลดาวน์ของ Yumi 1 เทิร์น',
+        ]},
+      {name:'Starrynight Soothsayer', stars:4, hp:1823, atk:587, def:320, bonusStats:{atk:24},
+        abilityName:'Seductive Kiss',
+        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a skill, increase main target's damage by 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% for 2 turns. If this skill spends Cocktails, increase damage by 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% more.",
+        abilityTh:[
+          'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
+          'หลังใช้สกิล เพิ่มดาเมจของเป้าหมายหลัก 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% 2 เทิร์น หากสกิลนี้ใช้ Cocktail เพิ่มดาเมจ 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% เพิ่มเติม',
+        ]},
+    ],
   },
   {name:'Marian', codename:'Marian', role:'Medic', element:'Bless', rarity:5,
     cards:['Abundance 4pc','Opulence 2pc'], weapon:'Best HP% Bless healing weapon (Angel Heart)',
