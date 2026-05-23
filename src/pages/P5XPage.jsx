@@ -4503,7 +4503,30 @@ function parseHiddenAbility(str) {
   return s
 }
 
-function computeStats(char, weaponIdx) {
+function parseWeaponBonusAtRefine(weapon, refine) {
+  if (!weapon?.bonusStats) return {}
+  if (!weapon.ability || refine === 0) return weapon.bonusStats
+  const result = {}
+  const lines = Array.isArray(weapon.ability) ? weapon.ability : [weapon.ability]
+  for (const [k, base] of Object.entries(weapon.bonusStats)) {
+    let scaled = base
+    for (const line of lines) {
+      if (scaled !== base) break
+      const clean = line.replace(/%/g, '')
+      for (const m of clean.matchAll(/(\d+\.?\d*)(\/\d+\.?\d*){4,}/g)) {
+        const vals = m[0].split('/').map(parseFloat)
+        if (vals.length >= 5 && Math.abs(vals[0] - base) < 2) {
+          scaled = vals[Math.min(refine, vals.length - 1)]
+          break
+        }
+      }
+    }
+    result[k] = scaled
+  }
+  return result
+}
+
+function computeStats(char, weaponIdx, refine = 0) {
   const s = {atk:0, crit:0, cdmg:0, hp:0, def:0, edm:0, heal:0, spd:0}
   if (!char) return s
   char.cards.forEach(cardStr => {
@@ -4517,9 +4540,8 @@ function computeStats(char, weaponIdx) {
     if (pc >= 4 && setData.stats4) Object.entries(setData.stats4).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
   })
   const wIdx = weaponIdx ?? 0
-  if (char.weapons?.[wIdx]?.bonusStats) {
-    Object.entries(char.weapons[wIdx].bonusStats).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
-  }
+  const weaponBonus = parseWeaponBonusAtRefine(char.weapons?.[wIdx], refine)
+  Object.entries(weaponBonus).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
   // Hidden ability (character-level passive stat bonus)
   const hidden = parseHiddenAbility(char.hiddenAbility)
   Object.entries(hidden).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
@@ -4554,7 +4576,7 @@ export default function P5XPage() {
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
-  const stats = computeStats(currentChar, selectedWeaponIdx)
+  const stats = computeStats(currentChar, selectedWeaponIdx, weaponRefine)
 
   const lv80arr = currentChar?.baseStatsLv80
   const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
@@ -5238,6 +5260,77 @@ export default function P5XPage() {
                     )
                   })()}
                 </div>
+
+                {/* ── STAT REQUIREMENTS FROM CARDS ─────────────────────────── */}
+                {(() => {
+                  const charTgt = CHAR_STAT_TARGETS[currentChar.codename]
+                  if (!charTgt) return null
+                  const entries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
+                  if (!entries.length) return null
+                  const STAT_LABELS = {
+                    atk:'ATK%', crit:'CRIT Rate%', cdmg:'CRIT DMG%',
+                    edm:'Elem DMG%', hp:'HP%', def:'DEF%',
+                    heal:'Healing%', spd:'Speed', spr:'SP Recovery%',
+                    ailm:'Ailment Acc%', pierce:'Pierce Rate%'
+                  }
+                  const selW = currentChar.weapons?.[selectedWeaponIdx ?? 0]
+                  const base0 = computeStats(currentChar, selectedWeaponIdx ?? 0, 0)
+                  const base6 = computeStats(currentChar, selectedWeaponIdx ?? 0, 6)
+                  const lv80all2 = Array.isArray(currentChar.baseStatsLv80)
+                    ? currentChar.baseStatsLv80
+                    : currentChar.baseStatsLv80 ? [currentChar.baseStatsLv80] : []
+                  const lv80_A0 = lv80all2[0]
+                  const lv80_A6 = lv80all2[lv80all2.length - 1]
+                  const scalesDiff = entries.some(([k]) => {
+                    const b0 = base0[k] || 0; const b6 = base6[k] || 0
+                    return Math.abs(b6 - b0) >= 1
+                  })
+                  return (
+                    <div className="info-panel">
+                      <div className="info-label">📊 Card Requirements (need from cards)</div>
+                      <div className="req-table">
+                        <div className="req-row req-hdr">
+                          <span>Stat</span>
+                          <span>Target</span>
+                          <span>Base</span>
+                          <span>Need 0★</span>
+                          {scalesDiff && <span>Need 6★</span>}
+                        </div>
+                        {entries.map(([k,[ideal]]) => {
+                          const b0 = base0[k] || 0
+                          const b6 = base6[k] || 0
+                          const need0 = Math.max(0, ideal - b0)
+                          const need6 = Math.max(0, ideal - b6)
+                          const isFlat = ['atk','hp','def'].includes(k)
+                          const fmt = v => k === 'spd' ? Math.round(v) : v.toFixed(0) + '%'
+                          // Per-ascension note for ATK/HP/DEF
+                          let a6Tgt = null
+                          if (isFlat && lv80_A0 && lv80_A6 && lv80_A0[k] !== lv80_A6[k]) {
+                            const wFlat = k==='atk'?(selW?.atk||0):k==='hp'?(selW?.hp||0):(selW?.def||0)
+                            const idealFinal = (lv80_A0[k] + wFlat) * (1 + ideal / 100)
+                            const pctA6 = Math.max(0, (idealFinal / (lv80_A6[k] + wFlat) - 1) * 100)
+                            if (ideal - pctA6 > 3) a6Tgt = pctA6.toFixed(0) + '%'
+                          }
+                          const cls0 = need0===0?'req-met':need0<30?'req-close':'req-far'
+                          const cls6 = need6===0?'req-met':need6<30?'req-close':'req-far'
+                          return (
+                            <div key={k} className="req-row">
+                              <span className="req-c-stat">{STAT_LABELS[k]||k}</span>
+                              <span className="req-c-tgt">
+                                {fmt(ideal)}
+                                {a6Tgt && <span className="req-a6-tgt">A6:{a6Tgt}</span>}
+                              </span>
+                              <span className="req-c-base">{fmt(b0)}</span>
+                              <span className={`req-c-need ${cls0}`}>{fmt(need0)}</span>
+                              {scalesDiff && <span className={`req-c-need ${cls6}`}>{fmt(need6)}</span>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className="req-note">Base = set bonuses + hidden ability. Need = target − base. 0★/6★ = weapon refine scaling.</div>
+                    </div>
+                  )
+                })()}
 
                 <div className="info-panel">
                   <div className="info-label" style={{display:'flex',alignItems:'center',gap:8}}>
