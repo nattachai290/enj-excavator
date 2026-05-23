@@ -113,7 +113,10 @@ const CHARACTERS = [
         hp: 1729, atk: 623, def: 296,
         bonusStats: {atk:12},
         abilityName: 'Machete',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen attacking a foe with an ailment, increase Attack by 19.1%/24.8%/24.8%/30.5%/30.5%/36.2%/36.2%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When attacking a foe with an ailment, increase Attack by 19.1%/24.8%/24.8%/30.5%/30.5%/36.2%/36.2%.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อโจมตีศัตรูที่มี ailment เพิ่ม Attack 19.1%/24.8%/24.8%/30.5%/30.5%/36.2%/36.2%',
@@ -199,7 +202,10 @@ const CHARACTERS = [
         hp: 1712, atk: 640, def: 328,
         bonusStats: {atk:12},
         abilityName: 'Masquerade Ribbon',
-        ability:"Increase Attack by 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%.\nWhen attacking a Burning foe, increase Attack by 23.7%/23.7%/30.8%/30.8%/37.9%/37.9%/45.0%.",
+        ability:[
+          "Increase Attack by 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%.",
+          "When attacking a Burning foe, increase Attack by 23.7%/23.7%/30.8%/30.8%/37.9%/37.9%/45.0%.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/16.0%/16.0%/20.0%/20.0%/24.0%/24.0%',
           'เมื่อโจมตีศัตรูที่ติด Burn เพิ่ม Attack 23.7%/23.7%/30.8%/30.8%/37.9%/37.9%/45.0%',
@@ -285,7 +291,10 @@ const CHARACTERS = [
         hp:2093, atk:581, def:282,
         bonusStats:{},
         abilityName:'Grand Presser',
-        ability:"Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.\nWhen Ryuji has Rebound and deals a critical hit with a skill, increase damage by 38.0%/49.5%/49.5%/61.0%/61.0%/72.5%/72.5%.",
+        ability:[
+          "Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.",
+          "When Ryuji has Rebound and deals a critical hit with a skill, increase damage by 38.0%/49.5%/49.5%/61.0%/61.0%/72.5%/72.5%.",
+        ],
         abilityTh:[
           'เพิ่ม CRIT Rate 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%',
           'เมื่อ Ryuji มี Rebound และ CRIT ด้วยสกิล เพิ่มดาเมจ 38.0%/49.5%/49.5%/61.0%/61.0%/72.5%/72.5%',
@@ -370,7 +379,10 @@ const CHARACTERS = [
         hp:1792, atk:613, def:296,
         bonusStats:{atk:24},
         abilityName:'Blessing',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWith 2 or more Step stacks, increase damage by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "With 2 or more Step stacks, increase damage by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อมี Step stack 2 ขึ้นไป เพิ่มดาเมจ 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%',
@@ -455,7 +467,10 @@ const CHARACTERS = [
         hp:1792, atk:602, def:317,
         bonusStats:{atk:24},
         abilityName:'Cyberdeck Pro',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nAfter inflicting Virus on a foe, increase the target\'s damage taken by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After inflicting Virus on a foe, increase the target\'s damage taken by 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% for 2 turns.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังทำให้ศัตรูติด Virus เพิ่มดาเมจที่รับของเป้าหมาย 10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% 2 เทิร์น',
@@ -542,7 +557,10 @@ const CHARACTERS = [
         hp:1823, atk:571, def:310,
         bonusStats:{atk:24},
         abilityName:"Rock 'n' Roller",
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nAfter using Catchy Hook, increase Attack by 28.0%/36.0%/36.0%/44.0%/44.0%/52.0%/52.0% for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After using Catchy Hook, increase Attack by 28.0%/36.0%/36.0%/44.0%/44.0%/52.0%/52.0% for 2 turns.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้ Catchy Hook เพิ่ม Attack 28.0%/36.0%/36.0%/44.0%/44.0%/52.0%/52.0% เป็นเวลา 2 เทิร์น',
@@ -612,20 +630,20 @@ const CHARACTERS = [
     weapons:[
       {name:"Kunoichi: Sky's Edge", stars:5, hp:2299, atk:687, def:401, bonusStats:{spd:15},
         abilityName:'Shadow Dance',
-        ability:"Increase Speed by 15.0/15.0/20.0/20.0/25.0/25.0/30.0. For every 2 Insight stack spent, gain 2/3/3/4/4/5/5 Intel stacks. Also, increase party's damage by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% for 1 turn. Increase max stacks of Intel to 11/12/12/13/13/14/14.",
+        ability:["Increase Speed by 15.0/15.0/20.0/20.0/25.0/25.0/30.0. For every 2 Insight stack spent, gain 2/3/3/4/4/5/5 Intel stacks. Also, increase party's damage by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% for 1 turn. Increase max stacks of Intel to 11/12/12/13/13/14/14."],
         abilityTh:[
           'เพิ่ม Speed 15.0/15.0/20.0/20.0/25.0/25.0/30.0',
           'ต่อ Insight 2 stack ที่ใช้ รับ Intel 2/3/3/4/4/5/5 stack เพิ่มดาเมจของปาร์ตี้ 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% 1 เทิร์น เพิ่ม Intel stack สูงสุดเป็น 11/12/12/13/13/14/14',]},
       {name:'Moonlight Needle', stars:4, hp:1839, atk:550, def:320, bonusStats:{atk:24},
         abilityName:'Reflected Moon',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. For each Insight stack spent, permanently increase party's Attack by 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8%. Stacks up to 5 times.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. For each Insight stack spent, permanently increase party's Attack by 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8%. Stacks up to 5 times."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ต่อ Insight 1 stack ที่ใช้ เพิ่ม Attack ของปาร์ตี้แบบถาวร 3.5%/4.6%/4.6%/5.7%/5.7%/6.8%/6.8% สะสมสูงสุด 5 ครั้ง',
         ]},
       {name:'Red Plum Blossom', stars:4, hp:1982, atk:550, def:285, bonusStats:{spd:9}, isEvent:true,
         abilityName:'In Bud',
-        ability:"Increase Speed by 4.6/4.6/5.9/5.9/7.2/7.2/8.5. For each Insight stack spent, randomly grant 1 of the following effects to the party: Increase Attack by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns), Increase Defense by 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 turns), Increase max HP by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns). Also, 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% chance to gain 1 Intel stack.",
+        ability:["Increase Speed by 4.6/4.6/5.9/5.9/7.2/7.2/8.5. For each Insight stack spent, randomly grant 1 of the following effects to the party: Increase Attack by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns), Increase Defense by 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 turns), Increase max HP by 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 turns). Also, 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% chance to gain 1 Intel stack."],
         abilityTh:[
           'เพิ่ม Speed 4.6/4.6/5.9/5.9/7.2/7.2/8.5',
           'ต่อ Insight 1 stack ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 เทิร์น), เพิ่ม Defense 11.0%/14.0%/14.0%/17.0%/17.0%/20.0%/20.0% (2 เทิร์น), เพิ่ม HP สูงสุด 7.0%/9.0%/9.0%/11.0%/11.0%/13.0%/13.0% (2 เทิร์น) โอกาส 5.0%/6.7%/6.7%/8.3%/8.3%/10.0%/10.0% ที่จะได้ Intel 1 stack',
@@ -710,7 +728,11 @@ const CHARACTERS = [
         hp: 1680, atk: 576, def: 335,
         bonusStats: {atk:12},
         abilityName: 'Sunstaff',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nAfter inflicting a debuff, increase Speed by 8/11/11/14/14/17/17 for 2 turns. Stacks up to 2 times.\nGain 2 stacks at the start of battle.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After inflicting a debuff, increase Speed by 8/11/11/14/14/17/17 for 2 turns. Stacks up to 2 times.",
+          "Gain 2 stacks at the start of battle.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังจากทำให้ติด debuff เพิ่ม Speed 8/11/11/14/14/17/17 เป็นเวลา 2 เทิร์น สะสมสูงสุด 2 ครั้ง\nรับ 2 stack เมื่อเริ่มต้นการต่อสู้',
@@ -796,7 +818,10 @@ const CHARACTERS = [
         hp:1744, atk:597, def:328,
         bonusStats:{atk:24},
         abilityName:"Knight's Reward",
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen dealing damage to the same foe multiple times, each hit has a 30% chance to deal 3.8%/4.9%/4.9%/6.0%/6.0%/7.1%/7.1% more damage (up to 19.0%/24.5%/24.5%/30.0%/30.0%/35.5%/35.5%).",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When dealing damage to the same foe multiple times, each hit has a 30% chance to deal 3.8%/4.9%/4.9%/6.0%/6.0%/7.1%/7.1% more damage (up to 19.0%/24.5%/24.5%/30.0%/30.0%/35.5%/35.5%).",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อโจมตีศัตรูตัวเดิมหลายครั้ง ทุกครั้งมีโอกาส 30% เพิ่มดาเมจ 3.8%/4.9%/4.9%/6.0%/6.0%/7.1%/7.1% (สูงสุด 19.0%/24.5%/24.5%/30.0%/30.0%/35.5%/35.5%)',
@@ -967,7 +992,10 @@ const CHARACTERS = [
         hp: 1966, atk: 434, def: 423,
         bonusStats: {def:18},
         abilityName: 'Jagato',
-        ability:"Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.\nEach time a counterattack is activated, increase Ice damage by 7.4%/9.6%/9.6%/11.8%/11.8%/14.0%/14.0% for 2 turns. Stacks up to 2 times.",
+        ability:[
+          "Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.",
+          "Each time a counterattack is activated, increase Ice damage by 7.4%/9.6%/9.6%/11.8%/11.8%/14.0%/14.0% for 2 turns. Stacks up to 2 times.",
+        ],
         abilityTh: [
           'เพิ่ม DEF 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%',
           'ทุกครั้งที่เปิดใช้ counterattack เพิ่มความเสียหายธาตุน้ำแข็ง 7.4%/9.6%/9.6%/11.8%/11.8%/14.0%/14.0% เป็นเวลา 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
@@ -1055,7 +1083,10 @@ const CHARACTERS = [
         hp:1649, atk:613, def:359,
         bonusStats:{atk:24},
         abilityName:'Unquenchable Flame',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen dealing Nuclear damage, increase damage by 4.4%/5.6%/5.6%/6.8%/6.8%/8.0%/8.0% for each Tenacity stack gained.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When dealing Nuclear damage, increase damage by 4.4%/5.6%/5.6%/6.8%/6.8%/8.0%/8.0% for each Tenacity stack gained.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อดีลดาเมจนิวเคลียร์ เพิ่มดาเมจ 4.4%/5.6%/5.6%/6.8%/6.8%/8.0%/8.0% ต่อ Tenacity stack ที่ได้รับ',
@@ -1140,7 +1171,10 @@ const CHARACTERS = [
         hp:1871, atk:592, def:328,
         bonusStats:{edm:10},
         abilityName:'Planar Cohesion',
-        ability:"Increase Almighty damage by 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%.\nWhen gaining Suspicion, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
+        ability:[
+          "Increase Almighty damage by 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%.",
+          "When gaining Suspicion, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
+        ],
         abilityTh:[
           'เพิ่มดาเมจอัลไมตี้ 9.6%/9.6%/12.8%/12.8%/16.0%/16.0%/19.2%',
           'เมื่อรับ Suspicion เพิ่ม Attack 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%',
@@ -1225,7 +1259,10 @@ const CHARACTERS = [
         hp:1823, atk:539, def:349,
         bonusStats:{atk:24},
         abilityName:'Fated Enthroning',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen Shoki grants Blessing stacks, increase his Attack by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for 2 turns. Stacks up to 3 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Shoki grants Blessing stacks, increase his Attack by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for 2 turns. Stacks up to 3 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Shoki มอบ Blessing stack เพิ่ม Attack 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% และ ailment accuracy 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% 2 เทิร์น สะสมสูงสุด 3 ครั้ง',
@@ -1234,7 +1271,10 @@ const CHARACTERS = [
         hp:2497, atk:595, def:449,
         bonusStats:{atk:24},
         abilityName:'Innumerable Stages',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen using a skill on an ally, increase Shoki\'s ailment accuracy by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% and grant 60% of this effect to all allies besides Shoki for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When using a skill on an ally, increase Shoki\'s ailment accuracy by 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% and grant 60% of this effect to all allies besides Shoki for 2 turns.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อใช้สกิลต่อพันธมิตร เพิ่ม ailment accuracy ของ Shoki 22.0%/28.0%/28.0%/34.0%/34.0%/40.0%/40.0% และมอบ 60% ของเอฟเฟกต์นี้ให้พันธมิตรอื่นนอกจาก Shoki 2 เทิร์น',
@@ -1319,7 +1359,10 @@ const CHARACTERS = [
         hp:1792, atk:555, def:328,
         bonusStats:{atk:24},
         abilityName:'Wake Effect',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen activating Torque Boost, increase damage by 18.0%/23.4%/23.4%/28.8%/28.8%/34.2%/34.2%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When activating Torque Boost, increase damage by 18.0%/23.4%/23.4%/28.8%/28.8%/34.2%/34.2%.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อเปิดใช้ Torque Boost เพิ่มดาเมจ 18.0%/23.4%/23.4%/28.8%/28.8%/34.2%/34.2%',
@@ -1404,7 +1447,10 @@ const CHARACTERS = [
         hp: 1871, atk: 539, def: 331,
         bonusStats: {atk:12},
         abilityName: 'Waterflowing Afterglow',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nFor each Extinguish stack, increase ailment accuracy by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "For each Extinguish stack, increase ailment accuracy by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4%.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ต่อ Extinguish stack เพิ่ม ailment accuracy 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4%',
@@ -1492,7 +1538,10 @@ const CHARACTERS = [
         hp: 1712, atk: 560, def: 346,
         bonusStats: {atk: 12},
         abilityName: 'Hunting Hound Claws',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen Big Welcome or Furrocious Follow-Up is active, increase Runa\'s ailment accuracy by 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Big Welcome or Furrocious Follow-Up is active, increase Runa\'s ailment accuracy by 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Big Welcome หรือ Furrocious Follow-Up ทำงาน เพิ่ม ailment accuracy ของ Runa 22.0%/28.5%/28.5%/35.0%/35.0%/41.5%/41.5%',
@@ -1584,7 +1633,10 @@ const CHARACTERS = [
         hp:1903, atk:529, def:352,
         bonusStats:{atk:24},
         abilityName:'Deliverance of Strength',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen Two Masks as One is activated, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0% for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Two Masks as One is activated, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0% for 2 turns.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อเปิดใช้ Two Masks as One เพิ่ม Attack 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0% 2 เทิร์น',
@@ -1669,7 +1721,10 @@ const CHARACTERS = [
         hp:1712, atk:608, def:341,
         bonusStats:{atk:24},
         abilityName:'Gilgamesh Axe',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nIncrease Attack and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for each foe with a debuff (up to 9.9%/12.9%/12.9%/15.9%/15.9%/18.9%/18.9%).",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Increase Attack and ailment accuracy by 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% for each foe with a debuff (up to 9.9%/12.9%/12.9%/15.9%/15.9%/18.9%/18.9%).",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ต่อศัตรู 1 ตัวที่ถูก debuff เพิ่ม Attack และ ailment accuracy 3.3%/4.3%/4.3%/5.3%/5.3%/6.3%/6.3% (สูงสุด 9.9%/12.9%/12.9%/15.9%/15.9%/18.9%/18.9%)',
@@ -1754,7 +1809,10 @@ const CHARACTERS = [
         hp: 1871, atk: 444, def: 430,
         bonusStats: {},
         abilityName: 'Spina Caritatis',
-        ability:"Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.\nAlso increase shield granted by Ashiya to allies with less than 60% HP by 13.7%/17.8%/17.8%/21.9%/21.9%/26.0%/26.0%.",
+        ability:[
+          "Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.",
+          "Also increase shield granted by Ashiya to allies with less than 60% HP by 13.7%/17.8%/17.8%/21.9%/21.9%/26.0%/26.0%.",
+        ],
         abilityTh: [
           'เพิ่ม shield 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%',
           "เพิ่ม shield ที่ Ashiya ให้แก่พันธมิตรที่มี HP ต่ำกว่า 60% 13.7%/17.8%/17.8%/21.9%/21.9%/26.0%/26.0%",
@@ -1842,7 +1900,10 @@ const CHARACTERS = [
         hp:1966, atk:597, def:289,
         bonusStats:{atk:24},
         abilityName:'Undying Embers',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhenever inflicting Bleed on foes, permanently increase Attack by 1.8%/2.4%/2.4%/3.0%/3.0%/3.6%/3.6%. Stacks up to 10 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Whenever inflicting Bleed on foes, permanently increase Attack by 1.8%/2.4%/2.4%/3.0%/3.0%/3.6%/3.6%. Stacks up to 10 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ทุกครั้งที่ทำให้ศัตรูติด Bleed เพิ่ม Attack ถาวร 1.8%/2.4%/2.4%/3.0%/3.0%/3.6%/3.6% สะสมสูงสุด 10 ครั้ง',
@@ -1912,13 +1973,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Moonlit Feather', stars:5, hp:2279, atk:733, def:401, bonusStats:{atk:30},
         abilityName:'Wine & Revelry',
-        ability:"Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. For each Cocktail spent, randomly grant 1 of the following effects to the party: Increase Attack by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 turns), Increase damage by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 turns), Increase critical rate by 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 turns). These effects do not stack. If Tailor-Made multiply effect by 120%; Standard by 100%; Basic by 50%. For every 2 Cocktails gained, reduce Yumi's cooldown time by 1 turn.",
+        ability:["Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. For each Cocktail spent, randomly grant 1 of the following effects to the party: Increase Attack by 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 turns), Increase damage by 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 turns), Increase critical rate by 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 turns). These effects do not stack. If Tailor-Made multiply effect by 120%; Standard by 100%; Basic by 50%. For every 2 Cocktails gained, reduce Yumi's cooldown time by 1 turn."],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'ต่อ Cocktail ที่ใช้ สุ่มมอบ 1 ในเอฟเฟกต์ต่อไปนี้ให้ปาร์ตี้: เพิ่ม Attack 6.0%/7.8%/7.8%/9.6%/9.6%/11.4%/11.4% (2 เทิร์น), เพิ่มดาเมจ 5.0%/6.5%/6.5%/8.0%/8.0%/9.5%/9.5% (2 เทิร์น), เพิ่ม CRIT Rate 4.0%/5.2%/5.2%/6.4%/6.4%/7.6%/7.6% (2 เทิร์น) เอฟเฟกต์เหล่านี้ไม่สะสม Tailor-Made ×120%, Standard ×100%, Basic ×50% ต่อ Cocktail ที่ได้รับทุก 2 stack ลดเวลาคูลดาวน์ของ Yumi 1 เทิร์น',]},
       {name:'Starrynight Soothsayer', stars:4, hp:1823, atk:587, def:320, bonusStats:{atk:24},
         abilityName:'Seductive Kiss',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a skill, increase main target's damage by 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% for 2 turns. If this skill spends Cocktails, increase damage by 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% more.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a skill, increase main target's damage by 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% for 2 turns. If this skill spends Cocktails, increase damage by 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% more."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้สกิล เพิ่มดาเมจของเป้าหมายหลัก 4.8%/6.0%/6.0%/7.2%/7.2%/8.4%/8.4% 2 เทิร์น หากสกิลนี้ใช้ Cocktail เพิ่มดาเมจ 3.6%/4.5%/4.5%/5.4%/5.4%/6.3%/6.3% เพิ่มเติม',
@@ -2003,7 +2064,11 @@ const CHARACTERS = [
         hp:2188, atk:481, def:356,
         bonusStats:{},
         abilityName:'Hymn of Life',
-        ability:"Increase healing effect by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.\nIncrease continuous healing effect by 28.5%/37.0%/37.0%/45.5%/45.5%/54.0%/54.0%.\nAfter using a healing skill, 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% chance to grant Blessing to the main target.",
+        ability:[
+          "Increase healing effect by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%.",
+          "Increase continuous healing effect by 28.5%/37.0%/37.0%/45.5%/45.5%/54.0%/54.0%.",
+          "After using a healing skill, 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% chance to grant Blessing to the main target.",
+        ],
         abilityTh:[
           'เพิ่มผลการรักษา 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%',
           'เพิ่มผลการรักษาต่อเนื่อง 28.5%/37.0%/37.0%/45.5%/45.5%/54.0%/54.0%',
@@ -2095,7 +2160,10 @@ const CHARACTERS = [
         hp: 1729, atk: 629, def: 314,
         bonusStats: {atk:12},
         abilityName: 'Silent Resolve',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen Makoto grants a buff to an ally, increase party\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2%, and also increase Makoto\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% more for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Makoto grants a buff to an ally, increase party\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2%, and also increase Makoto\'s damage by 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% more for 2 turns.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Makoto ให้ buff แก่พันธมิตร เพิ่มความเสียหายของปาร์ตี้ 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% และเพิ่มความเสียหายของ Makoto อีก 8.8%/11.6%/11.6%/14.4%/14.4%/17.2%/17.2% เป็นเวลา 2 เทิร์น',
@@ -2183,7 +2251,10 @@ const CHARACTERS = [
         hp:2093, atk:566, def:289,
         bonusStats:{atk:24},
         abilityName:'Bubble Puff Star',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen receiving healing while Summer Hype is active, increase damage by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 2 turns. Stacks up to 2 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When receiving healing while Summer Hype is active, increase damage by 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% for 2 turns. Stacks up to 2 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อรับการรักษาขณะ Summer Hype ใช้งานอยู่ เพิ่มดาเมจ 7.6%/9.9%/9.9%/12.2%/12.2%/14.5%/14.5% 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
@@ -2268,7 +2339,10 @@ const CHARACTERS = [
         hp: 1792, atk: 634, def: 314,
         bonusStats: {atk:12},
         abilityName: 'Cleansing Blade',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen using Yanhua Slash, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When using Yanhua Slash, increase Attack by 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อใช้ Yanhua Slash เพิ่ม Attack 22.0%/29.0%/29.0%/36.0%/36.0%/43.0%/43.0%',
@@ -2354,7 +2428,10 @@ const CHARACTERS = [
         hp: 2252, atk: 476, def: 317,
         bonusStats: {hp:12},
         abilityName: 'Death Stinger',
-        ability:"Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nIncrease Sacred Flame damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.",
+        ability:[
+          "Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Increase Sacred Flame damage by 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%.",
+        ],
         abilityTh: [
           'เพิ่ม HP สูงสุด 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เพิ่มความเสียหายของ Sacred Flame 34.0%/44.0%/44.0%/54.0%/54.0%/64.0%/64.0%',
@@ -2529,7 +2606,10 @@ const CHARACTERS = [
         hp:1918, atk:518, def:338,
         bonusStats:{atk:24},
         abilityName:"Sparrow's Leap",
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen Riko restores SP with a skill, increase CRIT DMG by 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% for 2 turns. Stacks up to 2 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When Riko restores SP with a skill, increase CRIT DMG by 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% for 2 turns. Stacks up to 2 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Riko คืน SP ด้วยสกิล เพิ่ม CRIT DMG 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% เป็นเวลา 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
@@ -2705,7 +2785,10 @@ const CHARACTERS = [
         hp:1744, atk:581, def:341,
         bonusStats:{atk:24},
         abilityName:'Shamshir',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen healing an ally with 80% or more HP, grant Moonlight. Moonlight: HP +10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% and ATK +4.0%/5.3%/5.3%/6.7%/6.7%/8.0%/8.0% for 2 turns.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When healing an ally with 80% or more HP, grant Moonlight. Moonlight: HP +10.0%/13.0%/13.0%/16.0%/16.0%/19.0%/19.0% and ATK +4.0%/5.3%/5.3%/6.7%/6.7%/8.0%/8.0% for 2 turns.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อฮีลพันธมิตรที่มี HP 80%+ ให้ Moonlight Moonlight: HP +10%/13%/.../19% และ ATK +4%/5.3%/.../8% เป็นเวลา 2 เทิร์น',
@@ -2714,7 +2797,11 @@ const CHARACTERS = [
         hp:1903, atk:539, def:341,
         bonusStats:{},
         abilityName:'Headhunter Ladle',
-        ability:"Increase critical rate by 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%.\nWhen attacking with a skill, restore HP equal to 6.3%/8.0%/8.0%/9.7%/9.7%/11.4%/11.4% of Attack to the ally with the lowest HP.\n2.0%/3.0%/3.0%/4.0%/4.0%/5.0%/5.0% chance to inflict Forget on target foe for 1 turn.",
+        ability:[
+          "Increase critical rate by 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%.",
+          "When attacking with a skill, restore HP equal to 6.3%/8.0%/8.0%/9.7%/9.7%/11.4%/11.4% of Attack to the ally with the lowest HP.",
+          "2.0%/3.0%/3.0%/4.0%/4.0%/5.0%/5.0% chance to inflict Forget on target foe for 1 turn.",
+        ],
         abilityTh:[
           'เพิ่ม CRIT Rate 5.9%/5.9%/7.6%/7.6%/9.3%/9.3%/11.0%',
           'เมื่อโจมตีด้วยสกิล ฟื้นฟู HP ให้พันธมิตรที่มี HP ต่ำสุด 6.3%/8.0%/8.0%/9.7%/9.7%/11.4%/11.4% ของ Attack',
@@ -2800,7 +2887,10 @@ const CHARACTERS = [
         hp:1808, atk:608, def:299,
         bonusStats:{},
         abilityName:'Meta Directors',
-        ability:"Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.\nWhen performing a follow-up attack, increase Electric damage by 9.7%/12.6%/12.6%/15.5%/15.5%/18.4%/18.4% for 1 turn. Stacks up to 2 times.",
+        ability:[
+          "Increase critical rate by 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%.",
+          "When performing a follow-up attack, increase Electric damage by 9.7%/12.6%/12.6%/15.5%/15.5%/18.4%/18.4% for 1 turn. Stacks up to 2 times.",
+        ],
         abilityTh:[
           'เพิ่ม CRIT Rate 7.3%/7.3%/9.5%/9.5%/11.7%/11.7%/13.9%',
           'เมื่อดีล follow-up attack เพิ่มดาเมจไฟฟ้า 9.7%/12.6%/12.6%/15.5%/15.5%/18.4%/18.4% เป็นเวลา 1 เทิร์น สะสมสูงสุด 2 ครั้ง',
@@ -2885,7 +2975,10 @@ const CHARACTERS = [
         hp:1744, atk:555, def:356,
         bonusStats:{atk:24},
         abilityName:'Quantum Radiation',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen a foe with an elemental ailment is present, decrease that foe\'s Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0%. Also, when inflicted with Radiation, decrease Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0% more.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When a foe with an elemental ailment is present, decrease that foe\'s Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0%. Also, when inflicted with Radiation, decrease Defense by 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0% more.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อมีศัตรูที่มีสภาวะธาตุ ลด DEF ศัตรูนั้น 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0% เมื่อมี Radiation ด้วย ลด DEF เพิ่มอีก 9.6%/12.4%/12.4%/15.2%/15.2%/18.0%/18.0%',
@@ -2970,7 +3063,10 @@ const CHARACTERS = [
         hp:1871, atk:534, def:349,
         bonusStats:{atk:24},
         abilityName:'Chirpy Pickaxe',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nAfter using a skill on an ally, for each Attack buff on the ally, increase Attack by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 2 turns. Stacks up to 3 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "After using a skill on an ally, for each Attack buff on the ally, increase Attack by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 2 turns. Stacks up to 3 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้สกิลต่อพันธมิตร ต่อ ATK buff บนพันธมิตร เพิ่ม Attack 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% 2 เทิร์น สะสมสูงสุด 3 ครั้ง',
@@ -3053,7 +3149,10 @@ const CHARACTERS = [
         hp: 1982, atk: 555, def: 335,
         bonusStats: {atk:12},
         abilityName: 'Lava Flame',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nIf Starfire is active, increase healing effect by 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% per stack of Starfire.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "If Starfire is active, increase healing effect by 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% per stack of Starfire.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หาก Starfire ทำงานอยู่ เพิ่มประสิทธิภาพการฟื้นฟู 6.9%/9.0%/9.0%/11.1%/11.1%/13.2%/13.2% ต่อ Starfire stack',
@@ -3139,7 +3238,11 @@ const CHARACTERS = [
         hp:1839, atk:550, def:346,
         bonusStats:{},
         abilityName:'Justice Lance',
-        ability:"Increase shield by 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%.\nAfter using a skill on an ally, increase Attack by 9.0%/11.7%/11.7%/14.4%/14.4%/17.1%/17.1% for 1 turn.\nFor every 20% HP the target loses, increase Attack by 20%.",
+        ability:[
+          "Increase shield by 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%.",
+          "After using a skill on an ally, increase Attack by 9.0%/11.7%/11.7%/14.4%/14.4%/17.1%/17.1% for 1 turn.",
+          "For every 20% HP the target loses, increase Attack by 20%.",
+        ],
         abilityTh:[
           'เพิ่ม shield 8.8%/8.8%/11.4%/11.4%/14.0%/14.0%/16.6%',
           'หลังใช้สกิลต่อพันธมิตร เพิ่ม Attack 9.0%/11.7%/11.7%/14.4%/14.4%/17.1%/17.1% 1 เทิร์น',
@@ -3225,7 +3328,10 @@ const CHARACTERS = [
         hp:1712, atk:581, def:363,
         bonusStats:{atk:24},
         abilityName:'Crime and Punishment',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nIf there are any Shocked foes, increase Attack by 20%/26%/26%/32%/32%/38%/38%.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "If there are any Shocked foes, increase Attack by 20%/26%/26%/32%/32%/38%/38%.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หากมีศัตรูติด Shock เพิ่ม Attack 20%/26%/26%/32%/32%/38%/38%',
@@ -3310,7 +3416,10 @@ const CHARACTERS = [
         hp:1729, atk:608, def:328,
         bonusStats:{atk:24},
         abilityName:'Don Glacial',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nEach time Kotone gains Ice Crystal stacks, increase Ice damage by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 1 turn. Stacks up to 10 times.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "Each time Kotone gains Ice Crystal stacks, increase Ice damage by 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% for 1 turn. Stacks up to 10 times.",
+        ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ทุกครั้งที่ Kotone ได้รับ Ice Crystal stack เพิ่มความเสียหายธาตุน้ำแข็ง 2.4%/3.1%/3.1%/3.8%/3.8%/4.5%/4.5% เป็นเวลา 1 เทิร์น สะสมสูงสุด 10 ครั้ง',
@@ -3381,7 +3490,10 @@ const CHARACTERS = [
         hp:2299, atk:449, def:306,
         bonusStats:{hp:24},
         abilityName:"Demon's Bite",
-        ability:"Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhile Desperado is active, increase max HP by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0% more, Defense by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%, and ailment resistance by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%.",
+        ability:[
+          "Increase max HP by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "While Desperado is active, increase max HP by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0% more, Defense by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%, and ailment resistance by 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%.",
+        ],
         abilityTh:[
           'เพิ่ม HP สูงสุด 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'ขณะ Desperado ใช้งานอยู่ เพิ่ม HP สูงสุดเพิ่มเติม 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%, DEF 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0% และต้านทานสภาวะแปรปรวน 11.0%/14.3%/14.3%/17.7%/17.7%/21.0%/21.0%',
@@ -3466,7 +3578,10 @@ const CHARACTERS = [
         hp:1871, atk:449, def:419,
         bonusStats:{def:35},
         abilityName:'Heavy Metal Pain',
-        ability:"Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.\nWhen granting a shield to an ally with less than 50% HP, increase shield by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0%.",
+        ability:[
+          "Increase Defense by 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%.",
+          "When granting a shield to an ally with less than 50% HP, increase shield by 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0%.",
+        ],
         abilityTh:[
           'เพิ่ม DEF 18.0%/18.0%/23.5%/23.5%/29.0%/29.0%/34.5%',
           'เมื่อมอบ shield ให้พันธมิตรที่มี HP ต่ำกว่า 50% เพิ่ม shield 16.3%/21.2%/21.2%/26.1%/26.1%/31.0%/31.0%',
@@ -3640,7 +3755,10 @@ const CHARACTERS = [
         hp: 1808, atk: 592, def: 331,
         bonusStats: {atk:12},
         abilityName: 'Scarlet Scepter',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.\nWhen gaining Verse of Hate, Verse of Healing, or Verse of Passion, increase damage by 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% based on the number of current Verses for 1 turn.",
+        ability:[
+          "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
+          "When gaining Verse of Hate, Verse of Healing, or Verse of Passion, increase damage by 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% based on the number of current Verses for 1 turn.",
+        ],
         abilityTh: [
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อได้รับ Verse of Hate, Verse of Healing หรือ Verse of Passion เพิ่มความเสียหาย 2.0%/2.6%/2.6%/3.2%/3.2%/3.8%/3.8% ตามจำนวน Verse ปัจจุบัน เป็นเวลา 1 เทิร์น',
@@ -3711,13 +3829,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Ephemerality', stars:5, hp:2339, atk:641, def:476, bonusStats:{def:45},
         abilityName:'Ephemerality',
-        ability:"Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%. After using a skill, grant 1 Seashell stack to the main target. For every stack of Seashell granted, increase Attack by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% and Defense by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% for 2 turns.",
+        ability:["Increase Defense by 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%. After using a skill, grant 1 Seashell stack to the main target. For every stack of Seashell granted, increase Attack by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% and Defense by 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% for 2 turns."],
         abilityTh:[
           'เพิ่ม Defense 45.0%/45.0%/59.0%/59.0%/73.0%/73.0%/87.0%',
           'หลังใช้สกิล มอบ Seashell 1 stack ให้เป้าหมายหลัก ต่อ Seashell 1 stack ที่มอบให้ เพิ่ม Attack 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% และ Defense 3.0%/4.0%/4.0%/5.0%/5.0%/6.0%/6.0% เป็นเวลา 2 เทิร์น',]},
       {name:'Submarine Sonar', stars:4, hp:1871, atk:513, def:381, bonusStats:{},
         abilityName:'Submarine Sonar',
-        ability:"Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%. Increase Defense of shielded allies by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%.",
+        ability:["Increase shield by 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%. Increase Defense of shielded allies by 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%."],
         abilityTh:[
           'เพิ่ม shield 8.7%/8.7%/11.3%/11.3%/13.9%/13.9%/16.5%',
           'เพิ่ม Defense ของพันธมิตรที่มี shield 24.0%/31.0%/31.0%/38.0%/38.0%/45.0%/45.0%',
@@ -3787,13 +3905,13 @@ const CHARACTERS = [
     weapons:[
       {name:'Retro Disco Style', stars:5, hp:2339, atk:694, def:423, bonusStats:{atk:30},
         abilityName:'Retro Disco Style',
-        ability:"Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. After granting Pulsating Rhythm, 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% chance to gain 1 Beat stack. Increase buffs from Pulsating Rhythm by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more.",
+        ability:["Increase Attack by 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%. After granting Pulsating Rhythm, 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% chance to gain 1 Beat stack. Increase buffs from Pulsating Rhythm by 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0% more."],
         abilityTh:[
           'เพิ่ม Attack 30.0%/30.0%/39.0%/39.0%/48.0%/48.0%/57.0%',
           'หลังมอบ Pulsating Rhythm โอกาส 41.0%/54.0%/54.0%/67.0%/67.0%/80.0%/80.0% ที่จะได้รับ Beat 1 stack เพิ่ม buff จาก Pulsating Rhythm 26.0%/34.0%/34.0%/42.0%/42.0%/50.0%/50.0%',]},
       {name:'Emerald Charmer', stars:4, hp:1871, atk:555, def:338, bonusStats:{atk:24},
         abilityName:'Emerald Charmer',
-        ability:"Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a support skill, 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% chance to gain 1 Beat stack.",
+        ability:["Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%. After using a support skill, 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% chance to gain 1 Beat stack."],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'หลังใช้สกิล support โอกาส 43.0%/56.0%/56.0%/69.0%/69.0%/82.0%/82.0% ที่จะได้รับ Beat 1 stack',
