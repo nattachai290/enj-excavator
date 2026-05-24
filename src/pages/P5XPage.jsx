@@ -5762,13 +5762,23 @@ export default function P5XPage() {
                           if (Object.keys(mContrib).length) sources.push({ label:'Mindscape (M5)', contrib:mContrib })
                         }
                         if (!sources.length) return null
+                        // Group by stat key
+                        const byKey = {}
+                        sources.forEach(({ label, contrib }) => {
+                          Object.entries(contrib).forEach(([k, v]) => {
+                            if (!byKey[k]) byKey[k] = []
+                            byKey[k].push({ label, v })
+                          })
+                        })
                         return (
                           <div className="req-sources">
                             <div className="req-sources-title">แหล่งที่มาของ "มีแล้ว"</div>
-                            {sources.map(({ label, contrib }, i) => (
-                              <div key={i} className="req-source-row">
-                                <span className="req-source-label">{label}</span>
-                                <span className="req-source-vals">{Object.entries(contrib).map(([k,v]) => `${STAT_LABELS[k]||k} ${fmtStat(k,v)}`).join(', ')}</span>
+                            {entries.filter(([k]) => byKey[k]).map(([k]) => (
+                              <div key={k} className="req-source-row">
+                                <span className="req-source-label">{STAT_LABELS[k]||k}</span>
+                                <span className="req-source-vals">
+                                  {byKey[k].map(({label, v}) => `${label} ${fmtStat(k,v)}`).join('  ·  ')}
+                                </span>
                               </div>
                             ))}
                           </div>
