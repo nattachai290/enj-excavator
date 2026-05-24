@@ -4746,7 +4746,7 @@ const PASSIVE_STAT_MAP = {
   'Power':          {atk:15},
   'Ruin':           {atk:10, edm:8},
   'Tenacity':       {atk:8},
-  'Courage':        {cdmg:15, edm:10},
+  'Courage':        {edm:12, elements:['Physical','Electric']},
   'Triumph':        {crit:15},
   'Love':           {heal:15},
   'Reconciliation': {spd:10},
@@ -4764,11 +4764,11 @@ const PASSIVE_STAT_MAP = {
   'Peace':          {def:12},
   'Futility':       {},
   'Prosperity':     {},
-  'Disappointment': {},
+  'Disappointment': {atk:10, crit:8, elements:['Almighty']},
   'Transformation': {},
   'Prudence':       {atk:8},
   'Defeat':         {edm:8},
-  'Worry':          {},
+  'Worry':          {cdmg:12},
 }
 
 // Sub stat label → internal stat key (null = not tracked in score yet)
@@ -4788,16 +4788,18 @@ const SUB_STAT_KEY = {
   'Speed':        'spd',
 }
 
-function scoreSpaceCard(card, charTargets, charCards) {
+function scoreSpaceCard(card, charTargets, charCards, charElement, charElement2) {
   if (!charTargets) return 0
   let score = 0
+  const charElements = [charElement, charElement2].filter(Boolean)
   const usedSets = (charCards || []).map(cs => {
     const m = cs.match(/^(.+?)\s+(2|4)pc$/i)
     return m ? m[1].trim() : null
   }).filter(Boolean)
   card.passives.forEach(p => {
-    const weights = PASSIVE_STAT_MAP[p.name] || {}
-    Object.entries(weights).forEach(([k, w]) => {
+    const { elements, ...statWeights } = PASSIVE_STAT_MAP[p.name] || {}
+    if (elements && charElements.length > 0 && !elements.some(e => charElements.includes(e))) return
+    Object.entries(statWeights).forEach(([k, w]) => {
       const target = charTargets[k]
       if (target && target[1] > 0) score += (target[1] / 25) * w
     })
@@ -5606,7 +5608,7 @@ export default function P5XPage() {
                   <div className="info-label">🃏 Space Card แนะนำ (จาก Passive)</div>
                   {(() => {
                     const ranked = REVELATION_CARDS.Space
-                      .map(card => ({ card, score: scoreSpaceCard(card, charTgt, currentChar.cards) }))
+                      .map(card => ({ card, score: scoreSpaceCard(card, charTgt, currentChar.cards, currentChar.element, currentChar.element2) }))
                       .sort((a, b) => b.score - a.score)
                       .slice(0, 3)
                     return (
@@ -5622,9 +5624,11 @@ export default function P5XPage() {
                               </div>
                               <div className="rec-passives">
                                 {card.passives.map(p => {
-                                  const pw = PASSIVE_STAT_MAP[p.name] || {}
+                                  const { elements: pElements, ...pStatWeights } = PASSIVE_STAT_MAP[p.name] || {}
                                   const usedSets = (currentChar.cards || []).map(cs => { const m = cs.match(/^(.+?)\s+(2|4)pc$/i); return m ? m[1].trim() : null }).filter(Boolean)
-                                  const relevant = charTgt && (Object.keys(pw).some(k => charTgt[k]?.[1] > 0) || usedSets.includes(p.name))
+                                  const charElements = [currentChar.element, currentChar.element2].filter(Boolean)
+                                  const elementOk = !pElements || charElements.length === 0 || pElements.some(e => charElements.includes(e))
+                                  const relevant = charTgt && elementOk && (Object.keys(pStatWeights).some(k => charTgt[k]?.[1] > 0) || usedSets.includes(p.name))
                                   return (
                                     <span key={p.name} className={'rec-passive' + (relevant ? ' rec-passive-hit' : '')}>
                                       {p.name}
