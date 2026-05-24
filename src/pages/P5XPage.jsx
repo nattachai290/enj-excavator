@@ -1711,6 +1711,7 @@ const CHARACTERS = [
       {hp:3756, atk:1164, def:687, spd:107},
     ],
     hiddenAbility: 'SPD +125.8',
+    mindscapeBonus: {spd:10, crit:12},
     weapons:[
       {name:'Nebula Pennant', stars:5,
         hp:2240, atk:694, def:410,
