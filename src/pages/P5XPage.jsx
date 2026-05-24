@@ -338,7 +338,7 @@ const CHARACTERS = [
       {hp:3564, atk:1286, def:610, spd:102},
       {hp:3623, atk:1307, def:621, spd:102},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {
         name: 'Phoenix Dagger', stars:5,
@@ -435,7 +435,7 @@ const CHARACTERS = [
       {hp:3532, atk:1319, def:676, spd:94},
       {hp:3590, atk:1340, def:687, spd:94},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {
         name: 'Rosethorn', stars:5,
@@ -535,7 +535,7 @@ const CHARACTERS = [
       {hp:4317, atk:1199, def:581, spd:0},
       {hp:4388, atk:1219, def:591, spd:0},
     ],
-    hiddenAbility: 'CRIT DMG +184.9%',
+    hiddenAbility: 'Crit Mult. +184.9%',
     weapons:[
       {name:'Revenge Axe', stars:5,
         hp:2616, atk:727, def:352,
@@ -632,7 +632,7 @@ const CHARACTERS = [
       {hp:3695, atk:1265, def:610, spd:0},
       {hp:3756, atk:1286, def:621, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Royal Étoile', stars:5,
         hp:2240, atk:766, def:370,
@@ -728,7 +728,7 @@ const CHARACTERS = [
       {hp:3695, atk:1242, def:654, spd:0},
       {hp:3756, atk:1263, def:665, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Technomage Ultra FS', stars:5,
         hp:2240, atk:753, def:396,
@@ -825,7 +825,7 @@ const CHARACTERS = [
       {hp:3760, atk:1178, def:639, spd:0},
       {hp:3823, atk:1197, def:650, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Superstar', stars:5,
         hp:2279, atk:714, def:388,
@@ -1115,7 +1115,7 @@ const CHARACTERS = [
       {hp:2618, atk:896, def:493, spd:0},
       {hp:2647, atk:906, def:497, spd:0},
     ],
-    hiddenAbility: 'CRIT Rate +18%',
+    hiddenAbility: 'Crit Rate +18%',
     weapons:[
       {name:'Venus Sunrise', stars:5,
         hp:2180, atk:747, def:410,
@@ -1212,7 +1212,7 @@ const CHARACTERS = [
       {hp:3662, atk:1253, def:654, spd:0},
       {hp:3723, atk:1274, def:665, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:"Angel's Hymn", stars:5,
         hp:2220, atk:760, def:396,
@@ -1239,10 +1239,10 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Yusuke Kitagawa',    codename:'Fox',            role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best DEF/Ice weapon',                           statPrio:['Defense %','Damage Mult','HP %'],                         note:'DEF-scaling Ice Sweeper. Damage scales off Defense — stack DEF% over ATK%.',
-    mechanics: "ทักษะและ Highlight ทั้งหมดของ Yusuke สเกลตาม DEF ไม่ใช่ ATK — สะสม DEF% ในทุก card slot Inspiration passive โอกาส 65% โต้กลับ (Ice, 88% DEF) เมื่อถูกทักษะศัตรู Keen Eye พัฒนา Inspiration ถัดไปเป็น Imagination: proc 100%, AoE และสร้าง shield Shield เปิด Painter's Focus (+7.5% DMG ต่อ shield, สูงสุด 6 stack) และ Artist's Intuition (+20% pierce 1 เทิร์น)",
+  {name:'Yusuke Kitagawa',    codename:'Fox',            role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best DEF/Ice weapon',                           statPrio:['Defense %','Damage Mult','HP %'],                         note:'DEF-scaling Ice Sweeper. Damage scales off Defense — stack Defense % over Attack %.',
+    mechanics: "ทักษะและ Highlight ทั้งหมดของ Yusuke สเกลตาม DEF ไม่ใช่ ATK — สะสม Defense % ในทุก card slot Inspiration passive โอกาส 65% โต้กลับ (Ice, 88% DEF) เมื่อถูกทักษะศัตรู Keen Eye พัฒนา Inspiration ถัดไปเป็น Imagination: proc 100%, AoE และสร้าง shield Shield เปิด Painter's Focus (+7.5% DMG ต่อ shield, สูงสุด 6 stack) และ Artist's Intuition (+20% pierce 1 เทิร์น)",
     rotation: [
-      "สะสม DEF% ในทุก main stat slot — Frozen Presence, Bone-Chilling Cold และ Highlight ล้วนสเกลตาม DEF",
+      "สะสม Defense % ในทุก main stat slot — Frozen Presence, Bone-Chilling Cold และ Highlight ล้วนสเกลตาม DEF",
       "เทิร์น 1 → Keen Eye → พัฒนา Inspiration ถัดไปเป็น Imagination (AoE, proc 100%, ได้ shield)",
       "ปล่อยให้ศัตรูโจมตีเพื่อเปิด Inspiration/Imagination → โต้กลับ passive โดยไม่เสียเทิร์น",
       "Bone-Chilling Cold ขณะมี shield active → bonus damage +30% บนทุก 5 hit",
@@ -1304,7 +1304,7 @@ const CHARACTERS = [
       {hp:4055, atk:894, def:872, spd:102},
       {hp:4122, atk:909, def:886, spd:102},
     ],
-    hiddenAbility: 'DEF% +43.6%',
+    hiddenAbility: 'Defense % +43.6%',
     weapons:[
       {
         name: 'Shadowkiller', stars:5,
@@ -1405,7 +1405,7 @@ const CHARACTERS = [
       {hp:3401, atk:1265, def:742, spd:0},
       {hp:3457, atk:1286, def:754, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Nuclear Finisher', stars:5,
         hp:2061, atk:766, def:449,
@@ -1504,7 +1504,7 @@ const CHARACTERS = [
       {hp:3858, atk:1221, def:676, spd:0},
       {hp:3922, atk:1241, def:687, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Gordian Kopis', stars:5,
         hp:2339, atk:740, def:410,
@@ -1804,7 +1804,7 @@ const CHARACTERS = [
       {hp:3858, atk:1112, def:683, spd:104},
       {hp:3922, atk:1130, def:695, spd:104},
     ],
-    hiddenAbility: 'Ailment Accur. +34.9%',
+    hiddenAbility: 'Ailment Accuracy +34.9%',
     weapons:[
       {
         name: 'Entropy', stars:5,
@@ -1902,7 +1902,7 @@ const CHARACTERS = [
       {hp:3532, atk:1155, def:713, spd:105},
       {hp:3590, atk:1174, def:724, spd:105},
     ],
-    hiddenAbility: 'Ailment Accur. +34.9%',
+    hiddenAbility: 'Ailment Accuracy +34.9%',
     weapons:[
       {
         name: 'Cerberus Claws', stars:5,
@@ -2011,7 +2011,7 @@ const CHARACTERS = [
       {hp:3924, atk:1090, def:727, spd:0},
       {hp:3989, atk:1108, def:739, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:"Warden's Judgement", stars:5,
         hp:2378, atk:661, def:440,
@@ -2202,7 +2202,7 @@ const CHARACTERS = [
       {hp:3858, atk:916, def:887, spd:104},
       {hp:3922, atk:930, def:901, spd:104},
     ],
-    hiddenAbility: 'DEF% +43.6%',
+    hiddenAbility: 'Defense % +43.6%',
     weapons:[
       {
         name: 'Spina Sacramenti', stars:5,
@@ -2303,7 +2303,7 @@ const CHARACTERS = [
       {hp:4055, atk:1232, def:596, spd:0},
       {hp:4122, atk:1252, def:606, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Bloodletter', stars:5,
         hp:2458, atk:747, def:361,
@@ -2402,7 +2402,7 @@ const CHARACTERS = [
       {hp:3760, atk:1210, def:661, spd:0},
       {hp:3823, atk:1230, def:672, spd:0},
     ],
-    hiddenAbility:'ATK% +29%',
+    hiddenAbility:'Attack % +29%',
     weapons:[
       {name:'Moonlit Feather', stars:5, hp:2279, atk:733, def:401, bonusStats:{atk:30},
         abilityName:'Wine & Revelry',
@@ -2420,15 +2420,15 @@ const CHARACTERS = [
     ],
   },
   {name:'Marian', codename:'Marian', role:'Medic', element:'Bless', rarity:5,
-    cards:['Love 4pc','Opulence 2pc'], weapon:'Best HP% Bless healing weapon (Angel Heart)',
+    cards:['Love 4pc','Opulence 2pc'], weapon:'Best HP % Bless healing weapon (Angel Heart)',
     statPrio:['HP %','Healing Effect','Defense %'], note:'Bless Medic. All skills scale with Minami\'s max HP. Diagnosis stacks (up to 2) amplify Compassionate Cure\'s healing targets and grant party max HP buffs. Guardian of Life revives 1 ally once per battle.',
-    mechanics: "การฮีลทั้งหมดสเกลตาม max HP ของ Minami (ไม่ใช่ ATK) — สะสม HP% ในทุก slot Diagnosis stack (สูงสุด 2) สะสมตอนเริ่มต้นการต่อสู้และทุกครั้งที่ HP ของ ally ลดต่ำกว่า 70% Compassionate Cure ใช้ Diagnosis stack ทั้งหมดเพื่อฮีลหลายเป้าและให้ปาร์ตี้ max HP up (+7.5% max HP ของ Minami ต่อ stack) Guardian of Life (M5) ฟื้นคืน ally ที่ KO อัตโนมัติ 1 คน ที่ HP 40% ของ Minami + 1200 ได้ 1 ครั้ง/การต่อสู้ Health Comes First passive ให้ ally ที่ฮีล +15% (สูงสุด +30% กับ Blessing) DMG เป็นเวลา 1 เทิร์น",
+    mechanics: "การฮีลทั้งหมดสเกลตาม max HP ของ Minami (ไม่ใช่ ATK) — สะสม HP % ในทุก slot Diagnosis stack (สูงสุด 2) สะสมตอนเริ่มต้นการต่อสู้และทุกครั้งที่ HP ของ ally ลดต่ำกว่า 70% Compassionate Cure ใช้ Diagnosis stack ทั้งหมดเพื่อฮีลหลายเป้าและให้ปาร์ตี้ max HP up (+7.5% max HP ของ Minami ต่อ stack) Guardian of Life (M5) ฟื้นคืน ally ที่ KO อัตโนมัติ 1 คน ที่ HP 40% ของ Minami + 1200 ได้ 1 ครั้ง/การต่อสู้ Health Comes First passive ให้ ally ที่ฮีล +15% (สูงสุด +30% กับ Blessing) DMG เป็นเวลา 1 เทิร์น",
     rotation: [
       "เทิร์น 1 → Healing Grace (ฮีล 2 ally, กำจัด 2 debuff, ให้ Blessing + Diagnosis; ดีที่สุดต้นเกมสำหรับ proactive healing)",
       "เทิร์น 2 → Nurse's Light (Bless DMG + Blessing stack ให้ปาร์ตี้ + 1 Diagnosis)",
       "ครบ 2 Diagnosis → Compassionate Cure (ฮีลหลายเป้า + max HP up ปาร์ตี้ 2T; ดีที่สุดก่อนช่วงโดนหนัก)",
       "ใช้ Highlight เมื่อพร้อม → ฮีลปาร์ตี้ + max HP buff + ฮีลต่อเนื่อง 1 เทิร์น",
-      "ให้ความสำคัญ HP% ในทุก card slot — ค่าฮีลและ Guardian of Life revival ล้วนสเกลตาม max HP",
+      "ให้ความสำคัญ HP % ในทุก card slot — ค่าฮีลและ Guardian of Life revival ล้วนสเกลตาม max HP",
       "ใช้ Blessing บน DPS หลักก่อน Highlight เพื่อ +30% DMG bonus ผ่าน Health Comes First",
     ],
     realName:'Minami Miyashita', persona:'Thalia',
@@ -2625,7 +2625,7 @@ const CHARACTERS = [
   {name:'Closer (Tropical)', codename:'closer-tropical', role:'Sweeper', element:'Bless', rarity:5,
     cards:['Courage 4pc','Virtue 2pc'], weapon:'Best HP/Bless ATK weapon',
     statPrio:['HP %','Attack %','Crit Rate'], note:'Bless Sweeper. Surf \'n\' Shine enters Summer Hype and enables HP-spending bonus hits on all skills. Outshine the Sun! converts max HP into flat ATK. Tropical Heart (5 heals) resets Surf \'n\' Shine cooldown.',
-    mechanics: "Surf 'n' Shine เข้าสู่ Summer Hype 3 เทิร์น — ใน Summer Hype ทักษะทุกอย่างสามารถหัก HP เพื่อ extra bonus hit (HP หักเมื่อโบนัสเปิดใช้งาน) Tropical Heart ติดตามการฮีลที่รับ: ครบ 5 ครั้ง → Surf 'n' Shine ฟื้นโดยไม่เสีย SP ป้องกัน KO จากการหัก HP ซ้ำ Outshine the Sun! แปลง max HP ส่วนเกินเป็น flat ATK ถาวร (จนถึง cap) — สะสมทั้ง HP% เพื่อ survive/scaling และ ATK% เพื่อ multiplier โดยตรง",
+    mechanics: "Surf 'n' Shine เข้าสู่ Summer Hype 3 เทิร์น — ใน Summer Hype ทักษะทุกอย่างสามารถหัก HP เพื่อ extra bonus hit (HP หักเมื่อโบนัสเปิดใช้งาน) Tropical Heart ติดตามการฮีลที่รับ: ครบ 5 ครั้ง → Surf 'n' Shine ฟื้นโดยไม่เสีย SP ป้องกัน KO จากการหัก HP ซ้ำ Outshine the Sun! แปลง max HP ส่วนเกินเป็น flat ATK ถาวร (จนถึง cap) — สะสมทั้ง HP % เพื่อ survive/scaling และ Attack % เพื่อ multiplier โดยตรง",
     rotation: [
       "เทิร์น 1 → Surf 'n' Shine (เข้า Summer Hype; ทุกทักษะได้ HP-spending bonus hit 3 เทิร์น)",
       "ใน Summer Hype: ใช้ Bless skill เพื่อ extra hit — ให้ความสำคัญทักษะ SP สูงสุดเพื่อ bonus hit มากสุด",
@@ -2690,7 +2690,7 @@ const CHARACTERS = [
       {hp:4317, atk:1166, def:596, spd:0},
       {hp:4388, atk:1185, def:606, spd:0},
     ],
-    hiddenAbility: 'HP% +29%',
+    hiddenAbility: 'HP % +29%',
     weapons:[
       {name:'Colorful Coast', stars:5,
         hp:2616, atk:707, def:361,
@@ -2819,8 +2819,8 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP %','Damage Mult','Attack %'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP% over ATK%.',
-    mechanics: "ดาเมจทักษะทั้งหมดของ Kiyoshi สเกลตาม max HP แทน ATK — สะสม HP% ในทุก card slot และ weapon Chosen One stack (จากการโจมตีศัตรูที่ Burned) เพิ่ม Fire และ elemental ailment damage ถาวร Sacred Flame ติด reactive DoT บนศัตรูตาม max HP และสถานะ Burn — DoT เปิดทุกครั้งที่ศัตรูที่ติดรับดาเมจ Fire เหมาะคู่กับ Fire unit ที่ติด Burn ได้สม่ำเสมอ (Panther, Howler) เพื่อรักษา Sacred Flame uptime และสะสม Chosen One",
+  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP %','Damage Mult','Attack %'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP % over Attack %.',
+    mechanics: "ดาเมจทักษะทั้งหมดของ Kiyoshi สเกลตาม max HP แทน ATK — สะสม HP % ในทุก card slot และ weapon Chosen One stack (จากการโจมตีศัตรูที่ Burned) เพิ่ม Fire และ elemental ailment damage ถาวร Sacred Flame ติด reactive DoT บนศัตรูตาม max HP และสถานะ Burn — DoT เปิดทุกครั้งที่ศัตรูที่ติดรับดาเมจ Fire เหมาะคู่กับ Fire unit ที่ติด Burn ได้สม่ำเสมอ (Panther, Howler) เพื่อรักษา Sacred Flame uptime และสะสม Chosen One",
     rotation: [
       "เทิร์น 1 → ใช้ Fire skill ที่สเกล HP เพื่อเริ่มสร้างดาเมจ (สเกลตาม max HP ไม่ใช่ ATK)",
       "เทิร์น 2 → Sacred Flame เมื่อศัตรูมี Burn (ติด HP-scaling DoT; เปิดเมื่อรับดาเมจ Fire)",
@@ -2884,7 +2884,7 @@ const CHARACTERS = [
       {hp:3379, atk:715, def:476, spd:99},
       {hp:3416, atk:722, def:481, spd:99},
     ],
-    hiddenAbility: 'HP% +21.8%',
+    hiddenAbility: 'HP % +21.8%',
     weapons:[
       {
         name: 'Baptism by Fire', stars:5,
@@ -2982,7 +2982,7 @@ const CHARACTERS = [
       {hp:3794, atk:1253, def:618, spd:98},
       {hp:3856, atk:1274, def:628, spd:98},
     ],
-    hiddenAbility: 'CRIT DMG +184.9%',
+    hiddenAbility: 'Crit Mult. +184.9%',
     weapons:[
       {
         name: "Lame de l'Amour", stars:5,
@@ -3018,7 +3018,7 @@ const CHARACTERS = [
   {name:'Wind (Tempest)', codename:'wind-tempest', role:'Strategist', element:'Wind', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best CRIT DMG/Support weapon (Windplum Dance)',
     statPrio:['Crit Mult.','Crit Rate','Speed'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP management unlocks full Blossoming Season potential.',
-    mechanics: "ATK buff และ CRIT DMG buff ทั้งหมดของ Riko สเกลตาม CRIT multiplier ของตัวเองที่เกิน 100% — ทุก 10% CRIT DMG ที่เกิน คูณค่าบัฟทุกอย่าง Blossoming Season ใช้ SP ทั้งหมด (ต่ำสุด 50, สูงสุด 200+) เพื่อผล tier: SP 50+ ให้ ATK buff, SP 100+ เพิ่ม CRIT DMG buff, SP 150+ เพิ่ม CRIT DMG อีก — ยิ่งใช้ SP มากยิ่งแรง SP ฟื้นจาก Storm of Petals (+16 SP) และ passive ของ Arrival of Spring (+12 SP ต่อ ally damage action ขณะ active) สะสม CRIT DMG% ในทุก slot เพื่อเพิ่มทุก buff",
+    mechanics: "ATK buff และ CRIT DMG buff ทั้งหมดของ Riko สเกลตาม CRIT multiplier ของตัวเองที่เกิน 100% — ทุก 10% CRIT DMG ที่เกิน คูณค่าบัฟทุกอย่าง Blossoming Season ใช้ SP ทั้งหมด (ต่ำสุด 50, สูงสุด 200+) เพื่อผล tier: SP 50+ ให้ ATK buff, SP 100+ เพิ่ม CRIT DMG buff, SP 150+ เพิ่ม CRIT DMG อีก — ยิ่งใช้ SP มากยิ่งแรง SP ฟื้นจาก Storm of Petals (+16 SP) และ passive ของ Arrival of Spring (+12 SP ต่อ ally damage action ขณะ active) สะสม Crit Mult. ในทุก slot เพื่อเพิ่มทุก buff",
     rotation: [
       "เทิร์น 1 → Arrival of Spring (ATK up ปาร์ตี้สเกลตาม CRIT DMG; ฟื้น SP ของ Riko ขณะ active)",
       "เทิร์น 2 → Storm of Petals (Wind DMG + Windswept/Falling Petals; ฟื้น SP ของ Riko 16)",
@@ -3122,7 +3122,7 @@ const CHARACTERS = [
       "เทิร์น 1 → Psy skill (สะสม Sparks + สร้างดาเมจสเกลตาม ATK)",
       "เทิร์น 2 → ทักษะฮีล (สะสม Sparks + ฮีล; ATK สเกลทั้งการฮีลและ Psy DMG ผ่าน Power of Memories)",
       "ใช้ Highlight เมื่อพร้อม → Psy DMG ใหญ่ + ฮีลปาร์ตี้ + max HP เพิ่ม",
-      "สะสม ATK% เป็นหลัก — ATK สเกลทั้งดาเมจและค่าฮีลทุกอย่างเท่าเทียมกัน",
+      "สะสม Attack % เป็นหลัก — ATK สเกลทั้งดาเมจและค่าฮีลทุกอย่างเท่าเทียมกัน",
     ],
     realName:'Seaside Tomoko', persona:'Prosymna',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3180,7 +3180,7 @@ const CHARACTERS = [
       {hp:3858, atk:1188, def:632, spd:0},
       {hp:3922, atk:1208, def:642, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Bubble Babies', stars:5,
         hp:2339, atk:720, def:383,
@@ -3278,7 +3278,7 @@ const CHARACTERS = [
       {hp:3597, atk:1199, def:705, spd:0},
       {hp:3657, atk:1219, def:716, spd:0},
     ],
-    hiddenAbility: 'CRIT Rate +22.4%',
+    hiddenAbility: 'Crit Rate +22.4%',
     weapons:[
       {name:'Golden Legacy', stars:5,
         hp:2180, atk:727, def:427,
@@ -3333,7 +3333,7 @@ const CHARACTERS = [
       "Jolly Cooperation proc อัตโนมัติบน ally skill — รักษา Yui ในสนามเพื่อ Electric amplification passive",
       "เมื่อเป้ามี Shock → ให้ความสำคัญ Electric DPS skill บนเป้านั้นเพื่อ Technical bonus",
       "ใช้ Highlight เมื่อพร้อม → Electric burst + บัฟ ตัวเอง + ช่วง follow-up ปาร์ตี้ขยาย",
-      "สะสม CRIT Rate% เพื่อ maximize crit ของ Jolly Cooperation follow-up และการโจมตีของ Yui",
+      "สะสม Crit Rate เพื่อ maximize crit ของ Jolly Cooperation follow-up และการโจมตีของ Yui",
     ],
     realName:'Yui', persona:'Apseudes',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
@@ -3391,7 +3391,7 @@ const CHARACTERS = [
       {hp:3728, atk:1253, def:618, spd:0},
       {hp:3790, atk:1274, def:628, spd:0},
     ],
-    hiddenAbility: 'CRIT Rate +22.4%',
+    hiddenAbility: 'Crit Rate +22.4%',
     weapons:[
       {name:'Cyber Jammers', stars:5,
         hp:2259, atk:760, def:374,
@@ -3585,7 +3585,7 @@ const CHARACTERS = [
       {hp:3858, atk:1101, def:719, spd:0},
       {hp:3922, atk:1119, def:731, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Sweet Pickaxe', stars:5,
         hp:2339, atk:667, def:436,
@@ -3615,13 +3615,13 @@ const CHARACTERS = [
     ],
   },
   {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Love 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP %','Healing Effect','Defense %'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.',
-    mechanics: "Lufel เป็นฮีลเลอร์แบบตรงไปตรงมา ทั้ง single-target และ AoE ซึ่งการฮีลสเกลตาม HP% และ Healing Bonus% Owl Fire ติด Burn บนเป้าและลด healing received (debuff role) Owl Green ฮีล ally เดี่ยวและให้ damage bonus เมื่อ ally นั้น HP ต่ำกว่า 50% Highlight ฮีลปาร์ตี้ทั้งหมดและให้ ATK buff ชั่วคราว ในฐานะฮีลเลอร์ 4★ บทบาทหลักของ Lufel คือฮีล HP ปาร์ตี้ต่อเนื่องในเนื้อหาที่ยังไม่มีฮีลเลอร์ 5★ ที่ดีกว่า",
+    mechanics: "Lufel เป็นฮีลเลอร์แบบตรงไปตรงมา ทั้ง single-target และ AoE ซึ่งการฮีลสเกลตาม HP % และ Healing Effect Owl Fire ติด Burn บนเป้าและลด healing received (debuff role) Owl Green ฮีล ally เดี่ยวและให้ damage bonus เมื่อ ally นั้น HP ต่ำกว่า 50% Highlight ฮีลปาร์ตี้ทั้งหมดและให้ ATK buff ชั่วคราว ในฐานะฮีลเลอร์ 4★ บทบาทหลักของ Lufel คือฮีล HP ปาร์ตี้ต่อเนื่องในเนื้อหาที่ยังไม่มีฮีลเลอร์ 5★ ที่ดีกว่า",
     rotation: [
       "เทิร์น 1 → Owl Green (ฮีล single-target บน ally HP ต่ำสุด; +DMG bonus ถ้า HP < 50%)",
       "เทิร์น 2 → Owl Fire (สร้าง Fire DMG + ติด Burn + ลด healing ที่ศัตรูรับ)",
       "ใช้ Highlight เมื่อพร้อม → ฮีลปาร์ตี้ทั้งหมด + ATK buff ปาร์ตี้ 2 เทิร์น",
       "ให้ความสำคัญ Owl Green บน ally ที่ HP วิกฤตก่อนใช้ทักษะโจมตี",
-      "สะสม HP% เพื่อ scaling ค่าฮีล; Healing Bonus% เพิ่มทุกการฮีลตามสัดส่วน",
+      "สะสม HP % เพื่อ scaling ค่าฮีล; Healing Effect เพิ่มทุกการฮีลตามสัดส่วน",
       "ใช้เป็น budget healer — สเกลได้ดีด้วยการลงทุน HP แม้จะเป็นยูนิต 4★",
     ],
     realName:'Lufel', persona:'Robroy',
@@ -3679,7 +3679,7 @@ const CHARACTERS = [
       {hp:2975, atk:833, def:503, spd:95},
       {hp:3007, atk:842, def:508, spd:95},
     ],
-    hiddenAbility: 'HP% +21.8%',
+    hiddenAbility: 'HP % +21.8%',
     weapons:[
       {
         name: 'Fallen Angel Wing', stars:5,
@@ -3720,7 +3720,7 @@ const CHARACTERS = [
       "สะสม Power of Friendship ถึง max (4-5 stack) เร็วๆ เพื่อ party buffs ถาวร",
       "Atomic Smash เมื่อศัตรู Down → Nuclear Technical สำหรับดาเมจโบนัส + Down Point exploitation",
       "ใช้ Highlight เมื่อพร้อม → Nuclear burst + เสริม party buff",
-      "สะสม ATK% เพื่อทั้ง shield scaling และ Power of Friendship buff — ATK สเกลทุกอย่าง",
+      "สะสม Attack % เพื่อทั้ง shield scaling และ Power of Friendship buff — ATK สเกลทุกอย่าง",
     ],
     realName:'Leo Kamiyama', persona:'Erytheia',
     weakRes:{ Fire:'wk', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'res',
@@ -3778,7 +3778,7 @@ const CHARACTERS = [
       {hp:2760, atk:825, def:518, spd:0},
       {hp:2791, atk:834, def:524, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Final Buster', stars:5,
         hp:2299, atk:687, def:432,
@@ -3819,7 +3819,7 @@ const CHARACTERS = [
       "รักษา Shock บนเป้าหลัก → Electroshark Technical ยิงทุกครั้งที่ใช้ทักษะ",
       "AoE Electric skill สะสม Line Drive stack passive บนทุกศัตรูพร้อมกัน",
       "ใช้ Highlight เมื่อพร้อม → AoE Electric ใหญ่ + ติด Shock + Line Drive amplification",
-      "สะสม ATK% และ Electric DMG% — Line Drive stack เพิ่ม Electric damage ที่บัฟแล้วให้สูงขึ้นอีก",
+      "สะสม Attack % และ Damage Mult — Line Drive stack เพิ่ม Electric damage ที่บัฟแล้วให้สูงขึ้นอีก",
     ],
     realName:'Motoha Arai', persona:'Awilda',
     weakRes:{ Fire:'normal', Ice:'wk', Electric:'res', Wind:'normal', Nuclear:'normal',
@@ -3877,7 +3877,7 @@ const CHARACTERS = [
       {hp:2570, atk:873, def:545, spd:0},
       {hp:2598, atk:882, def:551, spd:0},
     ],
-    hiddenAbility: 'ATK% +21.8%',
+    hiddenAbility: 'Attack % +21.8%',
     weapons:[
       {name:'Quasar', stars:5,
         hp:2141, atk:727, def:454,
@@ -3916,7 +3916,7 @@ const CHARACTERS = [
       "ครบ 10 Ice Crystal → Resonance ยิงอัตโนมัติ (critical follow-up รับประกัน; รีเซ็ต stack)",
       "เมื่อ HP ศัตรูต่ำ → Durandal of Ice (execute skill; ดาเมจโบนัสมหาศาลเมื่อ HP ต่ำกว่า threshold)",
       "ใช้ Highlight เมื่อพร้อม → Ice burst สูง + Parhelion buff + สะสม Crystal เร็วขึ้น",
-      "สะสม CRIT Rate% และ CRIT DMG% — Resonance critical รับประกันเมื่อ stack เต็ม = burst น่าเชื่อถือ",
+      "สะสม Crit Rate และ Crit Mult. — Resonance critical รับประกันเมื่อ stack เต็ม = burst น่าเชื่อถือ",
     ],
     realName:'Montagne Kotone', persona:'Terpsichore',
     weakRes:{ Fire:'normal', Ice:'res', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -3974,7 +3974,7 @@ const CHARACTERS = [
       {hp:2594, atk:912, def:493, spd:0},
       {hp:2622, atk:922, def:497, spd:0},
     ],
-    hiddenAbility: 'ATK% +21.8%',
+    hiddenAbility: 'Attack % +21.8%',
     weapons:[
       {name:'Queen of Winter', stars:5,
         hp:2160, atk:760, def:410,
@@ -4006,13 +4006,13 @@ const CHARACTERS = [
   {name:'Soy', codename:'Soy', role:'Guardian', element:'Ice', rarity:4,
     cards:['Love 4pc','Virtue 2pc'], weapon:'Best HP/Ice Guardian weapon',
     statPrio:['HP %','Healing Effect','Defense %'], note:'4★ Ice Guardian. HP-scaling tank with party HP buff and mitigation via Desperado.',
-    mechanics: "Soy เป็น Ice Guardian ที่สเกล HP เน้นรับดาเมจและบัฟ HP ปาร์ตี้ Desperado ให้ mitigation หลักของปาร์ตี้และบัฟ HP ปาร์ตี้ที่สเกลตาม max HP ของ Soy ในฐานะ tank บทบาทหลักของ Soy คือรับการโจมตีของศัตรู (ดึง aggro) และให้ mitigation เพื่อให้ DPS ดาเมจได้โดยไม่ตาย สะสม HP% เพื่อเพิ่ม survivability และค่าบัฟ HP-scaling ทั้งหมด",
+    mechanics: "Soy เป็น Ice Guardian ที่สเกล HP เน้นรับดาเมจและบัฟ HP ปาร์ตี้ Desperado ให้ mitigation หลักของปาร์ตี้และบัฟ HP ปาร์ตี้ที่สเกลตาม max HP ของ Soy ในฐานะ tank บทบาทหลักของ Soy คือรับการโจมตีของศัตรู (ดึง aggro) และให้ mitigation เพื่อให้ DPS ดาเมจได้โดยไม่ตาย สะสม HP % เพื่อเพิ่ม survivability และค่าบัฟ HP-scaling ทั้งหมด",
     rotation: [
       "เทิร์น 1 → Desperado (mitigation ปาร์ตี้ active + HP buff สเกลตาม max HP ของ Soy)",
       "เทิร์น 2 → Ice skill บนเป้าหลัก (สร้างดาเมจ; รักษาแรงกดดัน Ice เพื่อ weakness exploitation)",
       "รักษา taunt/aggro เพื่อปกป้อง ally ที่ DEF ต่ำจากการถูกโจมตีตรง",
       "ใช้ Highlight เมื่อพร้อม → ฟื้น HP ปาร์ตี้ + Ice DMG + ต่ออายุ mitigation",
-      "สะสม HP% และ DEF% เพื่อ tanking; HP% ยังสเกล HP buff ของ Desperado ให้ปาร์ตี้",
+      "สะสม HP % และ Defense % เพื่อ tanking; HP % ยังสเกล HP buff ของ Desperado ให้ปาร์ตี้",
       "คู่กับ Ice DPS (Fox, Matoi) เพื่อ Ice resonance stacking และ Ice Technical combos",
     ],
     realName:'Shun Kano', persona:'Mandrin',
@@ -4057,7 +4057,7 @@ const CHARACTERS = [
       {hp:3450, atk:674, def:460, spd:0},
       {hp:3488, atk:682, def:466, spd:0},
     ],
-    hiddenAbility: 'HP% +21.8%',
+    hiddenAbility: 'HP % +21.8%',
     weapons:[
       {name:'Permafrost', stars:5,
         hp:2874, atk:562, def:383,
@@ -4087,16 +4087,16 @@ const CHARACTERS = [
     ],
   },
   {name:'Yuki', codename:'Yuki', role:'Guardian', element:'Bless', rarity:4,
-    cards:['Triumph 4pc','Courage 2pc'], weapon:'Best DEF% Bless weapon (Karmic Cycle)',
+    cards:['Triumph 4pc','Courage 2pc'], weapon:'Best Defense % Bless weapon (Karmic Cycle)',
     statPrio:['Defense %','HP %','Speed'], note:'Bless Guardian. All damage and shields scale with DEF. Oath grants shields, DEF buffs, and enables Gavel stacks from Blessing. Cross-Examination converts DEF into party damage bonus.',
-    mechanics: "ดาเมจและ shield ทั้งหมดของ Yuki สเกลตาม DEF — สะสม DEF% ในทุก card slot Oath ให้ shield ปาร์ตี้, DEF buffs และเปิด Gavel stack เมื่อ ally ได้รับ Blessing effects Cross-Examination แปลง DEF ของ Yuki เป็น damage bonus ปาร์ตี้: DEF สูงขึ้น = ปาร์ตี้ดาเมจโบนัสมากขึ้น Yuki จึงเป็น tank หายากที่เพิ่มดาเมจปาร์ตี้ผ่านการสะสม DEF",
+    mechanics: "ดาเมจและ shield ทั้งหมดของ Yuki สเกลตาม DEF — สะสม Defense % ในทุก card slot Oath ให้ shield ปาร์ตี้, DEF buffs และเปิด Gavel stack เมื่อ ally ได้รับ Blessing effects Cross-Examination แปลง DEF ของ Yuki เป็น damage bonus ปาร์ตี้: DEF สูงขึ้น = ปาร์ตี้ดาเมจโบนัสมากขึ้น Yuki จึงเป็น tank หายากที่เพิ่มดาเมจปาร์ตี้ผ่านการสะสม DEF",
     rotation: [
       "เทิร์น 1 → Oath (shield ปาร์ตี้, DEF buff, เปิด Gavel stack จาก Blessing)",
       "เทิร์น 2 → Cross-Examination (party DMG bonus จาก DEF ของ Yuki; สร้าง Bless DMG สเกลตาม DEF)",
       "รักษา shield uptime ผ่าน Oath; shield เปิด Gavel stack เมื่อมี Blessing active ด้วย",
       "Bless DMG skill สร้างดาเมจที่สเกลตาม DEF ล้วนๆ — ไม่ต้องลงทุน ATK",
       "ใช้ Highlight เมื่อพร้อม → shield ปาร์ตี้ทั้งหมด + Bless DMG burst สเกลตาม DEF",
-      "สะสม DEF% สูงสุด — DEF สเกล shield, ดาเมจ และ Cross-Examination party DMG bonus",
+      "สะสม Defense % สูงสุด — DEF สเกล shield, ดาเมจ และ Cross-Examination party DMG bonus",
     ],
     realName:'Yukimi Fujikawa', persona:'Stix',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'wk',
@@ -4154,7 +4154,7 @@ const CHARACTERS = [
       {hp:2808, atk:674, def:630, spd:0},
       {hp:2839, atk:682, def:637, spd:0},
     ],
-    hiddenAbility: 'DEF% +32.6%',
+    hiddenAbility: 'Defense % +32.6%',
     weapons:[
       {name:'Karmic Cycle', stars:5,
         hp:2339, atk:562, def:524,
@@ -4187,14 +4187,14 @@ const CHARACTERS = [
   {name:'Moko', codename:'Moko', role:'Medic', element:'Psychokinesis', rarity:4,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
     statPrio:['Attack %','Healing Effect','HP %'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
-    mechanics: "รุ่น 4★ ของ Moko ใช้วงจร Sparks → Summer Reminiscence Resonance เดียวกับรุ่น 5★ แต่ตัวคูณต่ำกว่า Sparks สะสมบนศัตรูจากดาเมจทักษะของ ally (สูงสุด 5 stack); ครบ 5 stack → Summer Reminiscence Resonance ยิงอัตโนมัติ — ฮีลปาร์ตี้และ debuff ศัตรูพร้อมกัน Power of Memories แปลงผลฮีลเป็น Psy DMG และ max HP เพิ่ม สะสม ATK% เป็นหลัก — ATK สเกลทั้ง Psy attack ของ Moko และค่าฮีลทุกอย่าง",
+    mechanics: "รุ่น 4★ ของ Moko ใช้วงจร Sparks → Summer Reminiscence Resonance เดียวกับรุ่น 5★ แต่ตัวคูณต่ำกว่า Sparks สะสมบนศัตรูจากดาเมจทักษะของ ally (สูงสุด 5 stack); ครบ 5 stack → Summer Reminiscence Resonance ยิงอัตโนมัติ — ฮีลปาร์ตี้และ debuff ศัตรูพร้อมกัน Power of Memories แปลงผลฮีลเป็น Psy DMG และ max HP เพิ่ม สะสม Attack % เป็นหลัก — ATK สเกลทั้ง Psy attack ของ Moko และค่าฮีลทุกอย่าง",
     rotation: [
       "เทิร์น 1 → Psy skill บนเป้าหลัก (สร้างดาเมจ + สะสม Sparks บนเป้า)",
       "เทิร์น 2 → ทักษะฮีล (ฟื้น HP + สะสม Sparks; ทั้งคู่นับสู่ threshold 5 Sparks)",
       "ครบ 5 Sparks → Summer Reminiscence Resonance ยิงอัตโนมัติ (ฮีลปาร์ตี้ + debuff เป้า)",
       "Power of Memories: ผลฮีลแปลงเป็น Psy DMG — ATK สูงขึ้น = ฮีลมากขึ้น = Psy damage มากขึ้น",
       "ใช้ Highlight เมื่อพร้อม → Psy burst ใหญ่ + ฮีลปาร์ตี้ + max HP เพิ่ม",
-      "สะสม ATK% เพื่อสเกลทั้งการฮีลและ Psy damage พร้อมกัน",
+      "สะสม Attack % เพื่อสเกลทั้งการฮีลและ Psy damage พร้อมกัน",
     ],
     realName:'Tomoko Noge', persona:'Prosymna',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'normal', Nuclear:'normal',
@@ -4252,7 +4252,7 @@ const CHARACTERS = [
       {hp:3858, atk:1188, def:632, spd:0},
       {hp:3922, atk:1208, def:642, spd:0},
     ],
-    hiddenAbility: 'ATK% +29%',
+    hiddenAbility: 'Attack % +29%',
     weapons:[
       {name:'Bubble Babies', stars:5,
         hp:2339, atk:720, def:383,
@@ -4289,7 +4289,7 @@ const CHARACTERS = [
       "ครบ Verse stack สูงสุด → Sonnet of Fate Resonance (ดาเมจหลัก; สเกล +10% ต่อ stack ที่ใช้)",
       "ผสม Verse ตามสถานการณ์: Passion Resonance สำหรับ burst; Hate Resonance สำหรับ ailment; Healing สำหรับ sustain",
       "ใช้ Highlight เมื่อพร้อม → Curse burst ใหญ่ + Verse bonus พิเศษ",
-      "สะสม ATK% และ SPD — SPD เร่งการสะสม Verse และวงจร Resonance ต่อการต่อสู้",
+      "สะสม Attack % และ SPD — SPD เร่งการสะสม Verse และวงจร Resonance ต่อการต่อสู้",
     ],
     realName:'Toshiya Sumi', persona:'Gorgyra',
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'wk', Wind:'normal', Nuclear:'normal', Curse:'res', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'normal' },
@@ -4346,7 +4346,7 @@ const CHARACTERS = [
       {hp:2713, atk:889, def:497, spd:98},
       {hp:2743, atk:898, def:503, spd:98},
     ],
-    hiddenAbility: 'ATK% +21.8%',
+    hiddenAbility: 'Attack % +21.8%',
     weapons:[
       {
         name: "Babel's Verdict", stars:5,
@@ -4447,7 +4447,7 @@ const CHARACTERS = [
       {hp:2808, atk:769, def:571, spd:0},
       {hp:2839, atk:778, def:578, spd:0},
     ],
-    hiddenAbility:'DEF% +32.6%',
+    hiddenAbility:'Defense % +32.6%',
     weapons:[
       {name:'Ephemerality', stars:5, hp:2339, atk:641, def:476, bonusStats:{def:45},
         abilityName:'Ephemerality',
@@ -4532,7 +4532,7 @@ const CHARACTERS = [
       {hp:2808, atk:833, def:508, spd:0},
       {hp:2839, atk:842, def:514, spd:0},
     ],
-    hiddenAbility:'ATK% +21.8%',
+    hiddenAbility:'Attack % +21.8%',
     weapons:[
       {name:'Retro Disco Style', stars:5, hp:2339, atk:694, def:423, bonusStats:{atk:30},
         abilityName:'Retro Disco Style',
@@ -4797,13 +4797,15 @@ function parseHiddenAbility(str) {
   if (!str) return {}
   const s = {}
   const n = (re) => { const m = str.match(re); return m ? parseFloat(m[1]) : 0 }
-  const atk  = n(/ATK%?\s*\+(\d+\.?\d*)/)
-  const crit  = n(/CRIT\s*Rate\s*\+(\d+\.?\d*)/i)
-  const cdmg  = n(/CRIT\s*(?:DMG|Multiplier)\s*\+(\d+\.?\d*)/i)
-  const hp    = n(/HP%\s*\+(\d+\.?\d*)/)
-  const def   = n(/DEF%\s*\+(\d+\.?\d*)/)
+  const atk  = n(/(?:Attack\s*%|ATK)\s*\+(\d+\.?\d*)/)
+  const crit  = n(/Crit\s*Rate\s*\+(\d+\.?\d*)/i)
+  const cdmg  = n(/Crit\s*Mult\.?\s*\+(\d+\.?\d*)/i)
+  const hp    = n(/HP\s*%?\s*\+(\d+\.?\d*)/)
+  const def   = n(/Defense\s*%\s*\+(\d+\.?\d*)/i)
   const heal  = n(/Healing\s*Effect\s*\+(\d+\.?\d*)/i)
-  const spd   = n(/SPD?\s*\+(\d+\.?\d*)/)
+  const spd   = n(/(?:Speed|SPD)\s*\+(\d+\.?\d*)/i)
+  const ailm  = n(/Ailment\s*Accuracy\s*\+(\d+\.?\d*)/i)
+  const spr   = n(/SP\s*Recovery\s*\+(\d+\.?\d*)/i)
   if (atk)  s.atk  = atk
   if (crit) s.crit = crit
   if (cdmg) s.cdmg = cdmg
@@ -4811,6 +4813,8 @@ function parseHiddenAbility(str) {
   if (def)  s.def  = def
   if (heal) s.heal = heal
   if (spd)  s.spd  = spd
+  if (ailm) s.ailm = ailm
+  if (spr)  s.spr  = spr
   return s
 }
 
@@ -5365,7 +5369,7 @@ export default function P5XPage() {
                     <div className="dmg-auto-grid">
                       <div className="dmg-auto-row"><span>Char ATK</span><span className="dmg-auto-val">{dmgCharAtk.toLocaleString()}</span></div>
                       <div className="dmg-auto-row"><span>Weapon ATK</span><span className="dmg-auto-val">{dmgWeaponAtk.toLocaleString()}</span></div>
-                      <div className="dmg-auto-row"><span>ATK% (Build)</span><span className="dmg-auto-val">{stats.atk.toFixed(1)}%</span></div>
+                      <div className="dmg-auto-row"><span>Attack % (Build)</span><span className="dmg-auto-val">{stats.atk.toFixed(1)}%</span></div>
                       <div className="dmg-auto-row"><span>CRIT Rate (5+build)</span><span className="dmg-auto-val">{(5+stats.crit).toFixed(1)}%</span></div>
                       <div className="dmg-auto-row"><span>CRIT DMG (150+build)</span><span className="dmg-auto-val">{(150+stats.cdmg).toFixed(1)}%</span></div>
                       <div className="dmg-auto-row"><span>Elem DMG (Build)</span><span className="dmg-auto-val">{stats.edm.toFixed(1)}%</span></div>
@@ -5376,12 +5380,12 @@ export default function P5XPage() {
                   <div className="dmg-section">
                     <div className="dmg-section-title">💥 Battle Buffs (เพิ่มเติมในสนาม)</div>
                     <div className="dmg-field-grid">
-                      <div className="dmg-field"><label>Extra ATK%</label><input className="dmg-input" type="number" value={dmg.extraAtk} min="0" onChange={e=>setDmgField('extraAtk',e.target.value)}/><span className="dmg-unit">%</span></div>
+                      <div className="dmg-field"><label>Extra Attack %</label><input className="dmg-input" type="number" value={dmg.extraAtk} min="0" onChange={e=>setDmgField('extraAtk',e.target.value)}/><span className="dmg-unit">%</span></div>
                       <div className="dmg-field"><label>ATK Constant</label><input className="dmg-input" type="number" value={dmg.atkConst} min="0" onChange={e=>setDmgField('atkConst',e.target.value)}/></div>
-                      <div className="dmg-field"><label>Extra CRIT Rate%</label><input className="dmg-input" type="number" value={dmg.extraCritRate} min="0" onChange={e=>setDmgField('extraCritRate',e.target.value)}/><span className="dmg-unit">%</span></div>
-                      <div className="dmg-field"><label>Extra CRIT DMG%</label><input className="dmg-input" type="number" value={dmg.extraCritDmg} min="0" onChange={e=>setDmgField('extraCritDmg',e.target.value)}/><span className="dmg-unit">%</span></div>
+                      <div className="dmg-field"><label>Extra Crit Rate</label><input className="dmg-input" type="number" value={dmg.extraCritRate} min="0" onChange={e=>setDmgField('extraCritRate',e.target.value)}/><span className="dmg-unit">%</span></div>
+                      <div className="dmg-field"><label>Extra Crit Mult.</label><input className="dmg-input" type="number" value={dmg.extraCritDmg} min="0" onChange={e=>setDmgField('extraCritDmg',e.target.value)}/><span className="dmg-unit">%</span></div>
                       <div className="dmg-field"><label>DMG Mult%</label><input className="dmg-input" type="number" value={dmg.dmgMult} min="0" onChange={e=>setDmgField('dmgMult',e.target.value)}/><span className="dmg-unit">%</span></div>
-                      <div className="dmg-field"><label>Extra Elem DMG%</label><input className="dmg-input" type="number" value={dmg.extraEdm} min="0" onChange={e=>setDmgField('extraEdm',e.target.value)}/><span className="dmg-unit">%</span></div>
+                      <div className="dmg-field"><label>Extra Damage Mult</label><input className="dmg-input" type="number" value={dmg.extraEdm} min="0" onChange={e=>setDmgField('extraEdm',e.target.value)}/><span className="dmg-unit">%</span></div>
                       <div className="dmg-field"><label>DMG Taken (Enemy)</label><input className="dmg-input" type="number" value={dmg.dmgTaken} min="0" onChange={e=>setDmgField('dmgTaken',e.target.value)}/><span className="dmg-unit">%</span></div>
                     </div>
                   </div>
@@ -5610,10 +5614,10 @@ export default function P5XPage() {
                   const entries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
                   if (!entries.length) return null
                   const STAT_LABELS = {
-                    atk:'ATK%', crit:'CRIT Rate%', cdmg:'CRIT DMG%',
-                    edm:'Elem DMG%', hp:'HP%', def:'DEF%',
-                    heal:'Healing%', spd:'Speed', spr:'SP Recovery%',
-                    ailm:'Ailment Acc%', pierce:'Pierce Rate%'
+                    atk:'Attack %', crit:'Crit Rate', cdmg:'Crit Mult.',
+                    edm:'Damage Mult', hp:'HP %', def:'Defense %',
+                    heal:'Healing Effect', spd:'Speed', spr:'SP Recovery',
+                    ailm:'Ailment Accuracy', pierce:'Pierce Rate'
                   }
                   const selW = currentChar.weapons?.[selectedWeaponIdx ?? 0]
                   const base0 = computeStats(currentChar, selectedWeaponIdx ?? 0, 0)
@@ -5778,13 +5782,13 @@ export default function P5XPage() {
             )}
 
             <div className="p5x-stat-grid">
-              <StatRow label="ATK%"           statKey="atk"  maxRange={160} />
-              <StatRow label="CRIT Rate%"     statKey="crit" maxRange={75} />
-              <StatRow label="CRIT DMG%"      statKey="cdmg" maxRange={150} />
-              <StatRow label="HP%"            statKey="hp"   maxRange={200} />
-              <StatRow label="DEF%"           statKey="def"  maxRange={220} />
+              <StatRow label="Attack %"           statKey="atk"  maxRange={160} />
+              <StatRow label="Crit Rate"     statKey="crit" maxRange={75} />
+              <StatRow label="Crit Mult."      statKey="cdmg" maxRange={150} />
+              <StatRow label="HP %"            statKey="hp"   maxRange={200} />
+              <StatRow label="Defense %"           statKey="def"  maxRange={220} />
               <StatRow label="Element DMG%"   statKey="edm"  maxRange={100} />
-              <StatRow label="Healing Bonus%" statKey="heal" maxRange={35} />
+              <StatRow label="Healing Effect" statKey="heal" maxRange={35} />
               <StatRow label="SPD (Speed)"    statKey="spd"  maxRange={50} unit="" />
             </div>
 
@@ -5799,11 +5803,11 @@ export default function P5XPage() {
                 </div>
               )}
               <div className="summary-grid">
-                <div className="sum-box"><div className="sum-val">{totalStats.atk.toFixed(1)}%</div><div className="sum-lbl">ATK%</div></div>
+                <div className="sum-box"><div className="sum-val">{totalStats.atk.toFixed(1)}%</div><div className="sum-lbl">Attack %</div></div>
                 <div className="sum-box"><div className="sum-val">{Math.min(totalStats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
                 <div className="sum-box"><div className="sum-val">{totalStats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
                 <div className="sum-box"><div className="sum-val">{totalStats.edm.toFixed(1)}%</div><div className="sum-lbl">Elem DMG</div></div>
-                <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP%</div></div>
+                <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP %</div></div>
                 <div className="sum-box"><div className="sum-val">{Math.round(totalStats.spd)}</div><div className="sum-lbl">SPD</div></div>
               </div>
 
