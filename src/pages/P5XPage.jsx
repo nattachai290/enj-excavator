@@ -339,6 +339,7 @@ const CHARACTERS = [
       {hp:3623, atk:1307, def:621, spd:102},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, crit:12},
     weapons:[
       {
         name: 'Phoenix Dagger', stars:5,
@@ -436,6 +437,7 @@ const CHARACTERS = [
       {hp:3590, atk:1340, def:687, spd:94},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, crit:12},
     weapons:[
       {
         name: 'Rosethorn', stars:5,
@@ -536,6 +538,7 @@ const CHARACTERS = [
       {hp:4388, atk:1219, def:591, spd:0},
     ],
     hiddenAbility: 'Crit Mult. +184.9%',
+    mindscapeBonus: {edm:16, cdmg:24},
     weapons:[
       {name:'Revenge Axe', stars:5,
         hp:2616, atk:727, def:352,
@@ -633,6 +636,7 @@ const CHARACTERS = [
       {hp:3756, atk:1286, def:621, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, crit:12},
     weapons:[
       {name:'Royal Étoile', stars:5,
         hp:2240, atk:766, def:370,
@@ -729,6 +733,7 @@ const CHARACTERS = [
       {hp:3756, atk:1263, def:665, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {hp:20, atk:20},
     weapons:[
       {name:'Technomage Ultra FS', stars:5,
         hp:2240, atk:753, def:396,
@@ -826,6 +831,7 @@ const CHARACTERS = [
       {hp:3823, atk:1197, def:650, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {dmgred:16, atk:20},
     weapons:[
       {name:'Superstar', stars:5,
         hp:2279, atk:714, def:388,
@@ -925,6 +931,7 @@ const CHARACTERS = [
       {hp:2791, atk:834, def:487, spd:0},
     ],
     hiddenAbility:'SPD +119.1',
+    mindscapeBonus: {hp:20, atk:20},
     weapons:[
       {name:"Kunoichi: Sky's Edge", stars:5, hp:2299, atk:687, def:401, bonusStats:{spd:15},
         abilityName:'Shadow Dance',
@@ -1116,6 +1123,7 @@ const CHARACTERS = [
       {hp:2647, atk:906, def:497, spd:0},
     ],
     hiddenAbility: 'Crit Rate +18%',
+    mindscapeBonus: {atk:20, crit:12},
     weapons:[
       {name:'Venus Sunrise', stars:5,
         hp:2180, atk:747, def:410,
@@ -1213,6 +1221,7 @@ const CHARACTERS = [
       {hp:3723, atk:1274, def:665, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {hp:20, atk:20},
     weapons:[
       {name:"Angel's Hymn", stars:5,
         hp:2220, atk:760, def:396,
@@ -1305,6 +1314,7 @@ const CHARACTERS = [
       {hp:4122, atk:909, def:886, spd:102},
     ],
     hiddenAbility: 'Defense % +43.6%',
+    mindscapeBonus: {edm:16, crit:12},
     weapons:[
       {
         name: 'Shadowkiller', stars:5,
@@ -1406,6 +1416,7 @@ const CHARACTERS = [
       {hp:3457, atk:1286, def:754, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {atk:20, crit:12},
     weapons:[
       {name:'Nuclear Finisher', stars:5,
         hp:2061, atk:766, def:449,
@@ -1505,6 +1516,7 @@ const CHARACTERS = [
       {hp:3922, atk:1241, def:687, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, crit:12},
     weapons:[
       {name:'Gordian Kopis', stars:5,
         hp:2339, atk:740, def:410,
@@ -1602,6 +1614,7 @@ const CHARACTERS = [
       {hp:2767, atk:818, def:530, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +26.1%',
+    mindscapeBonus: {atk:20, ailm:24},
     weapons:[
       {name:'Ribalta', stars:5,
         hp:2279, atk:674, def:436,
@@ -1806,6 +1819,7 @@ const CHARACTERS = [
       {hp:3922, atk:1130, def:695, spd:104},
     ],
     hiddenAbility: 'Ailment Accuracy +34.9%',
+    mindscapeBonus: {edm:16, ailm:24},
     weapons:[
       {
         name: 'Entropy', stars:5,
@@ -1904,6 +1918,7 @@ const CHARACTERS = [
       {hp:3590, atk:1174, def:724, spd:105},
     ],
     hiddenAbility: 'Ailment Accuracy +34.9%',
+    mindscapeBonus: {edm:16, ailm:24},
     weapons:[
       {
         name: 'Cerberus Claws', stars:5,
@@ -2013,6 +2028,7 @@ const CHARACTERS = [
       {hp:3989, atk:1108, def:739, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, cdmg:24},
     weapons:[
       {name:"Warden's Judgement", stars:5,
         hp:2378, atk:661, def:440,
@@ -2110,6 +2126,7 @@ const CHARACTERS = [
       {hp:3590, atk:1274, def:716, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +34.9%',
+    mindscapeBonus: {atk:20, cdmg:24},
     weapons:[
       {name:'Last Quarter', stars:5,
         hp:2141, atk:760, def:427,
@@ -2305,6 +2322,7 @@ const CHARACTERS = [
       {hp:4122, atk:1252, def:606, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {atk:20, pierce:7.5},
     weapons:[
       {name:'Bloodletter', stars:5,
         hp:2458, atk:747, def:361,
@@ -2404,6 +2422,7 @@ const CHARACTERS = [
       {hp:3823, atk:1230, def:672, spd:0},
     ],
     hiddenAbility:'Attack % +29%',
+    mindscapeBonus: {hp:20, atk:20},
     weapons:[
       {name:'Moonlit Feather', stars:5, hp:2279, atk:733, def:401, bonusStats:{atk:30},
         abilityName:'Wine & Revelry',
@@ -2591,6 +2610,7 @@ const CHARACTERS = [
       {hp:3623, atk:1319, def:657, spd:98},
     ],
     hiddenAbility: 'ATK +29%',
+    mindscapeBonus: {edm:16, pierce:7.5},
     weapons:[
       {
         name: 'Deus Xiphos', stars:5,
@@ -2692,6 +2712,7 @@ const CHARACTERS = [
       {hp:4388, atk:1185, def:606, spd:0},
     ],
     hiddenAbility: 'HP % +29%',
+    mindscapeBonus: {atk:20, cdmg:24},
     weapons:[
       {name:'Colorful Coast', stars:5,
         hp:2616, atk:707, def:361,
@@ -2788,6 +2809,7 @@ const CHARACTERS = [
       {hp:3756, atk:1330, def:657, spd:95},
     ],
     hiddenAbility: 'ATK +29%',
+    mindscapeBonus: {atk:20, cdmg:24},
     weapons:[
       {
         name: "New Year's Light", stars:5,
@@ -2984,6 +3006,7 @@ const CHARACTERS = [
       {hp:3856, atk:1274, def:628, spd:98},
     ],
     hiddenAbility: 'Crit Mult. +184.9%',
+    mindscapeBonus: {atk:20, crit:12},
     weapons:[
       {
         name: "Lame de l'Amour", stars:5,
@@ -3188,6 +3211,7 @@ const CHARACTERS = [
       {hp:3922, atk:1208, def:642, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {spr:125, atk:20},
     weapons:[
       {name:'Bubble Babies', stars:5,
         hp:2339, atk:720, def:383,
@@ -3399,6 +3423,7 @@ const CHARACTERS = [
       {hp:3790, atk:1274, def:628, spd:0},
     ],
     hiddenAbility: 'Crit Rate +22.4%',
+    mindscapeBonus: {atk:20, cdmg:24},
     weapons:[
       {name:'Cyber Jammers', stars:5,
         hp:2259, atk:760, def:374,
@@ -3496,6 +3521,7 @@ const CHARACTERS = [
       {hp:2647, atk:842, def:541, spd:0},
     ],
     hiddenAbility: 'Ailment Accuracy +26.1%',
+    mindscapeBonus: {ailm:24, atk:20},
     weapons:[
       {name:'Jolting Pulse', stars:5,
         hp:2180, atk:694, def:445,
@@ -3593,6 +3619,7 @@ const CHARACTERS = [
       {hp:3922, atk:1119, def:731, spd:0},
     ],
     hiddenAbility: 'Attack % +29%',
+    mindscapeBonus: {edm:16, atk:20},
     weapons:[
       {name:'Sweet Pickaxe', stars:5,
         hp:2339, atk:667, def:436,
@@ -4540,6 +4567,7 @@ const CHARACTERS = [
       {hp:2839, atk:842, def:514, spd:0},
     ],
     hiddenAbility:'Attack % +21.8%',
+    mindscapeBonus: {ailm:28, atk:20},
     weapons:[
       {name:'Retro Disco Style', stars:5, hp:2339, atk:694, def:423, bonusStats:{atk:30},
         abilityName:'Retro Disco Style',
@@ -4798,7 +4826,8 @@ function getRoleArchetype(role) {
 }
 
 const statMap = {'Attack %':'atk','Crit Rate':'crit','Crit Mult.':'cdmg','HP %':'hp','Defense %':'def','Healing Effect':'heal','Speed':'spd','Damage Mult':'edm','Ailment Accuracy':'ailm'}
-const statLabels = {atk:'Attack %',crit:'Crit Rate',cdmg:'Crit Mult.',edm:'Damage Mult',hp:'HP %',def:'Defense %',heal:'Healing Effect',spd:'Speed',spr:'SP Recovery',ailm:'Ailment Accuracy'}
+const statLabels = {atk:'Attack %',crit:'Crit Rate',cdmg:'Crit Mult.',edm:'Damage Mult',hp:'HP %',def:'Defense %',heal:'Healing Effect',spd:'Speed',spr:'SP Recovery',ailm:'Ailment Accuracy',pierce:'Pierce Rate',dmgred:'Damage Reduction'}
+const statFlat = new Set(['spd'])
 
 function parseHiddenAbility(str) {
   if (!str) return {}
@@ -5357,7 +5386,7 @@ export default function P5XPage() {
                       <div className="kit-block-title">Mindscape <span className="ha-lv">LV 5</span></div>
                       <div className="hidden-ability-box">
                         {Object.entries(currentChar.mindscapeBonus).map(([key, val]) => (
-                          <div key={key}>{statLabels[key] || key} +{val}%</div>
+                          <div key={key}>{statLabels[key] || key} +{val}{statFlat.has(key) ? '' : '%'}</div>
                         ))}
                       </div>
                     </div>
