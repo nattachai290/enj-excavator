@@ -453,15 +453,15 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .rec-detail-set-line.rec-detail-set-4pc-active .rec-detail-set-badge { color:var(--persona3); border-color:var(--persona); background:#1a0d2e; }
 
 /* ── SUB STAT PRIORITY ── */
-.sub-prio-wrap { display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; }
-.sub-prio-col { flex:1; min-width:140px; }
-.sub-prio-title { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--p5x-muted); margin-bottom:5px; font-weight:700; }
-.sub-prio-row { display:flex; align-items:center; gap:5px; padding:3px 0; border-bottom:1px solid #111; }
-.sub-prio-row.sub-prio-top .sub-prio-label { color:var(--persona3); font-weight:700; }
-.sub-prio-row.sub-prio-top .sub-prio-rank { color:var(--persona); }
-.sub-prio-rank { font-size:0.6rem; color:var(--p5x-muted); min-width:18px; }
-.sub-prio-label { flex:1; font-size:0.7rem; color:var(--p5x-text); }
-.sub-prio-val { font-size:0.62rem; color:#888; white-space:nowrap; }
+.sub-prio-table { margin-top:6px; }
+.sub-prio-th, .sub-prio-tr { display:grid; grid-template-columns:22px 1fr 70px 120px; align-items:center; gap:6px; padding:4px 2px; }
+.sub-prio-th { font-size:0.58rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--p5x-muted); border-bottom:1px solid #222; padding-bottom:5px; margin-bottom:2px; }
+.sub-prio-tr { border-bottom:1px solid #111; }
+.sub-prio-tr-top .sub-prio-label { color:var(--persona3); font-weight:700; }
+.sub-prio-tr-top .sub-prio-rank { color:var(--persona); }
+.sub-prio-rank { font-size:0.62rem; color:var(--p5x-muted); }
+.sub-prio-label { font-size:0.72rem; color:var(--p5x-text); }
+.sub-prio-val { font-size:0.68rem; color:#aaa; text-align:right; }
 
 /* ── CARD REQUIREMENTS TABLE ── */
 .req-table { display:flex; flex-direction:column; gap:0; margin-top:4px; font-size:0.7rem; }

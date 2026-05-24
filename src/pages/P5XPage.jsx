@@ -5631,30 +5631,34 @@ export default function P5XPage() {
 
                 {/* ── SUB STAT PRIORITY ─────────────────────────────────────── */}
                 <div className="info-panel">
-                  <div className="info-label">📋 Sub Stat Priority (Space / Sun·Moon·Star·Sky)</div>
+                  <div className="info-label">📋 Sub Stat ที่ควรเน้น</div>
                   {(() => {
                     const spaceRanked = getSubStatPriority(charTgt, 'Space')
                     const otherRanked = getSubStatPriority(charTgt, 'Sun')
                     if (!spaceRanked.length && !otherRanked.length) return (
                       <div style={{color:'var(--p5x-muted)',fontSize:13}}>ไม่มีข้อมูล stat priority สำหรับตัวละครนี้</div>
                     )
+                    const spaceMap = Object.fromEntries(spaceRanked.map(s => [s.key, s]))
+                    const otherMap = Object.fromEntries(otherRanked.map(s => [s.key, s]))
+                    const allKeys = [...new Set([...spaceRanked.map(s => s.key), ...otherRanked.map(s => s.key)])]
+                    const merged = allKeys
+                      .map(k => ({ key:k, label: spaceMap[k]?.label || otherMap[k]?.label, spaceVal: spaceMap[k]?.best, otherVal: otherMap[k]?.best, weight: charTgt?.[k]?.[1] || 0 }))
+                      .sort((a,b) => b.weight - a.weight)
+                      .slice(0, 5)
                     return (
-                      <div className="sub-prio-wrap">
-                        {[{label:'Space (주)', items: spaceRanked}, {label:'Sun·Moon·Star·Sky', items: otherRanked}].map(({label, items}) => (
-                          <div key={label} className="sub-prio-col">
-                            <div className="sub-prio-title">{label}</div>
-                            {items.length === 0
-                              ? <div style={{color:'var(--p5x-muted)',fontSize:12}}>—</div>
-                              : items.slice(0, 5).map((s, i) => (
-                                <div key={s.label} className={'sub-prio-row' + (i === 0 ? ' sub-prio-top' : '')}>
-                                  <span className="sub-prio-rank">#{i+1}</span>
-                                  <span className="sub-prio-label">{s.label}</span>
-                                  <span className="sub-prio-val">max {s.best}/roll</span>
-                                </div>
-                              ))
-                            }
-                          </div>
-                        ))}
+                      <div>
+                        <div className="sub-prio-table">
+                          <div className="sub-prio-th"><span>#</span><span>Stat</span><span>Space</span><span>Sun·Moon·Star·Sky</span></div>
+                          {merged.map((item, i) => (
+                            <div key={item.key} className={'sub-prio-tr' + (i === 0 ? ' sub-prio-tr-top' : '')}>
+                              <span className="sub-prio-rank">#{i+1}</span>
+                              <span className="sub-prio-label">{item.label}</span>
+                              <span className="sub-prio-val">{item.spaceVal != null ? `${item.spaceVal}%` : '—'}</span>
+                              <span className="sub-prio-val">{item.otherVal != null ? `${item.otherVal}%` : '—'}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="req-note" style={{marginTop:6}}>ค่าที่แสดงคือ tier สูงสุดต่อ 1 upgrade · Space card มี pool sub stat ต่างจาก Sun/Moon/Star/Sky</div>
                       </div>
                     )
                   })()}
