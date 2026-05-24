@@ -4930,8 +4930,9 @@ export default function P5XPage() {
   const [skillLevel, setSkillLevel] = useState(3)
   const [charStage, setCharStage] = useState(null)
   const [openSpaceCard, setOpenSpaceCard] = useState(null)
+  const [subAlloc, setSubAlloc] = useState({})
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null) }, [charName])
+  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}) }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -5863,6 +5864,98 @@ export default function P5XPage() {
                         })}
                       </div>
                       <div className="req-note">sub = 1 slot ต่อ card ต่อ stat (5 cards) × {UPGRADES} upgrades · ไม่รวม in-battle passive</div>
+                    </div>
+                  )
+                })()}
+
+                {/* ── SUB STAT ALLOCATOR ─────────────────────────────────────── */}
+                {(() => {
+                  if (!charTgt) return null
+                  const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
+                  if (!simEntries.length) return null
+
+                  const msBonus = (charStage?.includes('M5') && currentChar?.mindscapeBonus) ? currentChar.mindscapeBonus : {}
+                  const base0 = (() => {
+                    const s = computeStats(currentChar, selectedWeaponIdx ?? 0, weaponRefine)
+                    const all = {...s}
+                    Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
+                    return all
+                  })()
+
+                  // lookup sub stat best-tier value by stat key
+                  const getSubTier1 = (k, pool) => {
+                    const p = pool === 'Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+                    const entry = Object.entries(p).find(([l]) => SUB_STAT_KEY[l] === k)
+                    return entry?.[1]?.[0] || 0
+                  }
+
+                  const bump = (k, field, delta, max) =>
+                    setSubAlloc(prev => {
+                      const cur = prev[k] || {space:0, other:0}
+                      return {...prev, [k]: {...cur, [field]: Math.min(max, Math.max(0, (cur[field]||0) + delta))}}
+                    })
+
+                  // SPR summary
+                  const sprAlloc = subAlloc['spr'] || {space:0, other:0}
+                  const sprSub = getSubTier1('spr','Space') * 4 * sprAlloc.space + getSubTier1('spr','other') * 4 * sprAlloc.other
+                  const totalSpr = (base0.spr || 0) + sprSub
+                  const spPerCast = 16 * (1 + totalSpr / 100)
+                  const sp2Round = spPerCast * 2
+
+                  return (
+                    <div className="info-panel">
+                      <div className="info-label">🎛️ จำลอง Sub Stat</div>
+                      <div className="alloc-table">
+                        <div className="alloc-hdr">
+                          <span>Stat</span>
+                          <span>Space<br/><span style={{fontSize:'0.6rem',color:'#666'}}>max 1</span></span>
+                          <span>Other<br/><span style={{fontSize:'0.6rem',color:'#666'}}>max 4</span></span>
+                          <span>รวมจาก sub</span>
+                          <span>total</span>
+                          <span>target</span>
+                        </div>
+                        {simEntries.map(([k, [ideal]]) => {
+                          const alloc = subAlloc[k] || {space:0, other:0}
+                          const sv = getSubTier1(k, 'Space')
+                          const ov = getSubTier1(k, 'other')
+                          const subVal = sv * 4 * alloc.space + ov * 4 * alloc.other
+                          const total = (base0[k] || 0) + subVal
+                          const reach = total >= ideal
+                          const fmt = v => k === 'spd' ? Math.floor(v) : Math.floor(v) + '%'
+                          return (
+                            <div key={k} className="alloc-row">
+                              <span className="alloc-stat">{statLabels[k]||k}</span>
+                              <span className="alloc-ctrl">
+                                <button className="alloc-btn" onClick={() => bump(k,'space',-1,1)}>−</button>
+                                <span className="alloc-num">{alloc.space}</span>
+                                <button className="alloc-btn" onClick={() => bump(k,'space',+1,1)}>+</button>
+                                {sv > 0 && <span className="alloc-hint">{sv}%</span>}
+                              </span>
+                              <span className="alloc-ctrl">
+                                <button className="alloc-btn" onClick={() => bump(k,'other',-1,4)}>−</button>
+                                <span className="alloc-num">{alloc.other}</span>
+                                <button className="alloc-btn" onClick={() => bump(k,'other',+1,4)}>+</button>
+                                {ov > 0 && <span className="alloc-hint">{ov}%</span>}
+                              </span>
+                              <span style={{color: subVal>0?'#7a9':'#444'}}>{subVal>0?'+'+fmt(subVal):'—'}</span>
+                              <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700}}>{fmt(total)}</span>
+                              <span style={{color:'#555'}}>{fmt(ideal)}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      {charTgt?.spr && (
+                        <div className="alloc-spr-summary">
+                          <span>SPR {Math.floor(totalSpr)}%</span>
+                          <span className="alloc-spr-arrow">→</span>
+                          <span>SP/cast {spPerCast.toFixed(1)}</span>
+                          <span className="alloc-spr-arrow">→</span>
+                          <span className={sp2Round >= 200 ? 'alloc-spr-ok' : sp2Round >= 150 ? 'alloc-spr-warn' : 'alloc-spr-bad'}>
+                            2 round = {sp2Round.toFixed(1)} SP {sp2Round >= 200 ? '✓ (tier 150+, full)' : sp2Round >= 150 ? '✓ (tier 150+)' : sp2Round >= 100 ? '△ (tier 100+)' : '✗ (tier 50+)'}
+                          </span>
+                        </div>
+                      )}
+                      <div className="req-note">tier 1 (สูงสุด) × 4 upgrades · กด +/− เพื่อตั้งจำนวน card ที่มี sub stat นี้</div>
                     </div>
                   )
                 })()}
