@@ -5785,12 +5785,16 @@ export default function P5XPage() {
 
                   // Sub stats: 1 slot per stat per card × UPGRADES rolls at best tier
                   const subContrib = {}
+                  const subDetail = {} // { spaceVal, otherVal } per stat
                   for (const [k] of simEntries) {
                     const spaceEntry = Object.entries(CARD_SUB_STATS.Space).find(([l]) => SUB_STAT_KEY[l] === k)
                     const otherEntry = Object.entries(CARD_SUB_STATS._other).find(([l]) => SUB_STAT_KEY[l] === k)
                     const spaceRate = spaceEntry?.[1]?.[0] || 0
                     const otherRate = otherEntry?.[1]?.[0] || 0
-                    subContrib[k] = (spaceRate + 4 * otherRate) * UPGRADES
+                    const spaceVal = spaceRate * UPGRADES
+                    const otherVal = otherRate * UPGRADES
+                    subContrib[k] = spaceVal + 4 * otherVal
+                    subDetail[k] = { spaceVal, otherVal }
                   }
 
                   const msBonus = (charStage?.includes('M5') && currentChar?.mindscapeBonus) ? currentChar.mindscapeBonus : {}
@@ -5828,7 +5832,18 @@ export default function P5XPage() {
                               <span style={{color:'#aaa'}}>{fmt(k,ideal)}</span>
                               <span style={{color:'#555'}}>{fmt(k,have)}</span>
                               <span style={{color: main>0 ? '#7a9' : '#444'}}>{main>0 ? fmtD(k,main) : '—'}</span>
-                              <span style={{color: sub>0 ? '#7a9' : '#444'}}>{sub>0 ? fmtD(k,sub) : '—'}</span>
+                              <span style={{color: sub>0 ? '#7a9' : '#444', lineHeight:1.3}}>
+                                {sub>0 ? <>
+                                  <span style={{display:'block'}}>{fmtD(k,sub)}</span>
+                                  <span style={{display:'block', fontSize:'0.58rem', color:'#555'}}>
+                                    {'S '}
+                                    {k==='spd' ? subDetail[k].spaceVal.toFixed(1) : subDetail[k].spaceVal.toFixed(1)+'%'}
+                                    {' · '}
+                                    {k==='spd' ? subDetail[k].otherVal.toFixed(1) : subDetail[k].otherVal.toFixed(1)+'%'}
+                                    {'×4'}
+                                  </span>
+                                </> : '—'}
+                              </span>
                               <span style={{color: reach ? '#00ff88' : '#ff7a8a', fontWeight:700}}>
                                 {fmt(k,total)}{reach ? ' ✓' : ' ✗'}
                               </span>
