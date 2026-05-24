@@ -5958,13 +5958,18 @@ export default function P5XPage() {
                         const sv1 = getSubTier1(k, 'Space')
                         const ov1 = getSubTier1(k, 'Other')
                         const subVal = subFromAlloc[k] || 0
-                        const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal
+                        const passiveVal = (k === 'cdmg' && hasSunKissed) ? sunKissedCdmg : 0
+                        const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal + passiveVal
                         const reach = total >= ideal
                         return (
                           <div key={k} className="alloc-stat-block">
                             <div className="alloc-stat-header">
                               <span className="alloc-stat">{statLabels[k]||k}</span>
-                              <span style={{color:'#555', fontSize:'0.62rem'}}>base {fmt(k, base0[k]||0)}{mainFromSel[k] ? ` + main +${fmt(k, mainFromSel[k])}` : ''}</span>
+                              <span style={{color:'#555', fontSize:'0.62rem'}}>
+                                base {fmt(k, base0[k]||0)}
+                                {mainFromSel[k] ? ` + main +${fmt(k, mainFromSel[k])}` : ''}
+                                {passiveVal > 0 ? ` + passive +${fmt(k, passiveVal)}` : ''}
+                              </span>
                               <span style={{flex:1}}/>
                               <span style={{color: subVal>0?'#7a9':'#444', fontSize:'0.7rem'}}>{subVal>0?`sub +${fmt(k,subVal)}`:'sub —'}</span>
                               <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.8rem', minWidth:50, textAlign:'right'}}>{fmt(k,total)}</span>
