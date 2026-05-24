@@ -274,7 +274,7 @@ const REVELATION_CARDS = {
 
 const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
-  {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Curse DMG%'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
+  {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['Attack %','Crit Rate','Crit Mult.','Damage Mult'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
     mechanics: "Will of Rebellion สะสมจากการโจมตีศัตรูที่ HP ต่ำกว่า 60% (สูงสุด 1 stack ต่อศัตรูต่อการต่อสู้) เมื่อครบ 3 stack จะเกิด Extra Action อัตโนมัติ — SP ลดลง 80% และหักใช้ 3 stack เมื่อสิ้นสุด รักษา SP ให้เกิน 60% เพื่อเปิด passive Meditate (+50% ATK ระหว่าง extra action) Merciless Pursuit สร้างดาเมจ execute บนศัตรูที่ HP ต่ำกว่า 25% หลัง extra action",
     rotation: [
       "เทิร์นปกติ → ใช้ Trickster's Plunder (AoE) โจมตีหลายเป้าเพื่อสะสม stack เร็วขึ้น",
@@ -371,7 +371,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Ann Takamaki',       codename:'Panther',        role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],     note:'Top Fire AoE DPS. Power 4pc boosts party ATK when stacked with Fire sub-DPS.',
+  {name:'Ann Takamaki',       codename:'Panther',        role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Damage Mult','Crit Rate','Crit Mult.'],     note:'Top Fire AoE DPS. Power 4pc boosts party ATK when stacked with Fire sub-DPS.',
     mechanics: "Passion stack สะสมทุกครั้งที่ Ann โจมตีด้วยธาตุ Fire — ทักษะ AoE ต่อหลายเป้าได้สูงสุด 4 stack ในการกระทำเดียว เมื่อเทิร์นของ Ann เองมี 4+ stack จะใช้ stack ทั้งหมดเพื่อเข้าสู่ La Vie en Rose 1 เทิร์น (ATK +30–50%) ช่วง La Vie en Rose คือหน้าต่างดาเมจสูงสุด เมื่อหมด passive Marriage of Flames จะยิง Fire follow-up 2 ครั้งอัตโนมัติ",
     rotation: [
       "เทิร์น 1 → Crimson Rose (AoE, ได้ Passion สูงสุด 4 stack จากหลายเป้า) → La Vie en Rose เทิร์นถัดไป",
@@ -470,7 +470,7 @@ const CHARACTERS = [
   },
   {name:'Ryuji Sakamoto', codename:'Skull', role:'Assassin', element:'Physical', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Physical/CRIT weapon (Revenge Axe)',
-    statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Physical DMG%'], note:'Physical Assassin. Low-HP berserker — ATK scales with missing HP, Rebound state enables CRIT-guaranteed burst. Uses HP as resource for skills.',
+    statPrio:['Attack %','Crit Rate','Crit Mult.','Damage Mult'], note:'Physical Assassin. Low-HP berserker — ATK scales with missing HP, Rebound state enables CRIT-guaranteed burst. Uses HP as resource for skills.',
     mechanics: "HP ยิ่งต่ำ ATK ยิ่งสูง — ได้ ATK สูงสุด +40% (สูงสุดเมื่อ HP ≤20%) เมื่อ Ryuji เริ่มเทิร์นของตัวเองด้วย HP ต่ำกว่า 75% จะได้ Rebound: ทักษะถัดไปดาเมจ +30% และ CRIT Rate +30% God Hand Burst ภายใต้ Rebound = critical รับประกัน ทักษะบางอย่างหัก HP เพื่อปลดล็อกดาเมจโบนัส — Pirate Tactics หัก HP 20% ของ max HP",
     rotation: [
       "เทิร์น 1 → Pirate Tactics (หัก HP 20% max HP) → HP ลงต่ำกว่า 75% เปิด Rebound",
@@ -566,7 +566,7 @@ const CHARACTERS = [
   },
   {name:'Kasumi Yoshizawa', codename:'Violet', role:'Assassin', element:'Bless', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best CRIT Bless weapon (Royal Étoile)',
-    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Bless Assassin. Masquerade mode unlocks Highlight usage and stacks Lead/Follow Step for massive CRIT DMG. Invitation grants Dance Partner to an ally whose skills trigger bonus Cinderella Glow hits.',
+    statPrio:['Attack %','Crit Rate','Crit Mult.'], note:'Bless Assassin. Masquerade mode unlocks Highlight usage and stacks Lead/Follow Step for massive CRIT DMG. Invitation grants Dance Partner to an ally whose skills trigger bonus Cinderella Glow hits.',
     mechanics: "Lead Step สะสมจากการโจมตีด้วย Cinderella Glow; Follow Step จากการใช้ Invitation เมื่อมี 2+ Steps ระหว่าง action ของฝ่ายพันธมิตร Kasumi สามารถเปิด Masquerade mode ผ่าน Spellbound Cinders (cooldown 3 เทิร์น) ใน Masquerade → Highlight ใช้ฟรี (ไม่เสีย gauge, CRIT ได้, +15% ต่อ Lead Step, +20% ต่อ Follow Step) Masquerade คงอยู่จนต้นเทิร์นที่ 2 ของ Kasumi ถัดไป",
     rotation: [
       "เทิร์น 1 → Invitation → มอบ Dance Partner ให้ DPS หลัก; Kasumi ได้ Follow Step + ATK buff ทั้งคู่",
@@ -663,7 +663,7 @@ const CHARACTERS = [
   },
   {name:'Futaba Sakura', codename:'Oracle', role:'Elucidator', element:'-', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Technomage Ultra FS)',
-    statPrio:['ATK%','SPD','HP%'], note:'Elucidator. Stat Buff shares 20% of all stats with party. Virus changes foe affinities (Null→Resist, Resist→Normal, Normal→Weak) to create weakness targets. Data Storm buffs from Analysis Progress amplify weakness damage.',
+    statPrio:['Attack %','Speed','HP %'], note:'Elucidator. Stat Buff shares 20% of all stats with party. Virus changes foe affinities (Null→Resist, Resist→Normal, Normal→Weak) to create weakness targets. Data Storm buffs from Analysis Progress amplify weakness damage.',
     mechanics: "Analysis Progress สะสมเมื่อ ally ใช้ทักษะ (+5%) หรือโจมตีจุดอ่อน (+25%) Programming Pro awareness เริ่มทุกการต่อสู้ที่ 100% เมื่อครบ 100% และใช้ Pentest Complete! หรือ Vulnerability Found! จะเปิด Data Storm (ดาเมจปาร์ตี้ +10–20%) Data Link ต้องการ Data Storm active เพื่อบัฟ ATK ของ DPS ที่เลือก พร้อมติด Virus เพื่อเปลี่ยน affinity ของศัตรูหนึ่งระดับให้ใกล้จุดอ่อน",
     rotation: [
       "เทิร์น 1 → Pentest Complete! (DEF down ทุกศัตรู + เปิด Data Storm จาก 100% starting Progress)",
@@ -759,7 +759,7 @@ const CHARACTERS = [
   },
   {name:'Ayaka Sakai', codename:'Chord', role:'Strategist', element:'Electric', rarity:5,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best ATK/Support weapon (Superstar)',
-    statPrio:['ATK%','SPD','HP%'], note:'Top-tier Strategist. Catchy Hook instantly triggers ally Highlights — Costar mechanic amplifies the chosen DPS. ATK scales her own buff values.',
+    statPrio:['Attack %','Speed','HP %'], note:'Top-tier Strategist. Catchy Hook instantly triggers ally Highlights — Costar mechanic amplifies the chosen DPS. ATK scales her own buff values.',
     mechanics: "วงจรหลัก: มอบ Costar ให้ DPS หลัก (Unison Notes, คงอยู่ 3 เทิร์น) จากนั้นใช้ Catchy Hook เพื่อยิง Highlight ของ ally นั้นทันที พร้อมบัฟดาเมจ +78–90% โดยไม่เสีย cooldown ของพวกเขา Hard Rock awareness มอบ Costar ให้ ally ที่มี ATK สูงสุดอัตโนมัติเมื่อเริ่มต้นการต่อสู้ ทุกครั้งที่ใช้ Catchy Hook จะเพิ่ม ATK ของ Ayaka เอง +20% ถาวร (cap 40%) Highlight ของ Ayaka ให้ปาร์ตี้ทั้งหมด +45% DMG เป็นเวลา 4 action",
     rotation: [
       "เริ่มต้นการต่อสู้ → Hard Rock มอบ Costar ให้ ally ATK สูงสุดอัตโนมัติ (โดยปกติคือ DPS หลัก)",
@@ -858,7 +858,7 @@ const CHARACTERS = [
   },
   {name:'Riko Tanemura', codename:'Wind', role:'Elucidator', element:'-', rarity:4,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:"Best SPD support weapon (Kunoichi: Sky's Edge)",
-    statPrio:['SPD','ATK%','HP%'], note:"Elucidator. Speed-scaling DEF debuffer and damage amplifier via Insight/Intel system. Verngale Petals grants Fair Winds (party DMG buff). Stat Buff shares 15% of Revealed Phantom Thief's stats with party.",
+    statPrio:['Speed','Attack %','HP %'], note:"Elucidator. Speed-scaling DEF debuffer and damage amplifier via Insight/Intel system. Verngale Petals grants Fair Winds (party DMG buff). Stat Buff shares 15% of Revealed Phantom Thief's stats with party.",
     mechanics: "Insight ถูกติดบนศัตรูที่มี Down Point สูงสุดทุก 3 action ของ ally (หรือผ่าน awareness) เมื่อ Riko โจมตีศัตรูที่มี Insight จะใช้ stack ทั้งหมดเพื่อได้ Intel (2 stack ต่อการโจมตี, +1 ถ้าโจมตีจุดอ่อนหรือ neutral) เมื่อมี 5+ Intel สามารถใช้ Verngale Petals — ใช้ Intel ทั้งหมดเพื่อรับ Fair Winds (ดาเมจปาร์ตี้ขึ้นตาม SPD) และฮีลเป้าเดี่ยว DEF debuff บน Scattered Plum Blossoms และ Dreams in the Mist สเกลตาม SPD เกิน 100: ทุก 10 SPD เพิ่ม % DEF reduction passive Stat Buff แชร์ 15% ของ stat Riko ให้ปาร์ตี้",
     rotation: [
       "เทิร์น 1 → Scattered Plum Blossoms (AoE DEF down + ติด Insight บนเป้าหลัก; สเกลตาม SPD เกิน 100)",
@@ -948,7 +948,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Yaoling Li',         codename:'Rin',            role:'Saboteur',   element:'Curse',          rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / SPD weapon',                       statPrio:['ATK%','SPD','DEF%'],                             note:'Best enemy debuffer — reduces enemy DEF. Hindrance 4pc amplifies debuffed targets.',
+  {name:'Yaoling Li',         codename:'Rin',            role:'Saboteur',   element:'Curse',          rarity:5, cards:['Hindrance 4pc','Strife 2pc'],   weapon:'Best Curse / SPD weapon',                       statPrio:['Attack %','Speed','Defense %'],                             note:'Best enemy debuffer — reduces enemy DEF. Hindrance 4pc amplifies debuffed targets.',
     mechanics: "ทุก 10 SPD ให้ Memory +1 ต่อเทิร์น (cap 18/เทิร์น ที่ 180+ SPD) เมื่อสะสม Memory 40 stack จะได้ Meng Po Soup 1 ใบ ใช้ทักษะขณะมี Soup active: โอกาส 50% ทำให้ศัตรู 1 ตัวติด Forget และเพิ่มผลทักษะนั้นสองเท่า DEF debuff บน Underworld Ferry และ Lion Dance สเกลโดยตรงกับ SPD — SPD สูงกว่า = debuff แรงกว่า เหมาะคู่กับ DPS ธาตุ Curse หรือ Physical ที่ได้ประโยชน์สูงสุดจากการลด DEF ศัตรู",
     rotation: [
       "เทิร์น 1 → Underworld Ferry (AoE DEF down ตาม SPD ต่อ 10 + Memory 4 stack ต่อศัตรูที่โดน)",
@@ -1049,7 +1049,7 @@ const CHARACTERS = [
   },
   {name:'Seiji Shiratori', codename:'Fleuret', role:'Assassin', element:'Wind', rarity:4,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best CRIT/Wind weapon (Venus Sunrise)',
-    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'4★ Wind Assassin. Right to Strike stack mechanic — AoE skills stack faster with more foes. At 3+ stacks, all skills gain bonus hits.',
+    statPrio:['Attack %','Crit Rate','Crit Mult.'], note:'4★ Wind Assassin. Right to Strike stack mechanic — AoE skills stack faster with more foes. At 3+ stacks, all skills gain bonus hits.',
     mechanics: "Right to Strike stack สะสมจาก Graceful Gale (AoE, โอกาส = จำนวนศัตรู × 48%), Coup Droit proc ท้ายเทิร์น (60%) และ awareness เมื่อมี 3+ stack → Saber Surge ได้ +1 hit และ CRIT Rate +20% — นี่คือช่วงดาเมจหลัก Blustering Épée ติด Windswept บนศัตรู; เมื่อ Windswept ถูก Saber Surge โจมตี โอกาส 100% เกิด extra hit เพิ่ม (ผ่าน Chivalrous Spirit) Mindscape 5 เพิ่ม stack สูงสุดเป็น 5 ให้ CRIT Rate +4% ต่อ stack และ extra hit บนทุกทักษะเมื่อเต็ม cap",
     rotation: [
       "เทิร์น 1 → Graceful Gale (AoE; ทุกศัตรูให้โอกาส ~50% ได้ Right to Strike 1 stack)",
@@ -1146,7 +1146,7 @@ const CHARACTERS = [
   },
   {name:'Manaka Nagao', codename:'Ange', role:'Elucidator', element:'-', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Angel\'s Hymn)',
-    statPrio:['ATK%','SPD','HP%'], note:'Elucidator. Stat Buff passively shares 20% of all Manaka\'s stats with the party. Musical Notes fuel skill cooldown reduction and pierce/ATK scaling. Da Capo grants an ally a rewind extra action — resetting their HP/SP/buffs/cooldowns to before their last action.',
+    statPrio:['Attack %','Speed','HP %'], note:'Elucidator. Stat Buff passively shares 20% of all Manaka\'s stats with the party. Musical Notes fuel skill cooldown reduction and pierce/ATK scaling. Da Capo grants an ally a rewind extra action — resetting their HP/SP/buffs/cooldowns to before their last action.',
     mechanics: "Musical Notes (สูงสุด 12) สะสม 1 ต่อ action ของ ally; ครบ 12 stack → Prayer Refrain เปิดอัตโนมัติฟรี Winged Canon บัฟดาเมจปาร์ตี้และให้ 4 Notes; Melody of Steps ใช้ Notes ทั้งหมดเพื่อบัฟ ATK + pierce (สเกลตาม ATK × Notes ที่ใช้) Da Capo (1 ครั้ง/การต่อสู้, ฟื้นหลัง 7 non-extra actions) ย้อนเวลา action ของ ally ที่เลือก — รีเซ็ต HP, SP, buff และ cooldown ก่อน action นั้น Crescendo passive ให้ ally ที่ถือ Da Capo +37.5% ATK เป็น buff ถาวรก่อนใช้",
     rotation: [
       "เทิร์น 1 → Winged Canon (DMG up ปาร์ตี้ + 4 Notes; CD 4 ally actions)",
@@ -1239,7 +1239,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Yusuke Kitagawa',    codename:'Fox',            role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best DEF/Ice weapon',                           statPrio:['DEF%','Ice DMG%','HP%'],                         note:'DEF-scaling Ice Sweeper. Damage scales off Defense — stack DEF% over ATK%.',
+  {name:'Yusuke Kitagawa',    codename:'Fox',            role:'Sweeper',    element:'Ice',            rarity:5, cards:['Truth 4pc','Courage 2pc'],      weapon:'Best DEF/Ice weapon',                           statPrio:['Defense %','Damage Mult','HP %'],                         note:'DEF-scaling Ice Sweeper. Damage scales off Defense — stack DEF% over ATK%.',
     mechanics: "ทักษะและ Highlight ทั้งหมดของ Yusuke สเกลตาม DEF ไม่ใช่ ATK — สะสม DEF% ในทุก card slot Inspiration passive โอกาส 65% โต้กลับ (Ice, 88% DEF) เมื่อถูกทักษะศัตรู Keen Eye พัฒนา Inspiration ถัดไปเป็น Imagination: proc 100%, AoE และสร้าง shield Shield เปิด Painter's Focus (+7.5% DMG ต่อ shield, สูงสุด 6 stack) และ Artist's Intuition (+20% pierce 1 เทิร์น)",
     rotation: [
       "สะสม DEF% ในทุก main stat slot — Frozen Presence, Bone-Chilling Cold และ Highlight ล้วนสเกลตาม DEF",
@@ -1339,7 +1339,7 @@ const CHARACTERS = [
   },
   {name:'Makoto Niijima', codename:'Queen', role:'Sweeper', element:'Nuclear', rarity:5,
     cards:['Truth 4pc','Courage 2pc'], weapon:'Best Nuclear ATK weapon',
-    statPrio:['ATK%','Nuclear DMG%','CRIT Rate%'], note:'Nuclear Sweeper/Medic hybrid. Crash Out boosts ATK +40% and evolves Nuclear Fury → Thermonuclear Fury. Chief Strategist scales ATK with ailment variety. Tenacity stacks from ailments on foes.',
+    statPrio:['Attack %','Damage Mult','Crit Rate'], note:'Nuclear Sweeper/Medic hybrid. Crash Out boosts ATK +40% and evolves Nuclear Fury → Thermonuclear Fury. Chief Strategist scales ATK with ailment variety. Tenacity stacks from ailments on foes.',
     mechanics: "Tenacity stack สะสมจากทักษะและ ailment บนศัตรู เมื่อครบ 5 stack → Crash Out เปิด (ATK +40%, DEF +20%, Nuclear Fury เปลี่ยนเป็น Thermonuclear Fury พร้อม multi-Technical hit ต่อ ailment) Chief Strategist ให้ ATK +15% ต่อ elemental ailment unique ที่มีบนศัตรู Execution of Justice awareness เริ่มทุกการต่อสู้ด้วย 5 stack — Crash Out เปิดทันทีในเทิร์น 1",
     rotation: [
       "เทิร์น 1 → Crash Out เปิดต้นเทิร์น (Execution of Justice ให้ 5 stack ตั้งแต่เริ่มต้น)",
@@ -1438,7 +1438,7 @@ const CHARACTERS = [
   },
   {name:'Goro Akechi', codename:'Crow', role:'Sweeper', element:'Almighty', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best ATK/CRIT Almighty weapon (Gordian Kopis)',
-    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'Almighty Sweeper. Alternating Bless/Curse skills maintain both Deduction (+party DMG) and Stratagem (DEF shred) simultaneously. Mastermind records ally damage into Arrow of Truth → Almighty burst via Rain of Justice.',
+    statPrio:['Attack %','Crit Rate','Crit Mult.'], note:'Almighty Sweeper. Alternating Bless/Curse skills maintain both Deduction (+party DMG) and Stratagem (DEF shred) simultaneously. Mastermind records ally damage into Arrow of Truth → Almighty burst via Rain of Justice.',
     mechanics: "สลับทักษะ Bless/Curse ทุกเทิร์น รักษาทั้ง Deduction (ดาเมจปาร์ตี้ขึ้น) และ Stratagem (DEF shred ศัตรู) พร้อมกัน Detective Advice ให้รางวัลการสลับ element ด้วย ATK +25% และ CRIT DMG +30% เป็นเวลา 1 เทิร์น Mastermind กำหนด DPS ally ที่ดาเมจ AoE จะถูกบันทึกเป็น Arrow of Truth stack Rain of Justice แปลง stack ทั้งหมดเป็น Almighty burst พร้อม Arrow of Perjury follow-up",
     rotation: [
       "เทิร์น 1 → Decisive Scheme (Curse) → ได้ Stratagem (DEF down 25%+) และ Suspicion",
@@ -1535,7 +1535,7 @@ const CHARACTERS = [
   },
   {name:'Luce', codename:'Luce', role:'Strategist', element:'Bless', rarity:4,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best ATK/ailment accuracy support weapon (Ribalta)',
-    statPrio:['Ailment Accuracy%','ATK%','SPD'], note:'Bless Strategist. 4 Improv states cycle elemental ailments and grant different per-ally buffs via Improvise. Blessing stacks boost party damage. Method Acting converts ailment accuracy into ATK.',
+    statPrio:['Ailment Accuracy','Attack %','Speed'], note:'Bless Strategist. 4 Improv states cycle elemental ailments and grant different per-ally buffs via Improvise. Blessing stacks boost party damage. Method Acting converts ailment accuracy into ATK.',
     mechanics: "Shoki หมุนเวียน 4 Improv states (Blazing Passion, Chilling Intensity, Electrifying Performance, Tempestuous Drama) สลับได้ต้นเทิร์น ทักษะแต่ละชนิดมีโอกาส 75% ติด elemental ailment บนศัตรูทุกตัว (Burn/Freeze/Shock/Windswept) Blessing stack จาก Followspot ให้ ally +5% DMG ต่อ stack (สูงสุด 25%) Improvise มอบโบนัสเฉพาะ state ให้ ally ที่เลือก: Blazing = DoT+ailment accuracy, Chilling = Technical Precision+ATK-on-Technical, Electrifying = CRIT DMG, Tempestuous = pierce Method Acting แปลง ailment accuracy เป็น ATK (+0.72% ต่อ 1% ailment accuracy, สูงสุด +72%)",
     rotation: [
       "เทิร์น 1 → Followspot (Bless DMG + Blessing 2 stack ทุก ally + ailment ตาม Improv state)",
@@ -1644,7 +1644,7 @@ const CHARACTERS = [
   },
   {name:'Turbo', codename:'Turbo', role:'Strategist', element:'Physical', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best SPD/Physical weapon (Nebula Pennant)',
-    statPrio:['SPD','ATK%','HP%'], note:'Physical Strategist. SPD-scaling buffs — every 10 SPD over 100 increases buff potency. Velocity mechanic grants extra actions.',
+    statPrio:['Speed','Attack %','HP %'], note:'Physical Strategist. SPD-scaling buffs — every 10 SPD over 100 increases buff potency. Velocity mechanic grants extra actions.',
     mechanics: "Velocity สะสมต่อเนื่อง: 4 stack ต่อ action ของ ally (+1 ต่อทุก 10 SPD เกิน 100, สูงสุด 6/action) เมื่อ Velocity >120 สามารถใช้ stack เพื่อเกิด extra action (CD 1 เทิร์น) Torque Boost เปิดที่จุด Velocity สะสม (100/220/350) → pierce ปาร์ตี้ +5%/10%/15% Extra action ได้โบนัสพิเศษเมื่อสลับทักษะ: Shockwave ได้ +50% CRIT DMG; Aero Setup เพิ่ม shield; Power Setup ให้ pierce บนเป้าหลัก ค่าบัฟทั้งหมด (ATK, DEF, pierce, DMG) สเกลตาม SPD เกิน 100 — รักษา SPD สูงสุดเพื่อประสิทธิภาพสูงสุด",
     rotation: [
       "เทิร์น 1 → Aero Setup (ATK + DEF up ปาร์ตี้ สเกลตาม SPD; บน extra action: เพิ่ม shield ปาร์ตี้)",
@@ -1739,7 +1739,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Matoi',              codename:'Matoi',          role:'Saboteur',   element:'Ice',            rarity:5, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Ice Saboteur weapon',                      statPrio:['HP%','DEF%','SPD'],                              note:'Ice Saboteur. Provides party-wide damage mitigation and debuffs.',
+  {name:'Matoi',              codename:'Matoi',          role:'Saboteur',   element:'Ice',            rarity:5, cards:['Peace 4pc','Opulence 2pc'],     weapon:'Best Ice Saboteur weapon',                      statPrio:['HP %','Defense %','Speed'],                              note:'Ice Saboteur. Provides party-wide damage mitigation and debuffs.',
     mechanics: "Extinguish stack (สูงสุด 4) สะสมทุกเทิร์นของ Natsukawa + จาก Sub-Zero Torrent Extinguishing Guidance ใช้ 2 stack; Requiem Guidance ใช้ 4 stack — ทั้งคู่ติด Damnation บนศัตรูทุกตัว (DMG taken +6% ต่อ stack, สูงสุด 4; M5 เพิ่ม cap เป็น 6) Ice Technical จากทักษะเปิด Disaster Preparedness: shield ปาร์ตี้ทั้งหมดทุกครั้ง Ailment accuracy สเกลค่า DEF down ทั้งหมดโดยตรง Cold Flames (จาก Iceburn Technical) เพิ่ม DMG taken multiplier มหาศาลบน DEF down Biting Cold awareness เพิ่มดาเมจ +27% ต่อเป้าที่ Frozen/Icebound",
     rotation: [
       "เทิร์น 1 → Sub-Zero Torrent (AoE Ice + DEF down + โอกาส 50% Freeze; ได้ Extinguish)",
@@ -1837,7 +1837,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Howler',             codename:'Howler',         role:'Saboteur',   element:'Fire',           rarity:5, cards:['Power 4pc','Strife 2pc'],       weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],     note:'Fire Saboteur with strong AoE coverage. Power 4pc amplifies team damage.',
+  {name:'Howler',             codename:'Howler',         role:'Saboteur',   element:'Fire',           rarity:5, cards:['Power 4pc','Strife 2pc'],       weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Damage Mult','Crit Rate','Crit Mult.'],     note:'Fire Saboteur with strong AoE coverage. Power 4pc amplifies team damage.',
     mechanics: "Runa มี Stance buff 2 แบบ: Big Welcome (จาก Welcome Hug AoE) และ Furrocious Follow-Up (จาก Furrious Bark ST) การใช้ Woof Woof Blaze ใช้ Stance ที่ active — Big Welcome → AoE Resonance + elemental DMG taken up; Furrocious Follow-Up → ST Resonance + Resonance DMG taken up Highlight ติด Enthusiastic Fuse บนศัตรูทุกตัว (สูงสุด 4 stack ที่ M5) — ทุก Fire/Ice/Electric/Wind/Resonance hit ของ ally ใช้ 1 stack เพื่อเพิ่มดาเมจ Peppy Guard Dog แปลง ailment accuracy เป็น ATK (อัตราส่วน 60%) ค่า DEF down ทั้งหมดสเกลตาม ailment accuracy",
     rotation: [
       "เทิร์น 1 → Welcome Hug (AoE Fire + AoE DEF down + Stance Big Welcome; โอกาส 50% Burn)",
@@ -1939,7 +1939,7 @@ const CHARACTERS = [
   },
   {name:'J&C', codename:'J&C', role:'Virtuoso', element:'Almighty', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best ATK/CRIT weapon (Warden\'s Judgement)',
-    statPrio:['ATK%','CRIT DMG%','CRIT Rate%'], note:'Dual-Persona Virtuoso. Select 2 of 4 Mask pairs before battle to define role and Facade combinations. Desire Level (scales with ATK/DMG Mult/CRIT DMG) amplifies all skill multipliers. Two Masks as One spends both Facades for powerful combo effects.',
+    statPrio:['Attack %','Crit Mult.','Crit Rate'], note:'Dual-Persona Virtuoso. Select 2 of 4 Mask pairs before battle to define role and Facade combinations. Desire Level (scales with ATK/DMG Mult/CRIT DMG) amplifies all skill multipliers. Two Masks as One spends both Facades for powerful combo effects.',
     mechanics: "ก่อนต่อสู้ เลือก Mask pair 2 จาก 4 คู่ (Mischief & Innocence, Service & Admonition, Absurdity & Nonsense, Luck & Loss) เพื่อกำหนดบทบาทและ Facade type ของ J&C ทุกการใช้ทักษะให้ Facade type นั้น และการได้ Facade เปิดบัฟปาร์ตี้ เมื่อมี Facade 2 ประเภทต่างกัน Two Masks as One จะยิงอัตโนมัติ (ต้นเทิร์น) พร้อมผลรวมพิเศษของคู่นั้น Desire Level สเกลตัวคูณทักษะทั้งหมด (+1 DL ต่อ 100 ATK, +1 ต่อ 2% DMG Mult, +1 ต่อ 6% CRIT DMG ที่เกิน 100%) M5 ให้ True Desire — ใช้ต้นเทิร์นเพื่อยิง Facade combo ทั้ง 6 พร้อมกัน",
     rotation: [
       "ก่อนต่อสู้: เลือก 2 Masks ตามต้องการของปาร์ตี้ (M+A สำหรับ DPS support; S+A สำหรับ shield+DEF; A+L สำหรับ Sweeper)",
@@ -2042,7 +2042,7 @@ const CHARACTERS = [
   },
   {name:'Noir', codename:'Noir', role:'Sweeper', element:'Psychokinesis', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best Ailment/Psy weapon (Last Quarter)',
-    statPrio:['ATK%','CRIT DMG%','CRIT Rate%'], note:'Psychokinesis Sweeper. Thoughtful Round stack system — each skill grants a unique round type that powers up the next ranged attack. Ailment accuracy scales ATK and CRIT DMG.',
+    statPrio:['Attack %','Crit Mult.','Crit Rate'], note:'Psychokinesis Sweeper. Thoughtful Round stack system — each skill grants a unique round type that powers up the next ranged attack. Ailment accuracy scales ATK and CRIT DMG.',
     mechanics: "ทุกทักษะมอบ Thoughtful Round ประเภทต่างกัน (Focused/Painpoint/Spillover/Overload) หลังใช้ทักษะ Haru ยิงโจมตีระยะไกลที่ใช้ Round ทั้งหมด — แต่ละ Round เพิ่มดาเมจ +20%/40%/50%, ATK +25% เมื่อมี 2+ Round; เมื่อมี 2+ Round กลายเป็น Resonating Shots (ยิง effect ทุก Round พร้อมกัน +70% extra) Target Audience เป็น debuff จาก Extrasensory Aim; เมื่อ Haru ถือมัน ทักษะได้ CRIT Rate หรือ pierce rate โบนัส Ailment accuracy แปลงเป็น ATK (+1% ต่อ 1.45%) และ CRIT DMG (+20% ต่อ 50% accuracy) ผ่าน Heiress's Leadership",
     rotation: [
       "เทิร์น 1 → Extrasensory Aim (AoE Psy + Target Audience ทุกศัตรู; ส่งถึง Haru + Focused Round)",
@@ -2137,7 +2137,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Cherish',            codename:'Cherish',        role:'Guardian',   element:'Ice',            rarity:5, cards:['Peace 4pc','Virtue 2pc'],       weapon:'Best HP/Shield weapon',                         statPrio:['HP%','DEF%','Healing Bonus%'],                   note:'Ice Guardian specialising in shields and party protection.',
+  {name:'Cherish',            codename:'Cherish',        role:'Guardian',   element:'Ice',            rarity:5, cards:['Peace 4pc','Virtue 2pc'],       weapon:'Best HP/Shield weapon',                         statPrio:['HP %','Defense %','Healing Effect'],                   note:'Ice Guardian specialising in shields and party protection.',
     mechanics: "Knight's Protection shield (single target) และ Knight's Resolve shield (AoE) ทั้งคู่สเกลตาม DEF ของ Ashiya เมื่อ ally ที่มี shield ถูกโจมตี Ashiya ได้ Heroism (สูงสุด 2/เทิร์น) เมื่อครบ 4 Heroism stack → Garden of Promises เปิด: shield ทุก ally ใหม่ + เสริม Frost Vines (เพิ่ม DMG taken debuff) และ Hoarfrost Vow (shield แรงขึ้น +25%) Flower Knight's Shield ให้ ally ที่มี shield +24% DEF และ ailment resistance +48% Flower Knight's Devotion ให้ DMG buff stack แก่ ally ที่ป้องกัน (สูงสุด 3 stack → +20% CRIT DMG เพิ่ม) ทุกครั้งที่ ailment resistance บล็อก ailment",
     rotation: [
       "เทิร์น 1 → Winter Fortress (AoE Knight's Resolve shield + Knight's Protection + party DMG buff 2T)",
@@ -2237,7 +2237,7 @@ const CHARACTERS = [
   },
   {name:'Messa', codename:'Messa', role:'Assassin', element:'Physical', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Physical/Bleed weapon (Bloodletter)',
-    statPrio:['ATK%','Physical DMG%','CRIT Rate%'], note:'Physical Assassin. Dual-mode Bleed stacker — Doctor mode builds stacks, Ripper mode detonates with Rending damage.',
+    statPrio:['Attack %','Damage Mult','Crit Rate'], note:'Physical Assassin. Dual-mode Bleed stacker — Doctor mode builds stacks, Ripper mode detonates with Rending damage.',
     mechanics: "Kitazato สลับระหว่าง Doctor mode (สะสม Bleed) และ Ripper mode (ระเบิด Rending) Doctor mode: Moonlit Scalpel สะสม Bleed (4 hit +1 stack), Crimson Operation รีเซ็ต duration Bleed และเปิด DoT เมื่อ Bleed รวมบนศัตรูใดเกิน 7 stack → Nightfall ปลดล็อก สลับ Ripper mode ทุก 3 Bleed = 1 Rending stack (DoT ทุกเทิร์น) Crimson/Pathology ใน Ripper ลบ Bleed ทั้งหมดเพื่อ +2% DMG ต่อ stack ขณะที่ Midnight Surgery ยิงโจมตีครั้งเดียวมหาศาล Highlight เชื่อม Doctor→5 Bleed→Ripper ในเทิร์นเดียว",
     rotation: [
       "Doctor mode: Moonlit Scalpel (4 hit + 1 Bleed) → Crimson Operation (เปิด DoT + รีเซ็ต timer) → ทำซ้ำ",
@@ -2336,7 +2336,7 @@ const CHARACTERS = [
   },
   {name:'Phoebe', codename:'Phoebe', role:'Elucidator', element:'-', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon',
-    statPrio:['ATK%','SPD','HP%'], note:"Elucidator. Cocktail system: allies generate Mixers → Cocktails (Tailor-Made/Standard/Basic by attribute match). Cocktails amplify skill effects. Stat Buff shares 20% of Phantom Thief's stats. Invigorating Blend grants attribute DMG buff + CRIT DMG at 2+ Standard Cocktails.",
+    statPrio:['Attack %','Speed','HP %'], note:"Elucidator. Cocktail system: allies generate Mixers → Cocktails (Tailor-Made/Standard/Basic by attribute match). Cocktails amplify skill effects. Stat Buff shares 20% of Phantom Thief's stats. Invigorating Blend grants attribute DMG buff + CRIT DMG at 2+ Standard Cocktails.",
     mechanics: "Mixer (4 attribute ประเภท) สร้างขึ้นทุกครั้งที่ ally ใช้ทักษะ, Resonance, Highlight หรือ Theurgy โจมตี หลัง 3 Mixer จะเปลี่ยนเป็น Cocktail (สูงสุด 3): Tailor-Made ถ้า 3 attribute ตรงกัน, Standard ถ้า 2 ตรงกัน, Basic ถ้าต่างกันทั้งหมด เมื่อ Yumi ใช้ทักษะ Cocktail จะถูกใช้เพื่อเพิ่มผลทักษะ (Tailor-Made 120%, Standard 100%, Basic 50%) บวกคืน SP 8 ให้ทุก ally passive Stat Buff แชร์ 20% ของ stat Yumi ให้ทุก ally Tempting Build และ Invigorating Blend สเกลตาม ATK ของ Yumi (ถึง threshold 6440 ATK)",
     rotation: [
       "เทิร์น 1 → Tempting Build (บัฟ ATK ปาร์ตี้ + ใช้ Cocktail บนทักษะ DPS ถัดไป 120% amplification; CD 6 ally actions)",
@@ -2421,7 +2421,7 @@ const CHARACTERS = [
   },
   {name:'Marian', codename:'Marian', role:'Medic', element:'Bless', rarity:5,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best HP% Bless healing weapon (Angel Heart)',
-    statPrio:['HP%','Healing Effect%','DEF%'], note:'Bless Medic. All skills scale with Minami\'s max HP. Diagnosis stacks (up to 2) amplify Compassionate Cure\'s healing targets and grant party max HP buffs. Guardian of Life revives 1 ally once per battle.',
+    statPrio:['HP %','Healing Effect','Defense %'], note:'Bless Medic. All skills scale with Minami\'s max HP. Diagnosis stacks (up to 2) amplify Compassionate Cure\'s healing targets and grant party max HP buffs. Guardian of Life revives 1 ally once per battle.',
     mechanics: "การฮีลทั้งหมดสเกลตาม max HP ของ Minami (ไม่ใช่ ATK) — สะสม HP% ในทุก slot Diagnosis stack (สูงสุด 2) สะสมตอนเริ่มต้นการต่อสู้และทุกครั้งที่ HP ของ ally ลดต่ำกว่า 70% Compassionate Cure ใช้ Diagnosis stack ทั้งหมดเพื่อฮีลหลายเป้าและให้ปาร์ตี้ max HP up (+7.5% max HP ของ Minami ต่อ stack) Guardian of Life (M5) ฟื้นคืน ally ที่ KO อัตโนมัติ 1 คน ที่ HP 40% ของ Minami + 1200 ได้ 1 ครั้ง/การต่อสู้ Health Comes First passive ให้ ally ที่ฮีล +15% (สูงสุด +30% กับ Blessing) DMG เป็นเวลา 1 เทิร์น",
     rotation: [
       "เทิร์น 1 → Healing Grace (ฮีล 2 ally, กำจัด 2 debuff, ให้ Blessing + Diagnosis; ดีที่สุดต้นเกมสำหรับ proactive healing)",
@@ -2518,7 +2518,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','CRIT Rate%','CRIT DMG%','Fire DMG%'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
+  {name:'Makoto',             codename:'makoto',         role:'Assassin',   element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],    weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Crit Rate','Crit Mult.','Damage Mult'],     note:'Fire Assassin variant. Moon Phase stacks → Scarlet Hades burst. Dual Theurgy (Ardhanari + Cadenza). Strong with ally buff support.',
     mechanics: "Moon Phase stack (สูงสุด 4, คงอยู่ 2 เทิร์น) สะสมจาก Melody of Flames (2 stack/ครั้ง) และ Nocturne of Battle (2 stack/ครั้ง) Scarlet Hades ใช้ Moon Phase ทั้งหมดเพื่อ (stack) hits แล้วใช้ Full Moon stack ทั้งหมดเพื่อ hit เพิ่ม — ที่ 4 stack pierce rate และดาเมจเพิ่มสูงสุด Full Moon stack มาจาก Ardhanari (Fire Theurgy) Cadenza (Theurgy ที่สอง) บัฟ CRIT DMG ปาร์ตี้ + ATK ของ Makoto เอง วงจรที่ดีที่สุดใช้ Theurgy ทั้งสองเพื่อสะสม Moon Phase และ Full Moon ก่อนระเบิดด้วย Scarlet Hades",
     rotation: [
       "เทิร์น 1 → Melody of Flames (Fire DMG + Moon Phase 2 stack; บัฟตัวคูณ Scarlet Hades ถัดไปด้วย)",
@@ -2624,7 +2624,7 @@ const CHARACTERS = [
   },
   {name:'Closer (Tropical)', codename:'closer-tropical', role:'Sweeper', element:'Bless', rarity:5,
     cards:['Courage 4pc','Virtue 2pc'], weapon:'Best HP/Bless ATK weapon',
-    statPrio:['HP%','ATK%','CRIT Rate%'], note:'Bless Sweeper. Surf \'n\' Shine enters Summer Hype and enables HP-spending bonus hits on all skills. Outshine the Sun! converts max HP into flat ATK. Tropical Heart (5 heals) resets Surf \'n\' Shine cooldown.',
+    statPrio:['HP %','Attack %','Crit Rate'], note:'Bless Sweeper. Surf \'n\' Shine enters Summer Hype and enables HP-spending bonus hits on all skills. Outshine the Sun! converts max HP into flat ATK. Tropical Heart (5 heals) resets Surf \'n\' Shine cooldown.',
     mechanics: "Surf 'n' Shine เข้าสู่ Summer Hype 3 เทิร์น — ใน Summer Hype ทักษะทุกอย่างสามารถหัก HP เพื่อ extra bonus hit (HP หักเมื่อโบนัสเปิดใช้งาน) Tropical Heart ติดตามการฮีลที่รับ: ครบ 5 ครั้ง → Surf 'n' Shine ฟื้นโดยไม่เสีย SP ป้องกัน KO จากการหัก HP ซ้ำ Outshine the Sun! แปลง max HP ส่วนเกินเป็น flat ATK ถาวร (จนถึง cap) — สะสมทั้ง HP% เพื่อ survive/scaling และ ATK% เพื่อ multiplier โดยตรง",
     rotation: [
       "เทิร์น 1 → Surf 'n' Shine (เข้า Summer Hype; ทุกทักษะได้ HP-spending bonus hit 3 เทิร์น)",
@@ -2721,7 +2721,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Rin (Firecracker)',  codename:'rin-firecracker',role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['ATK%','Fire DMG%','CRIT Rate%','CRIT DMG%'],     note:'Fire Sweeper variant. Festive alternate version of Rin.',
+  {name:'Rin (Firecracker)',  codename:'rin-firecracker',role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Damage Mult','Crit Rate','Crit Mult.'],     note:'Fire Sweeper variant. Festive alternate version of Rin.',
     mechanics: "Firecracker Yaoling สะสม Year-End Flames stack บนศัตรู (สูงสุด 4) ผ่านการโจมตีด้วย Fire — แต่ละ stack เพิ่ม DoT damage บนเป้านั้น Flaming Sword Dance เปิดใช้งานช่วงจำกัดเทิร์น เปลี่ยนการโจมตีระยะประชิดเป็น Yanhua Slash (Fire hit โบนัสที่เปิด Fire Technical) ATK เพิ่มขึ้นถาวรระหว่างการต่อสู้ และได้ ATK โบนัสขนาดใหญ่เมื่อเปิด Technical รุ่นนี้เน้น single-target Fire DPS พร้อม stack damage ที่เพิ่มขึ้นเรื่อยๆ ต่างจากบทบาท debuff ของ Rin",
     rotation: [
       "เทิร์น 1 → ใช้ Fire skill เพื่อเริ่มสะสม Year-End Flames stack บนเป้าหลัก",
@@ -2819,7 +2819,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP%','Fire DMG%','ATK%'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP% over ATK%.',
+  {name:'Kiyoshi Kurotani',   codename:'KEY',            role:'Sweeper',    element:'Fire',           rarity:5, cards:['Courage 4pc','Triumph 2pc'],      weapon:'Best HP/Fire DMG weapon',                       statPrio:['HP %','Damage Mult','Attack %'],                        note:'HP-scaling Fire Sweeper. Damage scales off max HP — stack HP% over ATK%.',
     mechanics: "ดาเมจทักษะทั้งหมดของ Kiyoshi สเกลตาม max HP แทน ATK — สะสม HP% ในทุก card slot และ weapon Chosen One stack (จากการโจมตีศัตรูที่ Burned) เพิ่ม Fire และ elemental ailment damage ถาวร Sacred Flame ติด reactive DoT บนศัตรูตาม max HP และสถานะ Burn — DoT เปิดทุกครั้งที่ศัตรูที่ติดรับดาเมจ Fire เหมาะคู่กับ Fire unit ที่ติด Burn ได้สม่ำเสมอ (Panther, Howler) เพื่อรักษา Sacred Flame uptime และสะสม Chosen One",
     rotation: [
       "เทิร์น 1 → ใช้ Fire skill ที่สเกล HP เพื่อเริ่มสร้างดาเมจ (สเกลตาม max HP ไม่ใช่ ATK)",
@@ -2917,7 +2917,7 @@ const CHARACTERS = [
       },
     ],
   },
-  {name:'Mont (Frostgale)',   codename:'mont-frostgale', role:'Assassin',   element:'Wind',           element2:'Ice', rarity:5, cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Wind/Ice ATK weapon',               statPrio:['ATK%','CRIT Rate%','CRIT DMG%'],                 note:'Dual-element Wind/Ice Assassin variant. Unique frostgale mechanics merge both elements.',
+  {name:'Mont (Frostgale)',   codename:'mont-frostgale', role:'Assassin',   element:'Wind',           element2:'Ice', rarity:5, cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Wind/Ice ATK weapon',               statPrio:['Attack %','Crit Rate','Crit Mult.'],                 note:'Dual-element Wind/Ice Assassin variant. Unique frostgale mechanics merge both elements.',
     mechanics: "Frostgale Kotone สลับระหว่าง Spring (Wind) และ Winter (Ice) modes สลับได้ขณะไม่มี Edge active การใช้ Ailes au Vent/Frozen Wings เปิด Spring's/Winter's Edge 1 เทิร์น — ระหว่าง Edge ทุก ally Wind/Ice skill ให้ 1 Vestige stack และโบนัส Edge เฉพาะ (Spring: follow-up Wind hit; Winter: shield ปาร์ตี้) เมื่อ Edge หมด Vestige ทั้งหมดยิงเป็น Resonance burst แต่ละ Vestige ที่ได้เพิ่ม ATK +5% ถาวร (สูงสุด 7 stack = +35%) Swan's Gaze M2: ระหว่าง Edge ศัตรู DEF -40% (Spring) หรือปาร์ตี้ Ice DMG +30% (Winter) — เปิด Edge ก่อนเทิร์น DPS",
     rotation: [
       "Spring mode: Éclat de Vent → Zephyr (AoE, +2 Vestige) → Ailes au Vent (เปิด Spring's Edge → Wind hit ของ ally สะสม Vestige → Resonance burst สิ้นสุด Edge)",
@@ -3017,7 +3017,7 @@ const CHARACTERS = [
   },
   {name:'Wind (Tempest)', codename:'wind-tempest', role:'Strategist', element:'Wind', rarity:5,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best CRIT DMG/Support weapon (Windplum Dance)',
-    statPrio:['CRIT DMG%','CRIT Rate%','SPD'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP management unlocks full Blossoming Season potential.',
+    statPrio:['Crit Mult.','Crit Rate','Speed'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP management unlocks full Blossoming Season potential.',
     mechanics: "ATK buff และ CRIT DMG buff ทั้งหมดของ Riko สเกลตาม CRIT multiplier ของตัวเองที่เกิน 100% — ทุก 10% CRIT DMG ที่เกิน คูณค่าบัฟทุกอย่าง Blossoming Season ใช้ SP ทั้งหมด (ต่ำสุด 50, สูงสุด 200+) เพื่อผล tier: SP 50+ ให้ ATK buff, SP 100+ เพิ่ม CRIT DMG buff, SP 150+ เพิ่ม CRIT DMG อีก — ยิ่งใช้ SP มากยิ่งแรง SP ฟื้นจาก Storm of Petals (+16 SP) และ passive ของ Arrival of Spring (+12 SP ต่อ ally damage action ขณะ active) สะสม CRIT DMG% ในทุก slot เพื่อเพิ่มทุก buff",
     rotation: [
       "เทิร์น 1 → Arrival of Spring (ATK up ปาร์ตี้สเกลตาม CRIT DMG; ฟื้น SP ของ Riko ขณะ active)",
@@ -3114,7 +3114,7 @@ const CHARACTERS = [
   },
   {name:'Moko (Seaside)', codename:'moko-seaside', role:'Medic', element:'Psychokinesis', rarity:5,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
-    statPrio:['ATK%','Healing Bonus%','HP%'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
+    statPrio:['Attack %','Healing Effect','HP %'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
     mechanics: "Sparks สะสมบนศัตรู (สูงสุด 5) ทุกครั้งที่ ally ใช้ทักษะโจมตีศัตรูนั้น เมื่อครบ 5 Sparks → Summer Reminiscence Resonance เปิดอัตโนมัติ — ฮีลปาร์ตี้และลด DEF/DMG taken ของเป้าพร้อมกัน ATK สเกลค่าฮีลทั้งหมด (ไม่ใช่ HP) Power of Memories แปลงผลฮีลเป็น Psy DMG บนเป้านั้นและให้ max HP แก่ผู้รับการฮีล วงจรฮีล+debuff ทำให้ Moko เป็น support DPS ในตัวเอง",
     rotation: [
       "ใช้ทักษะโจมตีเป้าหลักบ่อยๆ เพื่อสะสม Sparks ถึง 5 เร็วขึ้น (Resonance ยิงอัตโนมัติ)",
@@ -3212,7 +3212,7 @@ const CHARACTERS = [
   // ─── 4-Star ─────────────────────────────────────────────────────────────
   {name:'Morgana', codename:'Mona', role:'Medic', element:'Wind', rarity:5,
     cards:['Peace 4pc','Opulence 2pc'], weapon:'Best ATK/CRIT weapon (Golden Legacy)',
-    statPrio:['ATK%','CRIT Rate%','HP%'], note:'Only character who can revive allies mid-battle. Highlight revives 1 KO\'d ally with 20% HP. ATK scales healing; Chivalry mechanic provides bonus healing on crits.',
+    statPrio:['Attack %','Crit Rate','HP %'], note:'Only character who can revive allies mid-battle. Highlight revives 1 KO\'d ally with 20% HP. ATK scales healing; Chivalry mechanic provides bonus healing on crits.',
     mechanics: "Morgana เป็นตัวละครเดียวที่ฟื้น ally ได้กลางการต่อสู้ — Highlight ฟื้น ally ที่ KO 1 คนที่ HP 20% Chivalry stack สะสมจากการ crit ของทักษะและการฮีล; เมื่อ stack สูง ฮีลจะแรงขึ้นและ CRIT DMG ของเทิร์นนั้นเพิ่ม Masked Gentleman passive เปิดการฮีลเพิ่มเติมทุกครั้งที่การโจมตีของ Morgana crit บนศัตรู ATK สเกลค่าฮีลทั้งหมด (ไม่ใช่ HP) รักษา HP ปาร์ตี้ให้สูงเพื่อป้องกัน KO แต่เซฟ Highlight ไว้ฟื้นในจังหวะสำคัญ",
     rotation: [
       "เทิร์น 1 → ทักษะฮีล (ฟื้น HP ปาร์ตี้; สะสม Chivalry stack จาก crit และการฮีล)",
@@ -3325,7 +3325,7 @@ const CHARACTERS = [
   },
   {name:'Yui', codename:'Bui', role:'Sweeper', element:'Electric', rarity:5,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best follow-up/Electric weapon (Cyber Jammers)',
-    statPrio:['CRIT Rate%','ATK%','CRIT DMG%'], note:'Electric Sweeper. Follow-up attack specialist — Player 2 mechanic grants ally follow-ups, Jolly Cooperation Resonance procs on every ally skill use.',
+    statPrio:['Crit Rate','Attack %','Crit Mult.'], note:'Electric Sweeper. Follow-up attack specialist — Player 2 mechanic grants ally follow-ups, Jolly Cooperation Resonance procs on every ally skill use.',
     mechanics: "Player 2 ให้ความสามารถ follow-up attack แก่ ally เป้าหมาย Jolly Cooperation Resonance proc บน ally ทุกคนที่ใช้ทักษะ (โอกาส 35%) — ยิง Electric follow-up และเพิ่ม Electric DMG taken ของศัตรูเป้า +15% เป็นเวลา 1 เทิร์น สร้าง passive Electric amplification loop ที่ทำงานแม้ในเทิร์นของ DPS อื่น สะสม CRIT Rate และ ATK เพื่อ maximize ดาเมจ follow-up ของ Yui และมูลค่า proc ของ Jolly Cooperation",
     rotation: [
       "เทิร์น 1 → Player 2 บน DPS หลัก (ให้ follow-up capability; พวกเขา proc follow-up บนทักษะตัวเอง)",
@@ -3422,7 +3422,7 @@ const CHARACTERS = [
   },
   {name:'Vino', codename:'Vino', role:'Saboteur', element:'Nuclear', rarity:4,
     cards:['Hindrance 4pc','Strife 2pc'], weapon:'Best ailment accuracy weapon (Jolting Pulse)',
-    statPrio:['Ailment Accuracy%','ATK%','SPD'], note:'Nuclear Saboteur. All DEF-shred and damage-taken debuffs scale with ailment accuracy. Radiation + elemental ailment combos amplify party Nuclear damage. Perfect Timing converts ailment accuracy into raw ATK.',
+    statPrio:['Ailment Accuracy','Attack %','Speed'], note:'Nuclear Saboteur. All DEF-shred and damage-taken debuffs scale with ailment accuracy. Radiation + elemental ailment combos amplify party Nuclear damage. Perfect Timing converts ailment accuracy into raw ATK.',
     mechanics: "DEF shred และ damage-taken debuff ทั้งหมดของ Riddle สเกลตาม ailment accuracy — ailment accuracy สูงกว่า = debuff แรงกว่า ไม่มี cap นอกจากที่ระบุในค่าสูงสุด Radiation ที่ติดจากทักษะ stack กับ elemental ailment (Burn/Freeze/Shock) เพื่อเปิด Nuclear Amplification — ศัตรูที่มี Radiation + elemental ailment รับดาเมจ Nuclear สูงขึ้นจาก ally ทุกคน Perfect Timing แปลง ailment accuracy เป็น ATK โดยตรง รักษา ailment accuracy สูงสุดเพื่อ triple scaling: debuff แรงกว่า, Radiation amplification และ ATK conversion",
     rotation: [
       "เทิร์น 1 → DEF shred skill (สเกลตาม ailment accuracy → DEF ลดมหาศาลบนทุกศัตรู)",
@@ -3519,7 +3519,7 @@ const CHARACTERS = [
   },
   {name:'Riddle', codename:'Riddle', role:'Strategist', element:'Psychokinesis', rarity:5,
     cards:['Reconciliation 4pc','Opulence 2pc'], weapon:'Best Psy ATK support weapon',
-    statPrio:['ATK%','SPD','HP%'], note:'Psy Strategist. Childish Heart stacks → Off to Treasure Hunt ATK buff. Surprise Squad grants Affection enabling party follow-up CH generation. Mystery stacks amplify Highlight damage.',
+    statPrio:['Attack %','Speed','HP %'], note:'Psy Strategist. Childish Heart stacks → Off to Treasure Hunt ATK buff. Surprise Squad grants Affection enabling party follow-up CH generation. Mystery stacks amplify Highlight damage.',
     mechanics: "Childish Heart stack มาจากทักษะของ Haruna เองและจาก Affection — เมื่อ party มี Affection ดาเมจทักษะของพวกเขาให้ Childish Heart แก่ Haruna 1 stack Surprise Squad มอบ Affection ให้ทุก ally ในปาร์ตี้ ทำให้ Childish Heart สะสมทุกครั้งที่พวกเขาใช้ทักษะ Off to Treasure Hunt ใช้ Childish Heart stack เพื่อบัฟ ATK ทุก ally (scaling) Mystery stack (ได้ต่อ Childish Heart ที่ได้) เพิ่มดาเมจ Highlight +7.8% ต่อ stack Safety in Numbers ให้โบนัส +24% เมื่อใช้ 3+ stack พร้อมกัน",
     rotation: [
       "เทิร์น 1 → Surprise Squad (มอบ Affection ทุก ally → ปาร์ตี้สะสม Childish Heart ทุก skill action)",
@@ -3614,7 +3614,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Love 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP%','Healing Bonus%','DEF%'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.',
+  {name:'Cattle',             codename:'Cattle',         role:'Medic',      element:'Fire',           rarity:4, cards:['Love 4pc','Peace 2pc'],     weapon:'Best Healing weapon',                           statPrio:['HP %','Healing Effect','Defense %'],                   note:'4★ Fire Healer. Provides consistent HP recovery for the party.',
     mechanics: "Lufel เป็นฮีลเลอร์แบบตรงไปตรงมา ทั้ง single-target และ AoE ซึ่งการฮีลสเกลตาม HP% และ Healing Bonus% Owl Fire ติด Burn บนเป้าและลด healing received (debuff role) Owl Green ฮีล ally เดี่ยวและให้ damage bonus เมื่อ ally นั้น HP ต่ำกว่า 50% Highlight ฮีลปาร์ตี้ทั้งหมดและให้ ATK buff ชั่วคราว ในฐานะฮีลเลอร์ 4★ บทบาทหลักของ Lufel คือฮีล HP ปาร์ตี้ต่อเนื่องในเนื้อหาที่ยังไม่มีฮีลเลอร์ 5★ ที่ดีกว่า",
     rotation: [
       "เทิร์น 1 → Owl Green (ฮีล single-target บน ally HP ต่ำสุด; +DMG bonus ถ้า HP < 50%)",
@@ -3712,7 +3712,7 @@ const CHARACTERS = [
   },
   {name:'Leon', codename:'Leon', role:'Guardian', element:'Nuclear', rarity:4,
     cards:['Peace 4pc','Triumph 2pc'], weapon:'Best ATK support weapon (Final Buster)',
-    statPrio:['ATK%','HP%','DEF%'], note:'Nuclear Guardian/buffer. Power of Friendship stacks amplify ally ATK and CRIT DMG. Justice Barrier converts ally HP into a shield; Energy Recharge returns that HP when the shield expires. ATK scales all shield/buff values.',
+    statPrio:['Attack %','HP %','Defense %'], note:'Nuclear Guardian/buffer. Power of Friendship stacks amplify ally ATK and CRIT DMG. Justice Barrier converts ally HP into a shield; Energy Recharge returns that HP when the shield expires. ATK scales all shield/buff values.',
     mechanics: "Power of Friendship stack สะสมจากทักษะและ action ของ ally (สูงสุด 4-5) แต่ละ stack เพิ่ม ATK และ CRIT DMG ของ ally ถาวร Justice Barrier แปลง HP ของ ally ที่เลือกเป็น shield ขนาดใหญ่ — Energy Recharge ฟื้น HP ที่เสียไปนั้นเมื่อ shield หมดหรือถูกทำลาย ATK สเกลค่า shield และโบนัสบัฟทั้งหมด ในฐานะ Nuclear Guardian Leon ให้ offensive support (ATK/CRIT DMG buffs) พร้อมรักษา survivability ปาร์ตี้ผ่าน shield ที่ HP ฟื้นได้",
     rotation: [
       "เทิร์น 1 → Power of Friendship skill (สะสม stack; แต่ละ stack ATK + CRIT DMG ของ ally เพิ่มถาวร)",
@@ -3811,7 +3811,7 @@ const CHARACTERS = [
   },
   {name:'Closer', codename:'Closer', role:'Sweeper', element:'Electric', rarity:4,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Electric DMG weapon (Quasar)',
-    statPrio:['ATK%','Electric DMG%','CRIT Rate%'], note:'4★ Electric Sweeper. Shock-focused AoE DPS — spreads Shock, exploits Technicals, and stacks Electric damage debuffs on enemies.',
+    statPrio:['Attack %','Damage Mult','Crit Rate'], note:'4★ Electric Sweeper. Shock-focused AoE DPS — spreads Shock, exploits Technicals, and stacks Electric damage debuffs on enemies.',
     mechanics: "Closer เป็น Electric AoE DPS ที่เน้น Shock Line Drive passive สะสม Electric DMG taken บนศัตรูทุกครั้งที่โจมตีด้วย Electric (stack สูงสุด = amplification ขนาดใหญ่) Electroshark เปิดใช้งานเมื่อเป้าติด Shock — เปิด Electric Technical เพื่อดาเมจโบนัส การแพร่ Shock ไปหลายศัตรูผ่านทักษะ AoE ทำให้ Line Drive stack สะสมพร้อมกันในทุกเป้า",
     rotation: [
       "เทิร์น 1 → AoE Electric skill (แพร่ Shock ทุกศัตรู; เริ่มสะสม Line Drive stack)",
@@ -3908,7 +3908,7 @@ const CHARACTERS = [
   },
   {name:'Mont', codename:'Mont', role:'Assassin', element:'Ice', rarity:4,
     cards:['Courage 4pc','Triumph 2pc'], weapon:'Best Ice ATK weapon',
-    statPrio:['ATK%','CRIT Rate%','CRIT DMG%'], note:'4★ Ice Assassin. Ice Crystal mechanic with Resonance follow-up attacks and execute damage.',
+    statPrio:['Attack %','Crit Rate','Crit Mult.'], note:'4★ Ice Assassin. Ice Crystal mechanic with Resonance follow-up attacks and execute damage.',
     mechanics: "Ice Crystal stack สะสมจากทักษะ Ice (แต่ละ hit = 1 stack) เมื่อครบ 10 stack → Resonance ยิงอัตโนมัติ (follow-up attack critical รับประกัน) Parhelion buff (จากทักษะ Frost Lily/Winter Storm) เพิ่มดาเมจและ CRIT Rate ของ Mont สำหรับการโจมตีถัดไป Durandal of Ice เป็นทักษะ execute ที่ดาเมจสูงมากต่อศัตรูที่ HP ต่ำกว่า threshold เหมาะสุดกับเนื้อหา single-boss ที่ Ice Crystal stack สะสมเร็วจากทักษะ multi-hit",
     rotation: [
       "เทิร์น 1 → Frost Lily (Ice hit + สะสม Ice Crystal + เปิด Parhelion buff)",
@@ -4005,7 +4005,7 @@ const CHARACTERS = [
   },
   {name:'Soy', codename:'Soy', role:'Guardian', element:'Ice', rarity:4,
     cards:['Love 4pc','Virtue 2pc'], weapon:'Best HP/Ice Guardian weapon',
-    statPrio:['HP%','Healing Bonus%','DEF%'], note:'4★ Ice Guardian. HP-scaling tank with party HP buff and mitigation via Desperado.',
+    statPrio:['HP %','Healing Effect','Defense %'], note:'4★ Ice Guardian. HP-scaling tank with party HP buff and mitigation via Desperado.',
     mechanics: "Soy เป็น Ice Guardian ที่สเกล HP เน้นรับดาเมจและบัฟ HP ปาร์ตี้ Desperado ให้ mitigation หลักของปาร์ตี้และบัฟ HP ปาร์ตี้ที่สเกลตาม max HP ของ Soy ในฐานะ tank บทบาทหลักของ Soy คือรับการโจมตีของศัตรู (ดึง aggro) และให้ mitigation เพื่อให้ DPS ดาเมจได้โดยไม่ตาย สะสม HP% เพื่อเพิ่ม survivability และค่าบัฟ HP-scaling ทั้งหมด",
     rotation: [
       "เทิร์น 1 → Desperado (mitigation ปาร์ตี้ active + HP buff สเกลตาม max HP ของ Soy)",
@@ -4088,7 +4088,7 @@ const CHARACTERS = [
   },
   {name:'Yuki', codename:'Yuki', role:'Guardian', element:'Bless', rarity:4,
     cards:['Triumph 4pc','Courage 2pc'], weapon:'Best DEF% Bless weapon (Karmic Cycle)',
-    statPrio:['DEF%','HP%','SPD'], note:'Bless Guardian. All damage and shields scale with DEF. Oath grants shields, DEF buffs, and enables Gavel stacks from Blessing. Cross-Examination converts DEF into party damage bonus.',
+    statPrio:['Defense %','HP %','Speed'], note:'Bless Guardian. All damage and shields scale with DEF. Oath grants shields, DEF buffs, and enables Gavel stacks from Blessing. Cross-Examination converts DEF into party damage bonus.',
     mechanics: "ดาเมจและ shield ทั้งหมดของ Yuki สเกลตาม DEF — สะสม DEF% ในทุก card slot Oath ให้ shield ปาร์ตี้, DEF buffs และเปิด Gavel stack เมื่อ ally ได้รับ Blessing effects Cross-Examination แปลง DEF ของ Yuki เป็น damage bonus ปาร์ตี้: DEF สูงขึ้น = ปาร์ตี้ดาเมจโบนัสมากขึ้น Yuki จึงเป็น tank หายากที่เพิ่มดาเมจปาร์ตี้ผ่านการสะสม DEF",
     rotation: [
       "เทิร์น 1 → Oath (shield ปาร์ตี้, DEF buff, เปิด Gavel stack จาก Blessing)",
@@ -4183,10 +4183,10 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Key',                codename:'Key',            role:'Saboteur',   element:'Fire',           rarity:4, cards:['Hindrance 4pc','Strife 2pc'],    weapon:'Best Fire debuff weapon',                       statPrio:['ATK%','SPD','DEF%'],                             note:'4★ Fire Saboteur. Applies debuffs to reduce enemy Fire resistance.'},
+  {name:'Key',                codename:'Key',            role:'Saboteur',   element:'Fire',           rarity:4, cards:['Hindrance 4pc','Strife 2pc'],    weapon:'Best Fire debuff weapon',                       statPrio:['Attack %','Speed','Defense %'],                             note:'4★ Fire Saboteur. Applies debuffs to reduce enemy Fire resistance.'},
   {name:'Moko', codename:'Moko', role:'Medic', element:'Psychokinesis', rarity:4,
     cards:['Love 4pc','Opulence 2pc'], weapon:'Best Healing/Psy weapon (Bubble Babies)',
-    statPrio:['ATK%','Healing Bonus%','HP%'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
+    statPrio:['Attack %','Healing Effect','HP %'], note:'Psy Medic. Sparks → Summer Reminiscence Resonance cycles heal and debuff simultaneously. ATK scales all healing; Power of Memories grants Psy DMG and HP from healing output.',
     mechanics: "รุ่น 4★ ของ Moko ใช้วงจร Sparks → Summer Reminiscence Resonance เดียวกับรุ่น 5★ แต่ตัวคูณต่ำกว่า Sparks สะสมบนศัตรูจากดาเมจทักษะของ ally (สูงสุด 5 stack); ครบ 5 stack → Summer Reminiscence Resonance ยิงอัตโนมัติ — ฮีลปาร์ตี้และ debuff ศัตรูพร้อมกัน Power of Memories แปลงผลฮีลเป็น Psy DMG และ max HP เพิ่ม สะสม ATK% เป็นหลัก — ATK สเกลทั้ง Psy attack ของ Moko และค่าฮีลทุกอย่าง",
     rotation: [
       "เทิร์น 1 → Psy skill บนเป้าหลัก (สร้างดาเมจ + สะสม Sparks บนเป้า)",
@@ -4281,7 +4281,7 @@ const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Sepia',              codename:'Sepia',          role:'Assassin',   element:'Curse',          rarity:4, cards:['Reconciliation 4pc','Opulence 2pc'],  weapon:'Best Curse ATK weapon',                         statPrio:['ATK%','SPD','HP%'],                              note:'4★ Curse Assassin. High-speed burst damage with Curse element.',
+  {name:'Sepia',              codename:'Sepia',          role:'Assassin',   element:'Curse',          rarity:4, cards:['Reconciliation 4pc','Opulence 2pc'],  weapon:'Best Curse ATK weapon',                         statPrio:['Attack %','Speed','HP %'],                              note:'4★ Curse Assassin. High-speed burst damage with Curse element.',
     mechanics: "Sepia มี Verse 3 ประเภท (Hate/Healing/Passion) ที่สะสมจากทักษะต่างกัน Sonnet of Fate Resonance ใช้ Verse stack และเปิด secondary effect เฉพาะต่อประเภท: Hate = ติด Curse, Healing = ฟื้น HP, Passion = ดาเมจ Almighty โบนัส This Beautiful Woman passive เพิ่มดาเมจ Sonnet +10% ต่อ Verse stack ที่ใช้ SPD สูงเร่ง Verse generation ทำให้วงจร Resonance เร็วขึ้น ในฐานะ Curse Assassin 4★ Sepia แลก burst potential กับ high-speed cycling ที่สม่ำเสมอ",
     rotation: [
       "เทิร์น 1 → Hate Verse skill (Curse DMG + สะสม Hate stack สำหรับ Resonance ติด Curse)",
@@ -4381,7 +4381,7 @@ const CHARACTERS = [
   },
   {name:'Puppet', codename:'Puppet', role:'Elucidator', element:'-', rarity:4,
     cards:['Love 4pc','Peace 2pc'], weapon:'Best DEF/HP support weapon',
-    statPrio:['DEF%','HP%','SPD'], note:"Elucidator. Seashell stack system: granting shields adds Seashell stacks, which amplify future shields (Whispering Waves) and boost allies' DEF (I'll Protect You!). Stat Buff shares 15% of Phantom Thief's stats. Tide of Dreams grants damage up at 4+ Seashell stacks.",
+    statPrio:['Defense %','HP %','Speed'], note:"Elucidator. Seashell stack system: granting shields adds Seashell stacks, which amplify future shields (Whispering Waves) and boost allies' DEF (I'll Protect You!). Stat Buff shares 15% of Phantom Thief's stats. Tide of Dreams grants damage up at 4+ Seashell stacks.",
     mechanics: "Puppet (Miyu) ใช้ระบบ Seashell stack ที่ทุกครั้งที่มอบ shield ให้ปาร์ตี้จะเพิ่ม stack (สูงสุด 6-8) Seashell stack เพิ่มพลัง shield ในอนาคตผ่าน Whispering Waves (+1% shield ต่อ stack) Milestone bonus เปิดที่ 2/4/6 stack: DEF+8%, ATK+8%, DEF+12% ตามลำดับ Guardian of the Sea เพิ่ม Seashell stack อัตโนมัติทุกครั้งที่มอบ shield ในฐานะ Elucidator 4★ Miyu support ด้วย shield ที่เพิ่มขึ้นเรื่อยๆ และแชร์ stat ผ่าน Stat Buff",
     rotation: [
       "เทิร์น 1 → Shield skill (มอบ shield ปาร์ตี้; เปิด Seashell stack + auto-Seashell จาก Guardian of the Sea)",
@@ -4466,7 +4466,7 @@ const CHARACTERS = [
   },
   {name:'Okyann', codename:'Okyann', role:'Elucidator', element:'-', rarity:4,
     cards:['Opulence 4pc','Reconciliation 2pc'], weapon:'Best ATK support weapon (Retro Disco Style)',
-    statPrio:['ATK%','SPD','HP%'], note:"Elucidator. Beat stack system triggers Resonance (Pulsating Rhythm ATK/DEF/ailment accuracy buff). Retro Dance Number amplifies damage dealt to ailment-inflicted foes ×1.5. Stat Buff shares 15% of Phantom Thief's stats.",
+    statPrio:['Attack %','Speed','HP %'], note:"Elucidator. Beat stack system triggers Resonance (Pulsating Rhythm ATK/DEF/ailment accuracy buff). Retro Dance Number amplifies damage dealt to ailment-inflicted foes ×1.5. Stat Buff shares 15% of Phantom Thief's stats.",
     mechanics: "Okyann สะสม Beat stack passive (จากดาเมจทักษะของปาร์ตี้และ Retro Dance Number) เมื่อครบ 4+ Beat stack → Pulsating Rhythm Resonance ยิง — ให้ ATK/DEF/ailment accuracy buff ปาร์ตี้ที่สเกลตาม stat ของ Okyann เอง (buff เพิ่มขึ้นที่ Lv 50 และ 70 ของตัวละคร) Retro Dance Number คูณดาเมจปาร์ตี้ 1.5× ต่อศัตรูที่ติด ailment Stat Buff แชร์ 15% ของ stat ของ Okyann ให้ทุก ally ในฐานะ Elucidator 4★ Okyann โดดเด่นใน composition ที่เน้น ailment",
     rotation: [
       "เทิร์น 1 → ทักษะที่สะสม Beat stack (passive จาก party action หรือ stack generation โดยตรง)",
@@ -4790,8 +4790,8 @@ function getRoleArchetype(role) {
   return 'support'
 }
 
-const statMap = {'ATK%':'atk','Crit Rate':'crit','Crit Mult.':'cdmg','HP%':'hp','DEF%':'def','Healing Bonus%':'heal','SPD':'spd'}
-const statLabels = {atk:'ATK%',crit:'CRIT Rate%',cdmg:'CRIT DMG%',edm:'Elem DMG%',hp:'HP%',def:'DEF%',heal:'Healing%',spd:'SPD'}
+const statMap = {'Attack %':'atk','Crit Rate':'crit','Crit Mult.':'cdmg','HP %':'hp','Defense %':'def','Healing Effect':'heal','Speed':'spd','Damage Mult':'edm','Ailment Accuracy':'ailm'}
+const statLabels = {atk:'Attack %',crit:'Crit Rate',cdmg:'Crit Mult.',edm:'Damage Mult',hp:'HP %',def:'Defense %',heal:'Healing Effect',spd:'Speed'}
 
 function parseHiddenAbility(str) {
   if (!str) return {}
