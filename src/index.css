@@ -465,7 +465,9 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 
 /* ── CARD REQUIREMENTS TABLE ── */
 .req-table { display:flex; flex-direction:column; gap:0; margin-top:4px; font-size:0.7rem; }
-.req-row { display:grid; grid-template-columns:1fr 0.9fr 0.7fr 0.8fr 0.8fr; gap:3px; align-items:center; padding:3px 2px; border-bottom:1px solid #111; }
+.req-row { display:grid; grid-template-columns:1fr 0.9fr 0.7fr 0.8fr; gap:3px; align-items:center; padding:3px 2px; border-bottom:1px solid #111; }
+.sim-row, .sim-hdr { grid-template-columns:1.1fr 0.8fr 0.7fr 0.65fr 0.7fr 0.8fr; }
+.sim-hdr { font-size:0.6rem; color:var(--p5x-muted); font-weight:700; padding-bottom:4px; }
 .req-hdr { font-size:0.6rem; color:var(--p5x-muted); font-weight:700; padding-bottom:4px; }
 .req-c-stat { color:var(--p5x-text); font-size:0.68rem; }
 .req-c-tgt { color:#aaa; }

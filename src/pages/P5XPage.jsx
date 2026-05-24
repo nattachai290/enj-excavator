@@ -5764,6 +5764,83 @@ export default function P5XPage() {
                   )
                 })()}
 
+                {/* ── SIMULATION ──────────────────────────────────────────── */}
+                {charTgt && (() => {
+                  const UPGRADES = 4
+                  const simEntries = Object.entries(charTgt)
+                    .filter(([,[,w]]) => w > 0)
+                    .sort((a, b) => b[1][1] - a[1][1])
+                  if (!simEntries.length) return null
+
+                  // Greedy: assign best main stat per slot by weight priority
+                  const mainContrib = {}
+                  const usedSlot = new Set()
+                  for (const [k] of simEntries) {
+                    for (const slot of CARD_SLOTS) {
+                      if (usedSlot.has(slot.id)) continue
+                      const ms = slot.mainStats.find(m => m.key === k)
+                      if (ms) { mainContrib[k] = ms.max; usedSlot.add(slot.id); break }
+                    }
+                  }
+
+                  // Sub stats: 1 slot per stat per card × UPGRADES rolls at best tier
+                  const subContrib = {}
+                  for (const [k] of simEntries) {
+                    const spaceEntry = Object.entries(CARD_SUB_STATS.Space).find(([l]) => SUB_STAT_KEY[l] === k)
+                    const otherEntry = Object.entries(CARD_SUB_STATS._other).find(([l]) => SUB_STAT_KEY[l] === k)
+                    const spaceRate = spaceEntry?.[1]?.[0] || 0
+                    const otherRate = otherEntry?.[1]?.[0] || 0
+                    subContrib[k] = (spaceRate + 4 * otherRate) * UPGRADES
+                  }
+
+                  const msBonus = (charStage?.includes('M5') && currentChar?.mindscapeBonus) ? currentChar.mindscapeBonus : {}
+                  const base0 = (() => {
+                    const s = computeStats(currentChar, selectedWeaponIdx ?? 0, weaponRefine)
+                    const all = {...s}
+                    Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
+                    return all
+                  })()
+
+                  const fmt = (k, v) => k === 'spd' ? Math.round(v) : v.toFixed(0) + '%'
+                  const fmtD = (k, v) => k === 'spd' ? `+${Math.round(v)}` : `+${v.toFixed(0)}%`
+
+                  return (
+                    <div className="info-panel">
+                      <div className="info-label">🧮 ประมาณการ (main + sub แนะนำ)</div>
+                      <div className="req-table">
+                        <div className="req-row req-hdr sim-hdr">
+                          <span>Stat</span>
+                          <span>target</span>
+                          <span>มีแล้ว</span>
+                          <span>main</span>
+                          <span>sub ×{UPGRADES}</span>
+                          <span>รวม</span>
+                        </div>
+                        {simEntries.map(([k, [ideal]]) => {
+                          const have = base0[k] || 0
+                          const main = mainContrib[k] || 0
+                          const sub  = subContrib[k] || 0
+                          const total = have + main + sub
+                          const reach = total >= ideal
+                          return (
+                            <div key={k} className="req-row sim-row">
+                              <span className="req-c-stat">{statLabels[k]||k}</span>
+                              <span style={{color:'#aaa'}}>{fmt(k,ideal)}</span>
+                              <span style={{color:'#555'}}>{fmt(k,have)}</span>
+                              <span style={{color: main>0 ? '#7a9' : '#444'}}>{main>0 ? fmtD(k,main) : '—'}</span>
+                              <span style={{color: sub>0 ? '#7a9' : '#444'}}>{sub>0 ? fmtD(k,sub) : '—'}</span>
+                              <span style={{color: reach ? '#00ff88' : '#ff7a8a', fontWeight:700}}>
+                                {fmt(k,total)}{reach ? ' ✓' : ' ✗'}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className="req-note">sub = 1 slot ต่อ card ต่อ stat (5 cards) × {UPGRADES} upgrades · ไม่รวม in-battle passive</div>
+                    </div>
+                  )
+                })()}
+
                 <div className="info-panel">
                   <div className="info-label" style={{display:'flex',alignItems:'center',gap:8}}>
                     <span>⚔️ Recommended Weapon</span>
