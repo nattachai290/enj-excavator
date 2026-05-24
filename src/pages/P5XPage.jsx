@@ -3087,7 +3087,7 @@ const CHARACTERS = [
     weapons:[
       {name:'Windplum Dance', stars:5,
         hp:2398, atk:647, def:423,
-        bonusStats:{},
+        bonusStats:{cdmg:36.3},
         abilityName:'Windplum Dance',
         ability:[
           'Increase critical damage by 36.3%/36.3%/47.2%/47.2%/58.1%/58.1%/69.0%.',
