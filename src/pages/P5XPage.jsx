@@ -5593,8 +5593,8 @@ export default function P5XPage() {
                                         <span className="rec-detail-desc">{p.desc}</span>
                                         {setData && (
                                           <div className="rec-detail-set">
-                                            <span className="rec-detail-set-badge">2pc</span>{setData.bonus2}
-                                            {setData.bonus4 && <><span className="rec-detail-set-badge rec-detail-set-4pc">4pc</span>{setData.bonus4}</>}
+                                            <div className="rec-detail-set-line"><span className="rec-detail-set-badge">2pc</span>{setData.bonus2}</div>
+                                            {setData.bonus4 && <div className="rec-detail-set-line"><span className="rec-detail-set-badge rec-detail-set-4pc">4pc</span>{setData.bonus4}</div>}
                                           </div>
                                         )}
                                       </div>
