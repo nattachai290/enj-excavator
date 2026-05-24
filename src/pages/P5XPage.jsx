@@ -2017,7 +2017,7 @@ const CHARACTERS = [
         desc:"Wonder's skill and Thief Tactics levels increase by 1 more. Desire Level +20%. At battle start, gain True Desire (regained every 8 actions after spending). At start of J&C's turn, spend 1 True Desire to enhance the next Two Masks as One: activate ALL 6 Facade combos simultaneously + deal 8 hits of bonus Almighty damage to main target (40% ATK each, 1 hit per element; +1% per DL).",
         descTh:"เพิ่มระดับสกิลและ Thief Tactics ของ Wonder อีก 1 Desire Level +20% เมื่อเริ่มต้นการต่อสู้ รับ True Desire (ได้รับคืนทุก 8 แอ็คชันหลังใช้) ต้นเทิร์น J&C ใช้ True Desire 1 stack เพื่อเพิ่มพลัง Two Masks as One ถัดไป: เปิดใช้คอมโบ Facade ทั้ง 6 แบบพร้อมกัน + ดีลดาเมจโบนัสอัลไมตี้ต่อเป้าหมายหลัก 8 ครั้ง (40% ATK ต่อครั้ง 1 ครั้งต่อธาตุ; +1% ต่อ DL)"},
     ],
-    baseStats: {hp:417, atk:113, def:77, spd:100, crit:5, cdmg:174, edm:16, meleeMulti:128, rangedMulti:122.3, rangedAcc:91, rangedCrit:53.33},
+    baseStats: {hp:417, atk:113, def:77, spd:100, crit:5, cdmg:150, meleeMulti:128, rangedMulti:122.3, rangedAcc:91, rangedCrit:53.33},
     baseStatsLv80: [
       {hp:3600, atk:1000, def:667, spd:0},
       {hp:3665, atk:1018, def:679, spd:0},
