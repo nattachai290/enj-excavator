@@ -426,7 +426,7 @@ const CHARACTERS = [
         desc:"When attacking foes with Fire skills, 60% chance to gain 1 Passion stack.\nWhen La Vie en Rose is active, increase Fire damage by 11% per Passion stack spent (up to 110%).",
         descTh:"เมื่อโจมตีศัตรูด้วยสกิลธาตุไฟ โอกาส 60% รับ 1 Passion stack\nเมื่อ La Vie en Rose ทำงาน เพิ่มความเสียหายธาตุไฟ 11% ต่อ Passion stack ที่ใช้ (สูงสุด 110%)"},
     ],
-    baseStats:     {hp:288, atk:107, def:55, spd:94},
+    baseStats:     {hp:288, atk:107, def:55, spd:94, crit:5, cdmg:150},
     baseStatsLv80: [
       {hp:3240, atk:1210, def:620, spd:94},
       {hp:3298, atk:1232, def:631, spd:94},
