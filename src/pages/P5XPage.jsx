@@ -3096,7 +3096,7 @@ const CHARACTERS = [
         desc:"Blossoming Season affects all allies besides Riko. When main target uses a skill, immediately activate Storm of Petals once (once per Blossoming Season). Falling Petals duration +1 turn. While Riko is on field: for every 1% CRIT Rate over 100% on any ally, increase that damage's CRIT DMG by 2%.",
         descTh:"Blossoming Season ส่งผลต่อพันธมิตรทั้งหมดยกเว้น Riko เมื่อเป้าหมายหลักใช้สกิล เปิดใช้ Storm of Petals 1 ครั้งทันที (1 ครั้งต่อการใช้ Blossoming Season) Falling Petals ยาวขึ้น 1 เทิร์น ขณะ Riko อยู่ในสนาม: ต่อ CRIT Rate 1% เกิน 100% ของพันธมิตรใดก็ตาม เพิ่ม CRIT DMG ของดาเมจนั้น 2%"},
     ],
-    baseStats: {hp:323, atk:87, def:56, spd:104},
+    baseStats: {hp:323, atk:87, def:56, spd:104, cdmg:150},
     baseStatsLv80: [
       {hp:3630, atk:980, def:640, spd:0},
       {hp:3696, atk:998, def:651, spd:0},
@@ -4893,7 +4893,7 @@ function getSpacePassiveBonus(char, stats) {
 }
 
 function computeStats(char, weaponIdx, refine = 0) {
-  const s = {atk:0, crit:0, cdmg:150, hp:0, def:0, edm:0, heal:0, spd: char?.baseStats?.spd || 0}
+  const s = {atk:0, crit:0, cdmg: char?.baseStats?.cdmg || 0, hp:0, def:0, edm:0, heal:0, spd: char?.baseStats?.spd || 0}
   if (!char) return s
   char.cards.forEach(cardStr => {
     const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
