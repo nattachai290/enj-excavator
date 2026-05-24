@@ -4926,8 +4926,9 @@ export default function P5XPage() {
   const [userStats, setUserStats] = useState({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0})
   const [skillLevel, setSkillLevel] = useState(3)
   const [charStage, setCharStage] = useState(null)
+  const [openSpaceCard, setOpenSpaceCard] = useState(null)
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null) }, [charName])
+  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null) }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -5602,29 +5603,45 @@ export default function P5XPage() {
                       .slice(0, 3)
                     return (
                       <div className="rec-cards-list">
-                        {ranked.map(({card, score}, ri) => {
+                        {ranked.map(({card}, ri) => {
                           const medals = ['🥇','🥈','🥉']
+                          const isOpen = openSpaceCard === card.name
+                          const usedSets = (currentChar.cards || []).map(cs => { const m = cs.match(/^(.+?)\s+(2|4)pc$/i); return m ? m[1].trim() : null }).filter(Boolean)
+                          const charElements = [currentChar.element, currentChar.element2].filter(Boolean)
                           return (
                             <div key={card.name} className={'rec-card-item' + (ri === 0 ? ' rec-top' : '')}>
-                              <div className="rec-card-header">
+                              <div className="rec-card-header" style={{cursor:'pointer'}} onClick={() => setOpenSpaceCard(isOpen ? null : card.name)}>
                                 <span className="rec-medal">{medals[ri]}</span>
                                 <span className="rec-card-name">{card.name}</span>
-                                {score > 0 && <span className="rec-score">{score.toFixed(0)}pt</span>}
+                                <div className="rec-passives" style={{flex:1}}>
+                                  {card.passives.map(p => {
+                                    const { elements: pElements, ...pStatWeights } = PASSIVE_STAT_MAP[p.name] || {}
+                                    const elementOk = !pElements || charElements.length === 0 || pElements.some(e => charElements.includes(e))
+                                    const relevant = charTgt && elementOk && (Object.keys(pStatWeights).some(k => charTgt[k]?.[1] > 0) || usedSets.includes(p.name))
+                                    return (
+                                      <span key={p.name} className={'rec-passive' + (relevant ? ' rec-passive-hit' : '')}>
+                                        {p.name}
+                                      </span>
+                                    )
+                                  })}
+                                </div>
+                                <span className="rec-toggle-arrow">{isOpen ? '▲' : '▼'}</span>
                               </div>
-                              <div className="rec-passives">
-                                {card.passives.map(p => {
-                                  const { elements: pElements, ...pStatWeights } = PASSIVE_STAT_MAP[p.name] || {}
-                                  const usedSets = (currentChar.cards || []).map(cs => { const m = cs.match(/^(.+?)\s+(2|4)pc$/i); return m ? m[1].trim() : null }).filter(Boolean)
-                                  const charElements = [currentChar.element, currentChar.element2].filter(Boolean)
-                                  const elementOk = !pElements || charElements.length === 0 || pElements.some(e => charElements.includes(e))
-                                  const relevant = charTgt && elementOk && (Object.keys(pStatWeights).some(k => charTgt[k]?.[1] > 0) || usedSets.includes(p.name))
-                                  return (
-                                    <span key={p.name} className={'rec-passive' + (relevant ? ' rec-passive-hit' : '')}>
-                                      {p.name}
-                                    </span>
-                                  )
-                                })}
-                              </div>
+                              {isOpen && (
+                                <div className="rec-card-detail">
+                                  {card.passives.map(p => {
+                                    const { elements: pElements, ...pStatWeights } = PASSIVE_STAT_MAP[p.name] || {}
+                                    const elementOk = !pElements || charElements.length === 0 || pElements.some(e => charElements.includes(e))
+                                    const relevant = charTgt && elementOk && (Object.keys(pStatWeights).some(k => charTgt[k]?.[1] > 0) || usedSets.includes(p.name))
+                                    return (
+                                      <div key={p.name} className={'rec-detail-row' + (relevant ? ' rec-detail-hit' : '')}>
+                                        <span className="rec-detail-name">{p.name}</span>
+                                        <span className="rec-detail-desc">{p.desc}</span>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              )}
                             </div>
                           )
                         })}
