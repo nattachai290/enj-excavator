@@ -3074,7 +3074,7 @@ const CHARACTERS = [
         descTh:"ระหว่างการต่อสู้ เพิ่ม CRIT DMG และ HP ตาม SP Recovery ของ Riko ที่ SP Recovery สูงสุด 450%: CRIT DMG +84%, HP +1800"},
     ],
     awareness:[
-      {name:'Fragrant Gale',
+      {name:'Fragrant Gale', stats:{spr:60},
         desc:"Increase Riko's max SP to 200 and SP Recovery by 60%. When using a skill to restore own SP, the amount is affected by SP Recovery.",
         descTh:"เพิ่ม SP สูงสุดของ Riko เป็น 200 และ SP Recovery +60% เมื่อใช้สกิลเพื่อคืน SP ตัวเอง ปริมาณที่ได้รับจะถูกคูณด้วย SP Recovery"},
       {name:'Colors of Dawn',
@@ -4898,6 +4898,9 @@ function computeStats(char, weaponIdx, refine = 0) {
   // Hidden ability (character-level passive stat bonus)
   const hidden = parseHiddenAbility(char.hiddenAbility)
   Object.entries(hidden).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
+  // A0 awareness stats (always active)
+  const a0Stats = char.awareness?.[0]?.stats || {}
+  Object.entries(a0Stats).forEach(([k,v]) => { s[k] = (s[k]||0)+v })
   return s
 }
 
@@ -5733,6 +5736,10 @@ export default function P5XPage() {
                         const hStats = parseHiddenAbility(currentChar.hiddenAbility)
                         const hContrib = Object.fromEntries(Object.entries(hStats).filter(([k]) => trackedKeys.has(k)))
                         if (Object.keys(hContrib).length) sources.push({ label:'Hidden ability', contrib:hContrib })
+                        const a0Stats = currentChar.awareness?.[0]?.stats || {}
+                        const a0Contrib = Object.fromEntries(Object.entries(a0Stats).filter(([k]) => trackedKeys.has(k)))
+                        const a0Name = currentChar.awareness?.[0]?.name
+                        if (a0Name && Object.keys(a0Contrib).length) sources.push({ label:`A0: ${a0Name}`, contrib:a0Contrib })
                         if (Object.keys(msBonus).length) {
                           const mContrib = Object.fromEntries(Object.entries(msBonus).filter(([k]) => trackedKeys.has(k)))
                           if (Object.keys(mContrib).length) sources.push({ label:'Mindscape (M5)', contrib:mContrib })
