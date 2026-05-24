@@ -5693,17 +5693,7 @@ export default function P5XPage() {
                     Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
                     return all
                   }
-                  const base0 = applyMs(computeStats(currentChar, selectedWeaponIdx ?? 0, 0))
-                  const base6 = applyMs(computeStats(currentChar, selectedWeaponIdx ?? 0, 6))
-                  const lv80all2 = Array.isArray(currentChar.baseStatsLv80)
-                    ? currentChar.baseStatsLv80
-                    : currentChar.baseStatsLv80 ? [currentChar.baseStatsLv80] : []
-                  const lv80_A0 = lv80all2[0]
-                  const lv80_A6 = lv80all2[lv80all2.length - 1]
-                  const scalesDiff = entries.some(([k]) => {
-                    const b0 = base0[k] || 0; const b6 = base6[k] || 0
-                    return Math.abs(b6 - b0) >= 1
-                  })
+                  const base0 = applyMs(computeStats(currentChar, selectedWeaponIdx ?? 0, weaponRefine))
                   return (
                     <div className="info-panel">
                       <div className="info-label">📊 Card Requirements</div>
@@ -5729,7 +5719,7 @@ export default function P5XPage() {
                           )
                         })}
                       </div>
-                      <div className="req-note">มีแล้ว = set + weapon (0★) + hidden ability{charStage?.includes('M5') ? ' + Mindscape bonus' : ''}.</div>
+                      <div className="req-note">มีแล้ว = set + weapon ({weaponRefine}★) + hidden ability{charStage?.includes('M5') ? ' + Mindscape bonus' : ''}.</div>
                     </div>
                   )
                 })()}
