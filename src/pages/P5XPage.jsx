@@ -2497,7 +2497,7 @@ const CHARACTERS = [
         desc:"Restore a KO'd ally's HP equal to 40% of Minami's max HP + 1200. This effect can be activated once per battle.",
         descTh:"ฟื้นฟู HP ของพันธมิตรที่ KO เท่ากับ 40% ของ HP สูงสุด Minami + 1200 เอฟเฟกต์นี้เปิดใช้ได้ครั้งเดียวต่อการต่อสู้"},
     ],
-    baseStats: {hp:368, atk:80, def:59, spd:94},
+    baseStats: {hp:368, atk:80, def:59, spd:94, crit:5, cdmg:150, heal:20.9, meleeMulti:115, rangedMulti:16.7, rangedAcc:90, rangedCrit:5.93},
     baseStatsLv80: [
       {hp:4140, atk:910, def:673, spd:0},
       {hp:4214, atk:926, def:685, spd:0},
@@ -4893,7 +4893,7 @@ function getSpacePassiveBonus(char, stats) {
 }
 
 function computeStats(char, weaponIdx, refine = 0) {
-  const s = {atk:0, crit: char?.baseStats?.crit || 0, cdmg: char?.baseStats?.cdmg || 0, hp:0, def:0, edm: char?.baseStats?.edm || 0, heal:0, spd: char?.baseStats?.spd || 0, ailm: char?.baseStats?.ailm || 0, dmgred: char?.baseStats?.dmgred || 0, dmgDown: char?.baseStats?.dmgDown || 0}
+  const s = {atk:0, crit: char?.baseStats?.crit || 0, cdmg: char?.baseStats?.cdmg || 0, hp:0, def:0, edm: char?.baseStats?.edm || 0, heal: char?.baseStats?.heal || 0, spd: char?.baseStats?.spd || 0, ailm: char?.baseStats?.ailm || 0, dmgred: char?.baseStats?.dmgred || 0, dmgDown: char?.baseStats?.dmgDown || 0}
   if (!char) return s
   char.cards.forEach(cardStr => {
     const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
