@@ -147,7 +147,7 @@ const CARD_SLOTS = [
     {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
     {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
     {label:'Speed',          key:'spd',  min:3.1,  max:20.3, unit:''},
-    {label:'SP Recovery',    key:null,   min:13.6, max:90.4, unit:'%'},
+    {label:'SP Recovery',    key:'spr',  min:13.6, max:90.4, unit:'%'},
   ]},
 ]
 
@@ -4931,8 +4931,9 @@ export default function P5XPage() {
   const [charStage, setCharStage] = useState(null)
   const [openSpaceCard, setOpenSpaceCard] = useState(null)
   const [subAlloc, setSubAlloc] = useState({})
+  const [mainStatSel, setMainStatSel] = useState({})
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}) }, [charName])
+  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, edm:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}) }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -5882,80 +5883,134 @@ export default function P5XPage() {
                     return all
                   })()
 
-                  // lookup sub stat best-tier value by stat key
-                  const getSubTier1 = (k, pool) => {
-                    const p = pool === 'Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
-                    const entry = Object.entries(p).find(([l]) => SUB_STAT_KEY[l] === k)
-                    return entry?.[1]?.[0] || 0
+                  const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
+                  const getSubTier1 = (k, slotId) => {
+                    const pool = slotId === 'Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+                    return Object.entries(pool).find(([l]) => SUB_STAT_KEY[l] === k)?.[1]?.[0] || 0
                   }
-
-                  const bump = (k, field, delta, max) =>
+                  const bump = (k, slotId, delta) =>
                     setSubAlloc(prev => {
-                      const cur = prev[k] || {space:0, other:0}
-                      return {...prev, [k]: {...cur, [field]: Math.min(max, Math.max(0, (cur[field]||0) + delta))}}
+                      const cur = (prev[k] || {})
+                      return {...prev, [k]: {...cur, [slotId]: Math.min(4, Math.max(0, (cur[slotId]||0) + delta))}}
                     })
 
-                  // SPR summary
-                  const sprAlloc = subAlloc['spr'] || {space:0, other:0}
-                  const sprSub = getSubTier1('spr','Space') * 4 * sprAlloc.space + getSubTier1('spr','other') * 4 * sprAlloc.other
-                  const totalSpr = (base0.spr || 0) + sprSub
+                  // main stat from selection
+                  const mainFromSel = {}
+                  const selectableSlots = CARD_SLOTS.filter(slot =>
+                    slot.mainStats.some(ms => ms.key && simEntries.some(([k]) => k === ms.key))
+                  )
+                  Object.entries(mainStatSel).forEach(([slotId, label]) => {
+                    if (!label) return
+                    const slot = CARD_SLOTS.find(s => s.id === slotId)
+                    const ms = slot?.mainStats.find(m => m.label === label)
+                    if (ms?.key) mainFromSel[ms.key] = (mainFromSel[ms.key]||0) + ms.max
+                  })
+
+                  // sub contribution per stat
+                  const subFromAlloc = {}
+                  simEntries.forEach(([k]) => {
+                    subFromAlloc[k] = SLOT_IDS.reduce((sum, slotId) => {
+                      const rolls = (subAlloc[k] || {})[slotId] || 0
+                      return sum + getSubTier1(k, slotId) * rolls
+                    }, 0)
+                  })
+
+                  const fmt = (k, v) => k === 'spd' ? Math.floor(v) : Math.floor(v) + '%'
+
+                  // SPR & Sun-kissed Blooms
+                  const totalSpr = (base0.spr||0) + (mainFromSel.spr||0) + (subFromAlloc.spr||0)
                   const spPerCast = 16 * (1 + totalSpr / 100)
                   const sp2Round = spPerCast * 2
+                  const hasSunKissed = currentChar?.skills?.some(s => s.name === 'Sun-kissed Blooms')
+                  const sunKissedCdmg = hasSunKissed ? parseFloat((84 * Math.min(totalSpr, 450) / 450).toFixed(1)) : 0
 
                   return (
                     <div className="info-panel">
-                      <div className="info-label">🎛️ จำลอง Sub Stat</div>
-                      <div className="alloc-table">
-                        <div className="alloc-hdr">
-                          <span>Stat</span>
-                          <span>Space<br/><span style={{fontSize:'0.6rem',color:'#666'}}>max 1</span></span>
-                          <span>Other<br/><span style={{fontSize:'0.6rem',color:'#666'}}>max 4</span></span>
-                          <span>รวมจาก sub</span>
-                          <span>total</span>
-                          <span>target</span>
-                        </div>
-                        {simEntries.map(([k, [ideal]]) => {
-                          const alloc = subAlloc[k] || {space:0, other:0}
-                          const sv = getSubTier1(k, 'Space')
-                          const ov = getSubTier1(k, 'other')
-                          const subVal = sv * 4 * alloc.space + ov * 4 * alloc.other
-                          const total = (base0[k] || 0) + subVal
-                          const reach = total >= ideal
-                          const fmt = v => k === 'spd' ? Math.floor(v) : Math.floor(v) + '%'
-                          return (
-                            <div key={k} className="alloc-row">
-                              <span className="alloc-stat">{statLabels[k]||k}</span>
-                              <span className="alloc-ctrl">
-                                <button className="alloc-btn" onClick={() => bump(k,'space',-1,1)}>−</button>
-                                <span className="alloc-num">{alloc.space}</span>
-                                <button className="alloc-btn" onClick={() => bump(k,'space',+1,1)}>+</button>
-                                {sv > 0 && <span className="alloc-hint">{sv}%</span>}
-                              </span>
-                              <span className="alloc-ctrl">
-                                <button className="alloc-btn" onClick={() => bump(k,'other',-1,4)}>−</button>
-                                <span className="alloc-num">{alloc.other}</span>
-                                <button className="alloc-btn" onClick={() => bump(k,'other',+1,4)}>+</button>
-                                {ov > 0 && <span className="alloc-hint">{ov}%</span>}
-                              </span>
-                              <span style={{color: subVal>0?'#7a9':'#444'}}>{subVal>0?'+'+fmt(subVal):'—'}</span>
-                              <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700}}>{fmt(total)}</span>
-                              <span style={{color:'#555'}}>{fmt(ideal)}</span>
+                      <div className="info-label">🎛️ จำลอง Card Stats</div>
+
+                      {/* Main stat selection */}
+                      {selectableSlots.length > 0 && (
+                        <div style={{marginBottom:10}}>
+                          <div className="alloc-section-label">Main Stat</div>
+                          {selectableSlots.map(slot => (
+                            <div key={slot.id} style={{display:'flex', alignItems:'center', gap:5, marginBottom:4, flexWrap:'wrap'}}>
+                              <span style={{fontSize:'0.62rem', color:'#666', minWidth:36, fontWeight:700}}>{slot.id}</span>
+                              <button
+                                className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
+                                onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>
+                                —
+                              </button>
+                              {slot.mainStats.filter(ms => ms.key && simEntries.some(([k]) => k === ms.key)).map(ms => (
+                                <button key={ms.label}
+                                  className={'refine-btn' + (mainStatSel[slot.id] === ms.label ? ' active' : '')}
+                                  onClick={() => setMainStatSel(p => ({...p, [slot.id]: ms.label}))}>
+                                  {ms.label} +{ms.max}{ms.unit}
+                                </button>
+                              ))}
                             </div>
-                          )
-                        })}
-                      </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Sub stat per card */}
+                      <div className="alloc-section-label" style={{marginBottom:6}}>Sub Stat (tier 1 / roll, max 4 / card)</div>
+                      {simEntries.map(([k, [ideal]]) => {
+                        const sv1 = getSubTier1(k, 'Space')
+                        const ov1 = getSubTier1(k, 'Other')
+                        const subVal = subFromAlloc[k] || 0
+                        const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal
+                        const reach = total >= ideal
+                        return (
+                          <div key={k} className="alloc-stat-block">
+                            <div className="alloc-stat-header">
+                              <span className="alloc-stat">{statLabels[k]||k}</span>
+                              <span style={{color:'#555', fontSize:'0.62rem'}}>base {fmt(k, base0[k]||0)}{mainFromSel[k] ? ` + main +${fmt(k, mainFromSel[k])}` : ''}</span>
+                              <span style={{flex:1}}/>
+                              <span style={{color: subVal>0?'#7a9':'#444', fontSize:'0.7rem'}}>{subVal>0?`sub +${fmt(k,subVal)}`:'sub —'}</span>
+                              <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.8rem', minWidth:50, textAlign:'right'}}>{fmt(k,total)}</span>
+                              <span style={{color:'#444', fontSize:'0.68rem', minWidth:40, textAlign:'right'}}>/{fmt(k,ideal)}</span>
+                            </div>
+                            <div className="alloc-cards-row">
+                              {SLOT_IDS.map(slotId => {
+                                const t1 = getSubTier1(k, slotId)
+                                const rolls = (subAlloc[k] || {})[slotId] || 0
+                                return (
+                                  <div key={slotId} className="alloc-card-ctrl">
+                                    <span className="alloc-card-id">{slotId}</span>
+                                    <button className="alloc-btn" onClick={() => bump(k,slotId,-1)}>−</button>
+                                    <span className="alloc-num">{rolls}</span>
+                                    <button className="alloc-btn" onClick={() => bump(k,slotId,+1)}>+</button>
+                                    <span className="alloc-hint">{t1>0?`${t1}%`:'—'}</span>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+
+                      {/* SPR & Sun-kissed Blooms summaries */}
                       {charTgt?.spr && (
-                        <div className="alloc-spr-summary">
+                        <div className="alloc-spr-summary" style={{marginTop:8}}>
                           <span>SPR {Math.floor(totalSpr)}%</span>
                           <span className="alloc-spr-arrow">→</span>
                           <span>SP/cast {spPerCast.toFixed(1)}</span>
                           <span className="alloc-spr-arrow">→</span>
-                          <span className={sp2Round >= 200 ? 'alloc-spr-ok' : sp2Round >= 150 ? 'alloc-spr-warn' : 'alloc-spr-bad'}>
-                            2 round = {sp2Round.toFixed(1)} SP {sp2Round >= 200 ? '✓ (tier 150+, full)' : sp2Round >= 150 ? '✓ (tier 150+)' : sp2Round >= 100 ? '△ (tier 100+)' : '✗ (tier 50+)'}
+                          <span className={sp2Round>=200?'alloc-spr-ok':sp2Round>=150?'alloc-spr-warn':'alloc-spr-bad'}>
+                            2 round = {sp2Round.toFixed(1)} SP {sp2Round>=200?'✓ (tier 150+, full 200)':sp2Round>=150?'✓ (tier 150+)':sp2Round>=100?'△ (tier 100+)':'✗ (tier 50+)'}
                           </span>
                         </div>
                       )}
-                      <div className="req-note">tier 1 (สูงสุด) × 4 upgrades · กด +/− เพื่อตั้งจำนวน card ที่มี sub stat นี้</div>
+                      {hasSunKissed && (
+                        <div className="alloc-spr-summary" style={{marginTop:4}}>
+                          <span>Sun-kissed Blooms</span>
+                          <span className="alloc-spr-arrow">→</span>
+                          <span className={totalSpr>=450?'alloc-spr-ok':'alloc-spr-warn'}>
+                            CRIT DMG +{sunKissedCdmg}% {totalSpr>=450?'✓ (cap 450%)':`(${Math.floor(totalSpr)}/450%)`}
+                          </span>
+                        </div>
+                      )}
+                      <div className="req-note" style={{marginTop:6}}>tier 1 (สูงสุด) · กด +/− เพื่อตั้ง roll ต่อ card · ไม่รวม in-battle passive อื่น</div>
                     </div>
                   )
                 })()}
