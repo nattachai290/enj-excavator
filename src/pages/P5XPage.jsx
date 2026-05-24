@@ -5718,7 +5718,45 @@ export default function P5XPage() {
                           )
                         })}
                       </div>
-                      <div className="req-note">มีแล้ว = set + weapon ({weaponRefine}★) + hidden ability{charStage?.includes('M5') ? ' + Mindscape bonus' : ''}.</div>
+                      {(() => {
+                        const fmtStat = (k, v) => k === 'spd' ? `+${Math.round(v)}` : `+${v.toFixed(1)}%`
+                        const trackedKeys = new Set(entries.map(([k]) => k))
+                        const sources = []
+                        currentChar.cards.forEach(cardStr => {
+                          const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
+                          if (!m) return
+                          const setName = m[1].trim(), pc = parseInt(m[2])
+                          const setData = CARD_SETS.find(cs => cs.name.toLowerCase() === setName.toLowerCase())
+                          if (!setData) return
+                          const contrib = {}
+                          if (setData.stats2) Object.entries(setData.stats2).forEach(([k,v]) => { if (trackedKeys.has(k)) contrib[k] = (contrib[k]||0)+v })
+                          if (pc >= 4 && setData.stats4) Object.entries(setData.stats4).forEach(([k,v]) => { if (trackedKeys.has(k)) contrib[k] = (contrib[k]||0)+v })
+                          if (Object.keys(contrib).length) sources.push({ label:`${setName} ${pc}pc`, contrib })
+                        })
+                        const wStats = parseWeaponBonusAtRefine(currentChar.weapons?.[selectedWeaponIdx ?? 0], weaponRefine)
+                        const wContrib = Object.fromEntries(Object.entries(wStats).filter(([k]) => trackedKeys.has(k)))
+                        const wName = currentChar.weapons?.[selectedWeaponIdx ?? 0]?.name
+                        if (wName && Object.keys(wContrib).length) sources.push({ label:`${wName} ${weaponRefine}★`, contrib:wContrib })
+                        const hStats = parseHiddenAbility(currentChar.hiddenAbility)
+                        const hContrib = Object.fromEntries(Object.entries(hStats).filter(([k]) => trackedKeys.has(k)))
+                        if (Object.keys(hContrib).length) sources.push({ label:'Hidden ability', contrib:hContrib })
+                        if (Object.keys(msBonus).length) {
+                          const mContrib = Object.fromEntries(Object.entries(msBonus).filter(([k]) => trackedKeys.has(k)))
+                          if (Object.keys(mContrib).length) sources.push({ label:'Mindscape (M5)', contrib:mContrib })
+                        }
+                        if (!sources.length) return null
+                        return (
+                          <div className="req-sources">
+                            <div className="req-sources-title">แหล่งที่มาของ "มีแล้ว"</div>
+                            {sources.map(({ label, contrib }, i) => (
+                              <div key={i} className="req-source-row">
+                                <span className="req-source-label">{label}</span>
+                                <span className="req-source-vals">{Object.entries(contrib).map(([k,v]) => `${STAT_LABELS[k]||k} ${fmtStat(k,v)}`).join(', ')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      })()}
                     </div>
                   )
                 })()}
