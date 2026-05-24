@@ -442,10 +442,14 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .rec-detail-name { font-size:0.7rem; font-weight:700; color:#888; }
 .rec-detail-row.rec-detail-hit .rec-detail-name { color:var(--persona3); }
 .rec-detail-desc { font-size:0.67rem; color:#bbb; line-height:1.5; font-style:italic; }
-.rec-detail-set { margin-top:2px; padding-top:5px; border-top:1px solid #1c1c1c; display:flex; flex-direction:column; gap:2px; }
-.rec-detail-set-line { font-size:0.64rem; color:#666; line-height:1.5; display:flex; align-items:baseline; gap:5px; }
-.rec-detail-set-badge { display:inline-block; font-size:0.58rem; font-weight:700; padding:1px 6px; border-radius:3px; background:#1a1a1a; border:1px solid #333; color:var(--p5x-muted); flex-shrink:0; }
-.rec-detail-set-badge.rec-detail-set-4pc { color:var(--persona3); border-color:var(--persona2); background:#170a26; }
+.rec-detail-set { margin-top:2px; padding-top:5px; border-top:1px solid #1c1c1c; display:flex; flex-direction:column; gap:3px; }
+.rec-detail-set-line { font-size:0.65rem; color:#555; line-height:1.5; display:flex; align-items:baseline; gap:6px; }
+.rec-detail-set-line.rec-detail-set-active { color:#bbb; }
+.rec-detail-set-line.rec-detail-set-4pc-active { color:var(--persona3); }
+.rec-detail-set-badge { display:inline-block; font-size:0.58rem; font-weight:700; padding:1px 6px; border-radius:3px; background:#1a1a1a; border:1px solid #333; color:#555; flex-shrink:0; }
+.rec-detail-set-line.rec-detail-set-active .rec-detail-set-badge { color:#aaa; border-color:#555; background:#222; }
+.rec-detail-set-badge.rec-detail-set-4pc { color:var(--persona2); border-color:var(--persona2); background:#0e0817; }
+.rec-detail-set-line.rec-detail-set-4pc-active .rec-detail-set-badge { color:var(--persona3); border-color:var(--persona); background:#1a0d2e; }
 
 /* ── SUB STAT PRIORITY ── */
 .sub-prio-wrap { display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; }

@@ -5560,6 +5560,7 @@ export default function P5XPage() {
                           const medals = ['🥇','🥈','🥉']
                           const isOpen = openSpaceCard === card.name
                           const usedSets = (currentChar.cards || []).map(cs => { const m = cs.match(/^(.+?)\s+(2|4)pc$/i); return m ? m[1].trim() : null }).filter(Boolean)
+                          const usedSetsPc = Object.fromEntries((currentChar.cards || []).map(cs => { const m = cs.match(/^(.+?)\s+(2|4)pc$/i); return m ? [m[1].trim(), parseInt(m[2])] : null }).filter(Boolean))
                           const charElements = [currentChar.element, currentChar.element2].filter(Boolean)
                           return (
                             <div key={card.name} className={'rec-card-item' + (ri === 0 ? ' rec-top' : '')}>
@@ -5593,8 +5594,14 @@ export default function P5XPage() {
                                         <span className="rec-detail-desc">{p.desc}</span>
                                         {setData && (
                                           <div className="rec-detail-set">
-                                            <div className="rec-detail-set-line"><span className="rec-detail-set-badge">2pc</span>{setData.bonus2}</div>
-                                            {setData.bonus4 && <div className="rec-detail-set-line"><span className="rec-detail-set-badge rec-detail-set-4pc">4pc</span>{setData.bonus4}</div>}
+                                            <div className={'rec-detail-set-line' + ((usedSetsPc[p.name] ?? 0) >= 2 ? ' rec-detail-set-active' : '')}>
+                                              <span className="rec-detail-set-badge">2pc</span>{setData.bonus2}
+                                            </div>
+                                            {setData.bonus4 && (
+                                              <div className={'rec-detail-set-line' + ((usedSetsPc[p.name] ?? 0) >= 4 ? ' rec-detail-set-active rec-detail-set-4pc-active' : '')}>
+                                                <span className={'rec-detail-set-badge rec-detail-set-4pc'}>4pc</span>{setData.bonus4}
+                                              </div>
+                                            )}
                                           </div>
                                         )}
                                       </div>
