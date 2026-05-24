@@ -121,31 +121,31 @@ const CARD_SETS = [
 // mainStats: { label, key (internal stat key or null), min (LV1), max (LV25) }
 const CARD_SLOTS = [
   { id:'Space', mainStats:[
-    {label:'ATK',            key:null,   min:54,   max:359,  unit:''},
-    {label:'DEF',            key:null,   min:54,   max:359,  unit:''},
+    {label:'Attack',         key:null,   min:54,   max:359,  unit:''},
+    {label:'Defense',        key:null,   min:54,   max:359,  unit:''},
   ]},
   { id:'Sun', mainStats:[
     {label:'HP',             key:null,   min:162,  max:1080, unit:''},
   ]},
   { id:'Moon', mainStats:[
-    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
-    {label:'Elem DMG%',      key:'edm',  min:3.7,  max:25.1, unit:'%'},
-    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
-    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
-    {label:'Healing Effect%',key:'heal', min:3.4,  max:22.6, unit:'%'},
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Damage Mult',      key:'edm',  min:3.7,  max:25.1, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Healing Effect', key:'heal', min:3.4,  max:22.6, unit:'%'},
   ]},
   { id:'Star', mainStats:[
-    {label:'CRIT Rate%',     key:'crit', min:2.8,  max:18.8, unit:'%'},
-    {label:'CRIT DMG%',      key:'cdmg', min:5.7,  max:37.6, unit:'%'},
-    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
-    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
-    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
-    {label:'Ailment Acc%',   key:'ailm', min:5.7,  max:37.6, unit:'%'},
+    {label:'Crit Rate',     key:'crit', min:2.8,  max:18.8, unit:'%'},
+    {label:'Crit Mult.',      key:'cdmg', min:5.7,  max:37.6, unit:'%'},
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Ailment Accuracy',   key:'ailm', min:5.7,  max:37.6, unit:'%'},
   ]},
   { id:'Sky', mainStats:[
-    {label:'ATK%',           key:'atk',  min:4.6,  max:31.4, unit:'%'},
-    {label:'DEF%',           key:'def',  min:7.1,  max:47.1, unit:'%'},
-    {label:'HP%',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
     {label:'Speed',          key:'spd',  min:3.1,  max:20.3, unit:''},
     {label:'SP Recovery',    key:null,   min:13.6, max:90.4, unit:'%'},
   ]},
@@ -154,16 +154,16 @@ const CARD_SLOTS = [
 // Sub stats per slot — tiers [1st(best) … 5th(worst)] per upgrade roll
 const CARD_SUB_STATS = {
   Space: {
-    'CRIT Rate%':   [2.6, 2.3, 2.1, 1.8, 1.6],
-    'CRIT DMG%':    [5.2, 4.7, 4.2, 3.6, 3.1],
-    'Pierce Rate%': [2.7, 2.5, 2.2, 1.8, 1.6],
-    'Elem DMG%':    [3.5, 3.1, 2.7, 2.5, 2.1],
-    'ATK%':         [4.3, 3.9, 3.5, 3.1, 2.6],
-    'HP%':          [4.4, 4.0, 3.5, 3.2, 2.7],
+    'Crit Rate':   [2.6, 2.3, 2.1, 1.8, 1.6],
+    'Crit Mult.':    [5.2, 4.7, 4.2, 3.6, 3.1],
+    'Pierce Rate': [2.7, 2.5, 2.2, 1.8, 1.6],
+    'Damage Mult':    [3.5, 3.1, 2.7, 2.5, 2.1],
+    'Attack %':      [4.3, 3.9, 3.5, 3.1, 2.6],
+    'HP %':           [4.4, 4.0, 3.5, 3.2, 2.7],
     'HP':           [175, 157, 140, 123, 105],
-    'DEF%':         [6.4, 5.8, 5.2, 4.5, 3.8],
-    'Ailment Acc%': [5.2, 4.7, 4.2, 3.6, 3.1],
-    'SP Recovery%': [12.5, 11.2, 10.0, 8.7, 7.5],
+    'Defense %':     [6.4, 5.8, 5.2, 4.5, 3.8],
+    'Ailment Accuracy': [5.2, 4.7, 4.2, 3.6, 3.1],
+    'SP Recovery': [12.5, 11.2, 10.0, 8.7, 7.5],
     'Speed':        [2.8, 2.5, 2.2, 1.9, 1.6],
   },
   // Sun / Moon / Star / Sky share the same sub stat pool
@@ -172,18 +172,18 @@ const CARD_SUB_STATS = {
   get Star() { return this._other },
   get Sky()  { return this._other },
   _other: {
-    'CRIT Rate%':   [2.0, 1.8, 1.7, 1.4, 1.3],
-    'CRIT DMG%':    [4.1, 3.7, 3.4, 2.8, 2.5],
-    'Pierce Rate%': [2.1, 1.9, 1.7, 1.4, 1.3],
-    'Elem DMG%':    [2.8, 2.5, 2.1, 1.9, 1.7],
-    'ATK%':         [3.5, 3.2, 2.8, 2.5, 2.0],
-    'ATK':          [46,  41,  37,  32,  27],
-    'HP%':          [3.6, 3.3, 2.9, 2.6, 2.1],
+    'Crit Rate':   [2.0, 1.8, 1.7, 1.4, 1.3],
+    'Crit Mult.':    [4.1, 3.7, 3.4, 2.8, 2.5],
+    'Pierce Rate': [2.1, 1.9, 1.7, 1.4, 1.3],
+    'Damage Mult':    [2.8, 2.5, 2.1, 1.9, 1.7],
+    'Attack %':      [3.5, 3.2, 2.8, 2.5, 2.0],
+    'Attack':         [46,  41,  37,  32,  27],
+    'HP %':           [3.6, 3.3, 2.9, 2.6, 2.1],
     'HP':           [140, 126, 112, 98,  84],
-    'DEF%':         [5.2, 4.6, 4.1, 3.5, 3.0],
-    'DEF':          [46,  41,  37,  32,  27],
-    'Ailment Acc%': [4.1, 3.7, 3.4, 2.8, 2.5],
-    'SP Recovery%': [10.0, 9.0, 7.9, 7.0, 5.9],
+    'Defense %':     [5.2, 4.6, 4.1, 3.5, 3.0],
+    'Defense':        [46,  41,  37,  32,  27],
+    'Ailment Accuracy': [4.1, 3.7, 3.4, 2.8, 2.5],
+    'SP Recovery': [10.0, 9.0, 7.9, 7.0, 5.9],
     'Speed':        [2.2, 2.0, 1.8, 1.5, 1.3],
   },
 }
@@ -4738,18 +4738,18 @@ const PASSIVE_STAT_MAP = {
 
 // Sub stat label → internal stat key (null = not tracked in score yet)
 const SUB_STAT_KEY = {
-  'CRIT Rate%':   'crit',
-  'CRIT DMG%':    'cdmg',
-  'ATK%':         'atk',
-  'ATK':          'atk',
-  'HP%':          'hp',
+  'Crit Rate':   'crit',
+  'Crit Mult.':    'cdmg',
+  'Attack %':      'atk',
+  'Attack':        'atk',
+  'HP %':          'hp',
   'HP':           'hp',
-  'DEF%':         'def',
-  'DEF':          'def',
-  'Elem DMG%':    'edm',
-  'Ailment Acc%': 'ailm',
-  'Pierce Rate%': 'pierce',
-  'SP Recovery%': 'spr',
+  'Defense %':     'def',
+  'Defense':       'def',
+  'Damage Mult':    'edm',
+  'Ailment Accuracy': 'ailm',
+  'Pierce Rate': 'pierce',
+  'SP Recovery': 'spr',
   'Speed':        'spd',
 }
 
@@ -4790,7 +4790,7 @@ function getRoleArchetype(role) {
   return 'support'
 }
 
-const statMap = {'ATK%':'atk','CRIT Rate%':'crit','CRIT DMG%':'cdmg','HP%':'hp','DEF%':'def','Healing Bonus%':'heal','SPD':'spd'}
+const statMap = {'ATK%':'atk','Crit Rate':'crit','Crit Mult.':'cdmg','HP%':'hp','DEF%':'def','Healing Bonus%':'heal','SPD':'spd'}
 const statLabels = {atk:'ATK%',crit:'CRIT Rate%',cdmg:'CRIT DMG%',edm:'Elem DMG%',hp:'HP%',def:'DEF%',heal:'Healing%',spd:'SPD'}
 
 function parseHiddenAbility(str) {
