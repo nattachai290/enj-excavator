@@ -61,7 +61,7 @@ export const CHAR_STAT_TARGETS = {
   'Luce':            {atk:[65,18],  crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[55,12], def:[0,0],   heal:[0,0],  spd:[28,20],  ailm:[50,25]},
   // ── SABOTEUR ──
   'Rin':             {atk:[85,20],  crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[0,0],   def:[45,15], heal:[0,0],  spd:[155,25]},
-  'Matoi':           {atk:[0,0],    crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[0,0],   def:[60,8],  heal:[0,0],  spd:[28,12], ailm:[199,25]},
+  'Matoi':           {atk:[0,0],    crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0],   ailm:[199,25]},
   'Vino':            {atk:[65,18],  crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[55,12], def:[0,0],   heal:[0,0],  spd:[28,20],  ailm:[50,25]},
   'Key':             {atk:[65,20],  crit:[0,0],   cdmg:[0,0],   dmgMulti:[0,0],   hp:[0,0],   def:[38,12], heal:[0,0],  spd:[28,20]},
   // ── MEDIC ──
