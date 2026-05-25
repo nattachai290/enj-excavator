@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CARD_SETS, CARD_SLOTS, CARD_SUB_STATS } from '../../data/p5x-cards.js'
 import { SUB_STAT_KEY } from '../../data/p5x-targets.js'
 import { computeStats, getSpacePassiveBonus, statLabels } from '../../utils/p5x-stats.js'
@@ -15,6 +16,9 @@ export default function CardSimulator({
   simCardSet,
   setSimCardSet,
 }) {
+  // subSlots[cardSlotId] = [statKey|null, statKey|null, statKey|null, statKey|null]
+  const [subSlots, setSubSlots] = useState({})
+
   if (!charTgt) return null
   const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
   if (!simEntries.length) return null
@@ -45,6 +49,27 @@ export default function CardSimulator({
       if (delta > 0 && totalRollsForSlot(prev, slotId) >= 4) return prev
       return {...prev, [k]: {...cur, [slotId]: Math.max(0, curRolls + delta)}}
     })
+
+  const getCardSlots = (slotId) => subSlots[slotId] || [null, null, null, null]
+
+  const setSlotStat = (cardSlotId, slotIdx, newKey) => {
+    const current = getCardSlots(cardSlotId)
+    const oldKey = current[slotIdx]
+
+    // Clear old stat's rolls
+    if (oldKey && oldKey !== newKey) {
+      setSubAlloc(prev => ({...prev, [oldKey]: {...(prev[oldKey]||{}), [cardSlotId]: 0}}))
+    }
+
+    const newSlots = [...current]
+    // If new stat already used in another slot of same card, clear that slot
+    if (newKey) {
+      const dupIdx = current.findIndex((k, i) => k === newKey && i !== slotIdx)
+      if (dupIdx !== -1) newSlots[dupIdx] = null
+    }
+    newSlots[slotIdx] = newKey || null
+    setSubSlots(prev => ({...prev, [cardSlotId]: newSlots}))
+  }
 
   // main stat contributions
   const mainFromSel = {}
@@ -105,14 +130,25 @@ export default function CardSimulator({
           const pool = slot.id==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
           const usedRolls = totalRollsForSlot(subAlloc, slot.id)
           const full = usedRolls >= 4
+          const cardSlots = getCardSlots(slot.id)
+
+          // Build option list for this pool
+          const poolOptions = Object.entries(pool).map(([label, tiers]) => ({
+            key: SUB_STAT_KEY[label],
+            label,
+            t1: tiers[0],
+            unit: subUnit(label),
+          })).filter(o => o.key)
+
           return (
             <div key={slot.id} className="sim-card-block">
               <div className="sim-card-header">
                 <span className="sim-card-name">{slot.id}</span>
                 <span className={full ? 'sim-card-sub-count full' : 'sim-card-sub-count'}>{usedRolls}/4 rolls</span>
               </div>
+
               {/* Main stat */}
-              <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:6}}>
+              <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:8}}>
                 <button className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
                   onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>—</button>
                 {slot.mainStats.map(ms => (
@@ -123,20 +159,35 @@ export default function CardSimulator({
                   </button>
                 ))}
               </div>
-              {/* Sub stats */}
-              <div style={{display:'flex', flexDirection:'column', gap:2}}>
-                {Object.entries(pool).map(([subLabel, tiers]) => {
-                  const k = SUB_STAT_KEY[subLabel]
-                  const rolls = k ? ((subAlloc[k]||{})[slot.id] || 0) : 0
-                  const t1 = tiers[0]
-                  const unit = subUnit(subLabel)
+
+              {/* Sub stats — 4 dropdown rows */}
+              <div style={{display:'flex', flexDirection:'column', gap:3}}>
+                {[0,1,2,3].map(i => {
+                  const selKey = cardSlots[i]
+                  const opt = selKey ? poolOptions.find(o => o.key === selKey) : null
+                  const rolls = selKey ? ((subAlloc[selKey]||{})[slot.id] || 0) : 0
                   return (
-                    <div key={subLabel} className={'sim-sub-row' + (rolls > 0 ? ' locked' : '')}>
-                      <span className="sim-sub-label">{subLabel}</span>
-                      <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)} disabled={rolls===0}>−</button>
-                      <span className="alloc-num">{rolls}</span>
-                      <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)} disabled={full}>+</button>
-                      <span className="alloc-hint">+{t1}{unit}/roll</span>
+                    <div key={i} className={'sim-sub-row' + (selKey ? ' locked' : '')}>
+                      <select
+                        className="sim-sub-select"
+                        value={selKey || ''}
+                        onChange={e => setSlotStat(slot.id, i, e.target.value || null)}
+                      >
+                        <option value="">—</option>
+                        {poolOptions.map(o => (
+                          <option key={o.key} value={o.key}>{o.label}</option>
+                        ))}
+                      </select>
+                      {selKey && opt ? (
+                        <>
+                          <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={rolls===0}>−</button>
+                          <span className="alloc-num">{rolls}</span>
+                          <button className="alloc-btn" onClick={() => bump(selKey, slot.id, +1)} disabled={full && rolls===0}>+</button>
+                          <span className="alloc-hint">+{opt.t1}{opt.unit}/roll</span>
+                        </>
+                      ) : (
+                        <span className="alloc-hint" style={{marginLeft:4}}>เลือก sub stat</span>
+                      )}
                     </div>
                   )
                 })}
@@ -153,20 +204,33 @@ export default function CardSimulator({
           const spacePassiveVal = simSpacePassive[k] || 0
           const sunKissedVal = (k==='cdmg' && hasSunKissed) ? sunKissedCdmg : 0
           const subVal = subFromAlloc[k] || 0
-          const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal + spacePassiveVal + sunKissedVal
+          const mainVal = mainFromSel[k] || 0
+          const baseVal = base0[k] || 0
+          const total = baseVal + mainVal + subVal + spacePassiveVal + sunKissedVal
           const reach = total >= ideal
+
+          const parts = [
+            {label: 'base',    val: baseVal,       color: '#666'},
+            {label: 'main',    val: mainVal,        color: '#8888ff', show: mainVal > 0},
+            {label: 'sub',     val: subVal,         color: '#88ccff', show: subVal > 0},
+            {label: 'passive', val: spacePassiveVal, color: '#88ffcc', show: spacePassiveVal > 0},
+            {label: '☀️',      val: sunKissedVal,   color: '#ffcc44', show: sunKissedVal > 0},
+          ]
+
           return (
-            <div key={k} className="alloc-stat-header" style={{marginBottom:4}}>
-              <span className="alloc-stat">{statLabels[k]||k}</span>
-              <span style={{color:'#555', fontSize:'0.62rem', flex:1, marginLeft:6}}>
-                {fmt(k, base0[k]||0)}
-                {mainFromSel[k] ? ` +main ${fmt(k, mainFromSel[k])}` : ''}
-                {subVal>0 ? ` +sub ${fmt(k, subVal)}` : ''}
-                {spacePassiveVal>0 ? ` +passive ${fmt(k, spacePassiveVal)}` : ''}
-                {sunKissedVal>0 ? ` +☀️ ${fmt(k, sunKissedVal)}` : ''}
-              </span>
-              <span style={{color:reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.8rem', minWidth:50, textAlign:'right'}}>{fmt(k,total)}</span>
-              <span style={{color:'#444', fontSize:'0.68rem', minWidth:40, textAlign:'right'}}>/{fmt(k,ideal)}</span>
+            <div key={k} style={{marginBottom:6}}>
+              <div style={{display:'flex', alignItems:'center', gap:4}}>
+                <span className="alloc-stat" style={{minWidth:80}}>{statLabels[k]||k}</span>
+                <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.85rem', marginLeft:'auto'}}>{fmt(k,total)}</span>
+                <span style={{color:'#444', fontSize:'0.68rem', minWidth:44, textAlign:'right'}}>/{fmt(k,ideal)}</span>
+              </div>
+              <div style={{display:'flex', gap:6, flexWrap:'wrap', paddingLeft:2, marginTop:2}}>
+                {parts.filter(p => p.show !== false).map(p => (
+                  <span key={p.label} style={{fontSize:'0.6rem', color: p.color}}>
+                    <span style={{color:'#444'}}>{p.label} </span>{fmt(k, p.val)}
+                  </span>
+                ))}
+              </div>
             </div>
           )
         })}
@@ -193,7 +257,7 @@ export default function CardSimulator({
           </span>
         </div>
       )}
-      <div className="req-note" style={{marginTop:6}}>tier 1 · lock sub ที่ต้องการ (max 4/card) · กด +/− เพื่อตั้ง roll</div>
+      <div className="req-note" style={{marginTop:6}}>tier 1 · max 4 rolls/card · เลือก sub stat แล้วกด + เพื่อตั้ง roll</div>
     </div>
   )
 }
