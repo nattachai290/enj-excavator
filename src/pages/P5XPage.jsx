@@ -5911,10 +5911,15 @@ export default function P5XPage() {
                   const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
                   const subUnit = (lbl) => (lbl==='HP'||lbl==='Attack'||lbl==='Defense'||lbl==='Speed') ? '' : '%'
 
+                  const totalRollsForSlot = (alloc, slotId) =>
+                    Object.values(alloc).reduce((s, perSlot) => s + (perSlot[slotId] || 0), 0)
+
                   const bump = (k, slotId, delta) =>
                     setSubAlloc(prev => {
                       const cur = prev[k] || {}
-                      return {...prev, [k]: {...cur, [slotId]: Math.min(4, Math.max(0, (cur[slotId]||0) + delta))}}
+                      const curRolls = cur[slotId] || 0
+                      if (delta > 0 && totalRollsForSlot(prev, slotId) >= 4) return prev
+                      return {...prev, [k]: {...cur, [slotId]: Math.max(0, curRolls + delta)}}
                     })
 
                   // main stat contributions
@@ -5974,10 +5979,13 @@ export default function P5XPage() {
                       <div style={{display:'flex', flexDirection:'column', gap:8}}>
                         {CARD_SLOTS.map(slot => {
                           const pool = slot.id==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+                          const usedRolls = totalRollsForSlot(subAlloc, slot.id)
+                          const full = usedRolls >= 4
                           return (
                             <div key={slot.id} className="sim-card-block">
                               <div className="sim-card-header">
                                 <span className="sim-card-name">{slot.id}</span>
+                                <span className={full ? 'sim-card-sub-count full' : 'sim-card-sub-count'}>{usedRolls}/4 rolls</span>
                               </div>
                               {/* Main stat */}
                               <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:6}}>
@@ -6001,9 +6009,9 @@ export default function P5XPage() {
                                   return (
                                     <div key={subLabel} className={'sim-sub-row' + (rolls > 0 ? ' locked' : '')}>
                                       <span className="sim-sub-label">{subLabel}</span>
-                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)}>−</button>
+                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)} disabled={rolls===0}>−</button>
                                       <span className="alloc-num">{rolls}</span>
-                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)}>+</button>
+                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)} disabled={full}>+</button>
                                       <span className="alloc-hint">+{t1}{unit}/roll</span>
                                     </div>
                                   )
