@@ -3006,15 +3006,17 @@ export const CHARACTERS = [
         ]},
       {name:"Sparrow's Leap", stars:4,
         hp:1918, atk:518, def:338,
-        bonusStats:{atk:24},
+        bonusStats:{atk:12, cdmg:17.4},
         abilityName:"Sparrow's Leap",
         ability:[
           "Increase Attack by 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%.",
           "When Riko restores SP with a skill, increase CRIT DMG by 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% for 2 turns. Stacks up to 2 times.",
+          "(Max 2 stacks CRIT DMG: 17.4%/22.6%/22.6%/27.8%/27.8%/33.0%/33.0%)",
         ],
         abilityTh:[
           'เพิ่ม Attack 12.0%/12.0%/16.0%/16.0%/20.0%/20.0%/24.0%',
           'เมื่อ Riko คืน SP ด้วยสกิล เพิ่ม CRIT DMG 8.7%/11.3%/11.3%/13.9%/13.9%/16.5%/16.5% เป็นเวลา 2 เทิร์น สะสมสูงสุด 2 ครั้ง',
+          '(สะสม 2 ครั้ง CRIT DMG รวม: 17.4%/22.6%/22.6%/27.8%/27.8%/33.0%/33.0%)',
         ]},
     ],
     statTargets: {
