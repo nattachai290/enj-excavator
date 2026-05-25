@@ -973,13 +973,13 @@ export default function P5XPage() {
                           return (
                             <div key={k} className="req-row sim-row">
                               <span className="req-c-stat">{statLabels[k]||k}</span>
-                              <span style={{color:'#aaa'}}>{fmt(k,ideal)}</span>
-                              <span style={{color:'#555'}}>{fmt(k,have)}</span>
-                              <span style={{color: main>0 ? '#7a9' : '#444'}}>{main>0 ? fmtD(k,main) : '—'}</span>
-                              <span style={{color: sub>0 ? '#7a9' : '#444', lineHeight:1.3}}>
+                              <span style={{color:'#fff'}}>{fmt(k,ideal)}</span>
+                              <span style={{color:'#fff'}}>{fmt(k,have)}</span>
+                              <span style={{color: main>0 ? '#7a9' : '#fff'}}>{main>0 ? fmtD(k,main) : '—'}</span>
+                              <span style={{color: sub>0 ? '#7a9' : '#fff', lineHeight:1.3}}>
                                 {sub>0 ? <>
                                   <span style={{display:'block'}}>{fmtD(k,sub)}</span>
-                                  <span style={{display:'block', fontSize:'0.58rem', color:'#555'}}>
+                                  <span style={{display:'block', fontSize:'0.58rem', color:'#fff'}}>
                                     {'S '}
                                     {k==='spd' ? subDetail[k].spaceVal.toFixed(1) : (Math.floor(subDetail[k].spaceVal*10)/10).toFixed(1)+'%'}
                                     {' · '}
