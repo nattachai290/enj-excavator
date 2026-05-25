@@ -4944,8 +4944,10 @@ export default function P5XPage() {
   const [openSpaceCard, setOpenSpaceCard] = useState(null)
   const [subAlloc, setSubAlloc] = useState({})
   const [mainStatSel, setMainStatSel] = useState({})
+  const [simCardSet, setSimCardSet] = useState(null)
+  const [simLockedSubs, setSimLockedSubs] = useState({})
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}) }, [charName])
+  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}); setSimCardSet(null); setSimLockedSubs({}) }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -5887,36 +5889,51 @@ export default function P5XPage() {
                   )
                 })()}
 
-                {/* ── SUB STAT ALLOCATOR ─────────────────────────────────────── */}
+                {/* ── CARD SIMULATOR ─────────────────────────────────────── */}
                 {(() => {
                   if (!charTgt) return null
                   const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
                   if (!simEntries.length) return null
 
                   const msBonus = (charStage?.includes('M5') && currentChar?.mindscapeBonus) ? currentChar.mindscapeBonus : {}
+                  const charDefaultSet = (currentChar.cards||[]).find(c => c.includes('4pc'))?.replace(' 4pc','') || null
+                  const activeSet = simCardSet || charDefaultSet
+                  const charForSim = activeSet && activeSet !== charDefaultSet
+                    ? {...currentChar, cards: [activeSet + ' 4pc']}
+                    : currentChar
                   const base0 = (() => {
-                    const s = computeStats(currentChar, selectedWeaponIdx ?? 0, weaponRefine)
+                    const s = computeStats(charForSim, selectedWeaponIdx ?? 0, weaponRefine)
                     const all = {...s}
                     Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
                     return all
                   })()
 
                   const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
-                  const getSubTier1 = (k, slotId) => {
-                    const pool = slotId === 'Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
-                    return Object.entries(pool).find(([l]) => SUB_STAT_KEY[l] === k)?.[1]?.[0] || 0
-                  }
+                  const subUnit = (lbl) => (lbl==='HP'||lbl==='Attack'||lbl==='Defense'||lbl==='Speed') ? '' : '%'
+
                   const bump = (k, slotId, delta) =>
                     setSubAlloc(prev => {
-                      const cur = (prev[k] || {})
+                      const cur = prev[k] || {}
                       return {...prev, [k]: {...cur, [slotId]: Math.min(4, Math.max(0, (cur[slotId]||0) + delta))}}
                     })
 
-                  // main stat from selection
+                  const toggleLock = (slotId, subLabel) => {
+                    const k = SUB_STAT_KEY[subLabel]
+                    const currentlyLocked = !!simLockedSubs[slotId]?.[subLabel]
+                    const lockedCount = Object.values(simLockedSubs[slotId] || {}).filter(Boolean).length
+                    if (!currentlyLocked && lockedCount >= 4) return
+                    setSimLockedSubs(prev => ({...prev, [slotId]: {...(prev[slotId]||{}), [subLabel]: !currentlyLocked}}))
+                    if (currentlyLocked && k) {
+                      setSubAlloc(prev => {
+                        const cur = {...(prev[k]||{})}
+                        delete cur[slotId]
+                        return {...prev, [k]: cur}
+                      })
+                    }
+                  }
+
+                  // main stat contributions
                   const mainFromSel = {}
-                  const selectableSlots = CARD_SLOTS.filter(slot =>
-                    slot.mainStats.some(ms => ms.key && simEntries.some(([k]) => k === ms.key))
-                  )
                   Object.entries(mainStatSel).forEach(([slotId, label]) => {
                     if (!label) return
                     const slot = CARD_SLOTS.find(s => s.id === slotId)
@@ -5924,99 +5941,139 @@ export default function P5XPage() {
                     if (ms?.key) mainFromSel[ms.key] = (mainFromSel[ms.key]||0) + ms.max
                   })
 
-                  // sub contribution per stat
+                  // sub contributions
                   const subFromAlloc = {}
                   simEntries.forEach(([k]) => {
                     subFromAlloc[k] = SLOT_IDS.reduce((sum, slotId) => {
-                      const rolls = (subAlloc[k] || {})[slotId] || 0
-                      return sum + getSubTier1(k, slotId) * rolls
+                      const rolls = (subAlloc[k]||{})[slotId] || 0
+                      const pool = slotId==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+                      const t1 = Object.entries(pool).find(([l]) => SUB_STAT_KEY[l]===k)?.[1]?.[0] || 0
+                      return sum + t1 * rolls
                     }, 0)
                   })
 
                   const fmt = (k, v) => k === 'spd' ? Math.floor(v) : Math.floor(v) + '%'
 
-                  // SPR & passives
                   const totalSpr = (base0.spr||0) + (mainFromSel.spr||0) + (subFromAlloc.spr||0)
                   const spPerCast = 16 * (1 + totalSpr / 100)
                   const sp2Round = spPerCast * 2
                   const hasSunKissed = currentChar?.skills?.some(s => s.name === 'Sun-kissed Blooms')
                   const sunKissedCdmg = hasSunKissed ? parseFloat((84 * Math.min(totalSpr, 450) / 450).toFixed(1)) : 0
-                  const simSpacePassive = getSpacePassiveBonus(currentChar, {spr: totalSpr})
+                  const simSpacePassive = getSpacePassiveBonus(charForSim, {spr: totalSpr})
 
                   return (
                     <div className="info-panel">
                       <div className="info-label">🎛️ จำลอง Card Stats</div>
 
-                      {/* Main stat selection */}
-                      {selectableSlots.length > 0 && (
-                        <div style={{marginBottom:10}}>
-                          <div className="alloc-section-label">Main Stat</div>
-                          {selectableSlots.map(slot => (
-                            <div key={slot.id} style={{display:'flex', alignItems:'center', gap:5, marginBottom:4, flexWrap:'wrap'}}>
-                              <span style={{fontSize:'0.62rem', color:'#666', minWidth:36, fontWeight:700}}>{slot.id}</span>
-                              <button
-                                className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
-                                onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>
-                                —
-                              </button>
-                              {slot.mainStats.filter(ms => ms.key && simEntries.some(([k]) => k === ms.key)).map(ms => (
-                                <button key={ms.label}
-                                  className={'refine-btn' + (mainStatSel[slot.id] === ms.label ? ' active' : '')}
-                                  onClick={() => setMainStatSel(p => ({...p, [slot.id]: ms.label}))}>
-                                  {ms.label} +{ms.max}{ms.unit}
-                                </button>
-                              ))}
-                            </div>
+                      {/* Card set selector */}
+                      <div style={{marginBottom:10}}>
+                        <div className="alloc-section-label">Card Set (4pc)</div>
+                        <div style={{display:'flex', flexWrap:'wrap', gap:4}}>
+                          {charDefaultSet && (
+                            <button className={'refine-btn' + (!simCardSet ? ' active' : '')}
+                              onClick={() => setSimCardSet(null)}>
+                              {charDefaultSet} (default)
+                            </button>
+                          )}
+                          {CARD_SETS.filter(cs => cs.name !== charDefaultSet).map(cs => (
+                            <button key={cs.name}
+                              className={'refine-btn' + (simCardSet === cs.name ? ' active' : '')}
+                              onClick={() => setSimCardSet(cs.name)}>
+                              {cs.name}
+                            </button>
                           ))}
                         </div>
-                      )}
+                      </div>
 
-                      {/* Sub stat per card */}
-                      <div className="alloc-section-label" style={{marginBottom:6}}>Sub Stat (tier 1 / roll, max 4 / card)</div>
-                      {simEntries.map(([k, [ideal]]) => {
-                        const sv1 = getSubTier1(k, 'Space')
-                        const ov1 = getSubTier1(k, 'Other')
-                        const subVal = subFromAlloc[k] || 0
-                        const spacePassiveVal = simSpacePassive[k] || 0
-                        const sunKissedVal = (k === 'cdmg' && hasSunKissed) ? sunKissedCdmg : 0
-                        const passiveVal = spacePassiveVal + sunKissedVal
-                        const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal + passiveVal
-                        const reach = total >= ideal
-                        return (
-                          <div key={k} className="alloc-stat-block">
-                            <div className="alloc-stat-header">
+                      {/* Per-card blocks */}
+                      <div style={{display:'flex', flexDirection:'column', gap:8}}>
+                        {CARD_SLOTS.map(slot => {
+                          const pool = slot.id==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+                          const lockedForSlot = simLockedSubs[slot.id] || {}
+                          const lockedCount = Object.values(lockedForSlot).filter(Boolean).length
+                          return (
+                            <div key={slot.id} className="sim-card-block">
+                              <div className="sim-card-header">
+                                <span className="sim-card-name">{slot.id}</span>
+                                <span className="sim-card-sub-count">{lockedCount}/4 sub</span>
+                              </div>
+                              {/* Main stat */}
+                              <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:6}}>
+                                <button className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
+                                  onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>—</button>
+                                {slot.mainStats.map(ms => (
+                                  <button key={ms.label}
+                                    className={'refine-btn' + (mainStatSel[slot.id]===ms.label ? ' active' : '')}
+                                    onClick={() => setMainStatSel(p => ({...p, [slot.id]: ms.label}))}>
+                                    {ms.label} +{ms.max}{ms.unit}
+                                  </button>
+                                ))}
+                              </div>
+                              {/* Sub stats */}
+                              <div style={{display:'flex', flexDirection:'column', gap:2}}>
+                                {Object.entries(pool).map(([subLabel, tiers]) => {
+                                  const k = SUB_STAT_KEY[subLabel]
+                                  const locked = !!lockedForSlot[subLabel]
+                                  const rolls = k ? ((subAlloc[k]||{})[slot.id] || 0) : 0
+                                  const canLock = locked || lockedCount < 4
+                                  const t1 = tiers[0]
+                                  const unit = subUnit(subLabel)
+                                  return (
+                                    <div key={subLabel} className={'sim-sub-row' + (locked ? ' locked' : '')}>
+                                      <button
+                                        className={'sim-lock-btn' + (locked ? ' active' : '')}
+                                        onClick={() => toggleLock(slot.id, subLabel)}
+                                        disabled={!canLock}
+                                        title={locked ? 'unlock' : lockedCount>=4 ? 'max 4' : 'lock'}>
+                                        {locked ? '🔒' : '○'}
+                                      </button>
+                                      <span className="sim-sub-label">{subLabel}</span>
+                                      {locked ? (
+                                        <>
+                                          <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)}>−</button>
+                                          <span className="alloc-num">{rolls}</span>
+                                          <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)}>+</button>
+                                          <span className="alloc-hint">+{t1}{unit}/roll</span>
+                                        </>
+                                      ) : (
+                                        <span style={{color:'#555', fontSize:'0.62rem', marginLeft:'auto'}}>{t1}{unit}/roll</span>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+
+                      {/* Totals */}
+                      <div style={{marginTop:12, borderTop:'1px solid #333', paddingTop:8}}>
+                        <div className="alloc-section-label">สรุป</div>
+                        {simEntries.map(([k, [ideal]]) => {
+                          const spacePassiveVal = simSpacePassive[k] || 0
+                          const sunKissedVal = (k==='cdmg' && hasSunKissed) ? sunKissedCdmg : 0
+                          const subVal = subFromAlloc[k] || 0
+                          const total = (base0[k]||0) + (mainFromSel[k]||0) + subVal + spacePassiveVal + sunKissedVal
+                          const reach = total >= ideal
+                          return (
+                            <div key={k} className="alloc-stat-header" style={{marginBottom:4}}>
                               <span className="alloc-stat">{statLabels[k]||k}</span>
-                              <span style={{color:'#555', fontSize:'0.62rem'}}>
-                                base {fmt(k, base0[k]||0)}
-                                {mainFromSel[k] ? ` + main +${fmt(k, mainFromSel[k])}` : ''}
-                                {spacePassiveVal > 0 ? ` + Space passive +${fmt(k, spacePassiveVal)}` : ''}
-                                {sunKissedVal > 0 ? ` + Sun-kissed +${fmt(k, sunKissedVal)}` : ''}
+                              <span style={{color:'#555', fontSize:'0.62rem', flex:1, marginLeft:6}}>
+                                {fmt(k, base0[k]||0)}
+                                {mainFromSel[k] ? ` +main ${fmt(k, mainFromSel[k])}` : ''}
+                                {subVal>0 ? ` +sub ${fmt(k, subVal)}` : ''}
+                                {spacePassiveVal>0 ? ` +passive ${fmt(k, spacePassiveVal)}` : ''}
+                                {sunKissedVal>0 ? ` +☀️ ${fmt(k, sunKissedVal)}` : ''}
                               </span>
-                              <span style={{flex:1}}/>
-                              <span style={{color: subVal>0?'#7a9':'#444', fontSize:'0.7rem'}}>{subVal>0?`sub +${fmt(k,subVal)}`:'sub —'}</span>
-                              <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.8rem', minWidth:50, textAlign:'right'}}>{fmt(k,total)}</span>
+                              <span style={{color:reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.8rem', minWidth:50, textAlign:'right'}}>{fmt(k,total)}</span>
                               <span style={{color:'#444', fontSize:'0.68rem', minWidth:40, textAlign:'right'}}>/{fmt(k,ideal)}</span>
                             </div>
-                            <div className="alloc-cards-row">
-                              {SLOT_IDS.map(slotId => {
-                                const t1 = getSubTier1(k, slotId)
-                                const rolls = (subAlloc[k] || {})[slotId] || 0
-                                return (
-                                  <div key={slotId} className="alloc-card-ctrl">
-                                    <span className="alloc-card-id">{slotId}</span>
-                                    <button className="alloc-btn" onClick={() => bump(k,slotId,-1)}>−</button>
-                                    <span className="alloc-num">{rolls}</span>
-                                    <button className="alloc-btn" onClick={() => bump(k,slotId,+1)}>+</button>
-                                    <span className="alloc-hint">{t1>0?`${t1}%`:'—'}</span>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          </div>
-                        )
-                      })}
+                          )
+                        })}
+                      </div>
 
-                      {/* SPR & Sun-kissed Blooms summaries */}
+                      {/* SPR & Sun-kissed summaries */}
                       {charTgt?.spr && (
                         <div className="alloc-spr-summary" style={{marginTop:8}}>
                           <span>SPR {Math.floor(totalSpr)}%</span>
@@ -6024,7 +6081,7 @@ export default function P5XPage() {
                           <span>SP/cast {spPerCast.toFixed(1)}</span>
                           <span className="alloc-spr-arrow">→</span>
                           <span className={sp2Round>=200?'alloc-spr-ok':sp2Round>=150?'alloc-spr-warn':'alloc-spr-bad'}>
-                            2 round = {sp2Round.toFixed(1)} SP {sp2Round>=200?'✓ (tier 150+, full 200)':sp2Round>=150?'✓ (tier 150+)':sp2Round>=100?'△ (tier 100+)':'✗ (tier 50+)'}
+                            2 round = {sp2Round.toFixed(1)} SP {sp2Round>=200?'✓ (tier 150+)':sp2Round>=150?'✓ (tier 150+)':sp2Round>=100?'△ (tier 100+)':'✗'}
                           </span>
                         </div>
                       )}
@@ -6037,7 +6094,7 @@ export default function P5XPage() {
                           </span>
                         </div>
                       )}
-                      <div className="req-note" style={{marginTop:6}}>tier 1 (สูงสุด) · กด +/− เพื่อตั้ง roll ต่อ card · ไม่รวม in-battle passive อื่น</div>
+                      <div className="req-note" style={{marginTop:6}}>tier 1 · lock sub ที่ต้องการ (max 4/card) · กด +/− เพื่อตั้ง roll</div>
                     </div>
                   )
                 })()}
