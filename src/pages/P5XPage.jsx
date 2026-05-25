@@ -650,7 +650,7 @@ export default function P5XPage() {
                 <div className="info-panel">
                   <div className="info-label">🎴 Revelation Card — Main Stats แนะนำ</div>
                   <div className="slot-guide">
-                    {CARD_SLOTS.map(slot => {
+                    {CARD_SLOTS.filter(slot => slot.mainStats.some(({key}) => key !== null)).map(slot => {
                       let bestLabel = null, bestWeight = -1
                       slot.mainStats.forEach(({label, key}) => {
                         if (!key || !charTgt) return
@@ -683,6 +683,7 @@ export default function P5XPage() {
                     const ranked = REVELATION_CARDS.Space
                       .map(card => ({ card, score: scoreSpaceCard(card, charTgt, currentChar.cards, currentChar.element, currentChar.element2, currentChar.role) }))
                       .sort((a, b) => b.score - a.score)
+                      .filter((item, i) => i === 0 || item.score > 0)
                       .slice(0, 3)
                     return (
                       <div className="rec-cards-list">
@@ -943,97 +944,11 @@ export default function P5XPage() {
             </div>
           )}
 
-          {/* STAT CALCULATOR — inside sticky panel to prevent overlap */}
+          {/* Export / Import */}
           <div style={{ borderTop: '1px solid var(--p5x-border)', marginTop: 12, paddingTop: 12 }}>
-            <div className="section-title">🧮 STAT CALCULATOR</div>
-            <div style={{fontSize:'0.62rem',color:'var(--p5x-muted)',marginBottom:8}}>
-              ใส่ค่า stat เพิ่มจากการ์ด (main stat + sub roll) + hidden ability — ค่าจาก set/weapon คำนวณอัตโนมัติ
-            </div>
-
-            {lv80all && (
-              <div className="asc-selector">
-                <span className="asc-label">Ascension LV80</span>
-                <div className="asc-btns">
-                  {lv80all.map((_, i) => (
-                    <button key={i} className={'asc-btn' + (ascension === i ? ' active' : '')} onClick={() => setAscension(i)}>A{i}</button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="p5x-stat-grid">
-              <StatRow label="Attack %"           statKey="atk"  maxRange={160} />
-              <StatRow label="Crit Rate"     statKey="crit" maxRange={75} />
-              <StatRow label="Crit Mult."      statKey="cdmg" maxRange={150} />
-              <StatRow label="HP %"            statKey="hp"   maxRange={200} />
-              <StatRow label="Defense %"           statKey="def"  maxRange={220} />
-              <StatRow label="Element DMG%"   statKey="dmgMulti"  maxRange={100} />
-              <StatRow label="Healing Effect" statKey="heal" maxRange={35} />
-              <StatRow label="SPD (Speed)"    statKey="spd"  maxRange={50} unit="" />
-            </div>
-
-            <div style={{ marginTop: 12 }}>
-              <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
-              {lv80 && (
-                <div className="final-stats-row">
-                  <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
-                  <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
-                  <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
-                  <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
-                </div>
-              )}
-              <div className="summary-grid">
-                <div className="sum-box"><div className="sum-val">{totalStats.atk.toFixed(1)}%</div><div className="sum-lbl">Attack %</div></div>
-                <div className="sum-box"><div className="sum-val">{Math.min(totalStats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
-                <div className="sum-box"><div className="sum-val">{totalStats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
-                <div className="sum-box"><div className="sum-val">{totalStats.dmgMulti.toFixed(1)}%</div><div className="sum-lbl">Elem DMG</div></div>
-                <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP %</div></div>
-                <div className="sum-box"><div className="sum-val">{Math.round(totalStats.spd)}</div><div className="sum-lbl">SPD</div></div>
-              </div>
-
-              {scoreData && (
-                <div className="stat-target-card">
-                  <div className="stat-target-title">🎯 Stats เป้าหมาย (Endgame)</div>
-                  <div className="stat-target-chips">
-                    {scoreData.breakdown.map((b, i) => (
-                      <div key={i} className={'stat-chip' + (b.ratio >= 1 ? ' met' : b.ratio >= 0.75 ? ' close' : ' missing')}>
-                        {b.label} ≥ {b.ideal}{b.ratio >= 1 ? ' ✓' : ''}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="score-wrap">
-                <div className="score-title">📊 Build Score</div>
-                {scoreData ? <>
-                  <div className="score-number" style={{ color: scoreData.gradeColor }}>{scoreData.scorePct}%</div>
-                  <div className="score-label" style={{ color: scoreData.gradeColor }}>เกรด {scoreData.grade} — {scoreData.gradeNote}</div>
-                  <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: scoreData.scorePct + '%' }} /></div>
-                  <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
-                  <div className="score-breakdown">
-                    {scoreData.breakdown.map((b, i) => (
-                      <div key={i} className="score-item">
-                        <span className="si-label">{b.label}</span>
-                        <div className="si-bar">
-                          <div className="si-fill" style={{ width: b.ratio * 100 + '%', background: b.ratio >= 0.8 ? 'var(--gem)' : b.ratio >= 0.5 ? 'var(--persona)' : 'var(--p5x-muted)' }} />
-                        </div>
-                        <span className="si-val">{b.val} / {b.ideal}</span>
-                      </div>
-                    ))}
-                  </div>
-                </> : <>
-                  <div className="score-number" style={{ color: 'var(--persona)' }}>—</div>
-                  <div className="score-label" style={{ color: 'var(--p5x-muted)' }}>เลือกตัวละครก่อนเพื่อดู Score</div>
-                  <div className="score-bar-outer"><div className="score-bar-inner" style={{ width: '0%' }} /></div>
-                  <div className="score-tiers"><span>0</span><span>D</span><span>C</span><span>B</span><span>A</span><span>S</span><span>S+</span></div>
-                </>}
-              </div>
-
-              <div className="p5x-btn-row">
-                <button className="btn-p5x btn-p5x-export" onClick={() => setShowExport(true)}>📤 Export JSON</button>
-                <button className="btn-p5x btn-p5x-import" onClick={() => setShowImport(true)}>📥 Import JSON</button>
-              </div>
+            <div className="p5x-btn-row">
+              <button className="btn-p5x btn-p5x-export" onClick={() => setShowExport(true)}>📤 Export JSON</button>
+              <button className="btn-p5x btn-p5x-import" onClick={() => setShowImport(true)}>📥 Import JSON</button>
             </div>
           </div>
         </div>{/* /char-detail-sticky */}
