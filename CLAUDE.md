@@ -9,6 +9,22 @@
 5. **4pc → ได้ผล 2pc + 4pc + Space passive activate**
 6. format ที่ถูกต้อง: Space 1 ใบ + 4pc เสมอ (ถ้าต้องการ Space passive)
 
+## ลำดับการวิเคราะห์ตัวละคร
+
+**ห้ามอ่าน rotation ก่อนแล้วใช้เป็นเหตุผลเลือก stat** — rotation เป็นผลลัพธ์ของการวิเคราะห์ ไม่ใช่ source of reasoning
+
+ลำดับที่ถูกต้อง:
+1. **อ่านสกิลทุกตัว** — ดู mechanic, scaling, cap, condition
+2. **แปลสกิลเป็น playstyle** — สกิลไหนต้อง cast บ่อย? สกิลไหน dump? สกิลไหนเป็น engine?
+3. **เลือก stat** จาก playstyle ที่ได้ — stat ไหน scale สกิลที่ใช้บ่อย?
+4. **เลือก main/sub stat** จาก stat target
+5. **เขียน rotation** จาก playstyle — เป็นผลลัพธ์สุดท้าย
+
+ตัวอย่าง wind-tempest Moon slot:
+- Storm of Petals: deal damage (183% ATK) + restore SP → เป็น SP engine หลัก → ต้อง cast ซ้ำๆ เพื่อเติม SP
+- เนื่องจาก cast บ่อยโดย design ของ kit → ATK scale ทุกครั้ง → ATK% มี impact สม่ำเสมอ
+- จึงเลือก Moon→ATK% จากการวิเคราะห์สกิล ไม่ใช่จากการอ่าน rotation
+
 ## วิธีเลือก Rotation
 
 1. ตรวจสอบสิ่งที่ใช้ได้ตั้งแต่ R1 — SP เต็มตั้งแต่เริ่มเกม, Highlight gauge = 0%
