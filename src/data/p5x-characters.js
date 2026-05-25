@@ -2766,7 +2766,7 @@ export const CHARACTERS = [
   },
   {name:'Wind (Tempest)', codename:'wind-tempest', role:'Strategist', element:'Wind', rarity:5,
     cards:['Worry 4pc'], weapon:'Best CRIT DMG/Support weapon (Windplum Dance)',
-    statPrio:['Crit Mult.','Crit Rate','Speed'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP starts full each battle — open with Blossoming Season immediately.',
+    statPrio:['Crit Mult.','Crit Rate','SPR'], note:'Wind Strategist. CRIT DMG-scaling buffs — all party ATK/CRIT DMG buffs scale with her own CRIT multiplier. SP starts full each battle — open with Blossoming Season immediately. Speed ไม่ต้องลง main stat — ใช้ sub stat rolls ที่เหลือแทน (base 104 → target 132 ต้องการแค่ ~28 จาก card).',
     mechanics: "ATK buff และ CRIT DMG buff ทั้งหมดของ Riko สเกลตาม CRIT multiplier ของตัวเองที่เกิน 100% — ทุก 10% CRIT DMG ที่เกิน คูณค่าบัฟทุกอย่าง Blossoming Season ใช้ SP ทั้งหมด (ต่ำสุด 50, สูงสุด 200+) เพื่อผล tier: SP 50+ ให้ ATK buff, SP 100+ เพิ่ม CRIT DMG buff, SP 150+ เพิ่ม CRIT DMG อีก — ยิ่งใช้ SP มากยิ่งแรง SP เต็มตั้งแต่เริ่มเกม, Storm of Petals ฟื้น SP ตามสูตร 16 + SP Recovery% สะสม Crit Mult. ในทุก slot เพื่อเพิ่มทุก buff",
     rotation: [
       "R1: Blossoming Season → SP เต็ม 200 (tier 150+) buff DPS หลัก ATK+CRIT DMG+CRIT Rate ทันที",
