@@ -443,13 +443,15 @@ export default function P5XPage() {
                         ))}
                       </div>
                     </div>
-                    <div style={{marginBottom:8}}>
-                      <div className="slv-picker">
-                        {[['both','All'],['spring','🌿 Spring'],['winter','❄️ Winter']].map(([v,l]) => (
-                          <button key={v} className={'slv-btn'+(skillMode===v?' active':'')} onClick={()=>setSkillMode(v)}>{l}</button>
-                        ))}
+                    {(currentChar.skills||[]).some(sk => (sk.descTh||sk.desc||'').includes('[Spring]')) && (
+                      <div style={{marginBottom:8}}>
+                        <div className="slv-picker">
+                          {[['both','All'],['spring','🌿 Spring'],['winter','❄️ Winter']].map(([v,l]) => (
+                            <button key={v} className={'slv-btn'+(skillMode===v?' active':'')} onClick={()=>setSkillMode(v)}>{l}</button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                     {(currentChar.skills || []).length === 0
                       ? <div className="kit-empty">— ยังไม่มีข้อมูล</div>
                       : <div className="skill-grid">
