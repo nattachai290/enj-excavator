@@ -215,9 +215,9 @@ export default function CardSimulator({
           const reach = total >= ideal
 
           const parts = [
-            {label: 'char+wpn', val: baseVal,       color: '#fff'},
-            {label: 'card main',val: mainVal,       color: '#8888ff', show: mainVal > 0},
-            {label: 'card sub', val: subVal,        color: '#88ccff', show: subVal > 0},
+            {label: 'ตัวละคร+อาวุธ', val: baseVal,    color: '#fff'},
+            {label: 'main stat',    val: mainVal,    color: '#8888ff', show: mainVal > 0},
+            {label: 'sub stat',     val: subVal,     color: '#88ccff', show: subVal > 0},
             {label: spacePassiveName, val: spacePassiveVal, color: '#88ffcc', show: spacePassiveVal > 0},
             {label: 'Sun-kissed',     val: sunKissedVal,   color: '#ffcc44', show: sunKissedVal > 0},
           ]
