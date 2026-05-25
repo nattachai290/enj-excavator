@@ -527,7 +527,7 @@ const CHARACTERS = [
         desc:"Survive fatal damage 1 time during battle and recover 25% HP. After damaging a foe with God Hand Burst, inflict Cower on the target. Cower: increase Ryuji's next skill damage taken by 60%.",
         descTh:"รอดพ้นจากดาเมจสังหาร 1 ครั้งระหว่างการต่อสู้ และฟื้นฟู HP 25% หลังดาเมจด้วย God Hand Burst ทำให้เป้าหมายติด Cower Cower: เพิ่มดาเมจสกิลถัดไปของ Ryuji 60%"},
     ],
-    baseStats: {hp:352, atk:97, def:47, spd:94, crit:5, meleeMulti:120, rangedMulti:55.4, rangedAcc:84, rangedCrit:19.05},
+    baseStats: {hp:352, atk:97, def:47, spd:94, crit:5, cdmg:150, meleeMulti:120, rangedMulti:55.4, rangedAcc:84, rangedCrit:19.05},
     baseStatsLv80: [
       {hp:3960, atk:1100, def:533, spd:0},
       {hp:4031, atk:1120, def:543, spd:0},
@@ -537,7 +537,7 @@ const CHARACTERS = [
       {hp:4317, atk:1199, def:581, spd:0},
       {hp:4388, atk:1219, def:591, spd:0},
     ],
-    hiddenAbility: 'Crit Mult. +184.9%',
+    hiddenAbility: 'Crit Mult. +34.9%',
     mindscapeBonus: {dmgMulti:16, cdmg:24},
     weapons:[
       {name:'Revenge Axe', stars:5,
