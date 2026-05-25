@@ -51,6 +51,7 @@ export default function P5XPage() {
   const [mobileTab, setMobileTab] = useState('chars')
   const [userStats, setUserStats] = useState({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0})
   const [skillLevel, setSkillLevel] = useState(3)
+  const [skillMode, setSkillMode] = useState('both')
   const [charStage, setCharStage] = useState(null)
   const [openSpaceCard, setOpenSpaceCard] = useState(null)
   const [subAlloc, setSubAlloc] = useState({})
@@ -102,6 +103,15 @@ export default function P5XPage() {
       const parts = match.split('/')
       return parts[Math.min(skillLevel, parts.length - 1)]
     })
+  }
+
+  function filterSkillMode(text, mode) {
+    if (!text || mode === 'both') return text
+    const sections = text.split(/(?=\[(?:Spring|Winter)\])/g)
+    if (sections.length <= 1) return text
+    const tag = mode === 'spring' ? '[Spring]' : '[Winter]'
+    const match = sections.find(s => s.startsWith(tag))
+    return match ? match.replace(tag, '').trim() : text
   }
 
   function resolveRefine(text) {
@@ -427,10 +437,17 @@ export default function P5XPage() {
                   <div className="kit-block">
                     <div className="kit-block-title" style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:6}}>
                       <span>Skills</span>
-                      <div className="slv-picker">
-                        {SKILL_LEVEL_LABELS.map((l, i) => (
-                          <button key={i} className={'slv-btn'+(skillLevel===i?' active':'')} onClick={()=>setSkillLevel(i)} title={['Skill LV10','LV10 + Mindscape 5','Skill LV13','LV13 + Mindscape 5'][i]}>{l}</button>
-                        ))}
+                      <div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+                        <div className="slv-picker">
+                          {[['both','All'],['spring','🌿 Spring'],['winter','❄️ Winter']].map(([v,l]) => (
+                            <button key={v} className={'slv-btn'+(skillMode===v?' active':'')} onClick={()=>setSkillMode(v)}>{l}</button>
+                          ))}
+                        </div>
+                        <div className="slv-picker">
+                          {SKILL_LEVEL_LABELS.map((l, i) => (
+                            <button key={i} className={'slv-btn'+(skillLevel===i?' active':'')} onClick={()=>setSkillLevel(i)} title={['Skill LV10','LV10 + Mindscape 5','Skill LV13','LV13 + Mindscape 5'][i]}>{l}</button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     {(currentChar.skills || []).length === 0
@@ -438,7 +455,7 @@ export default function P5XPage() {
                       : <div className="skill-grid">
                           {(currentChar.skills || []).map((sk, i) => {
                             const rawDesc = lang === 'th' && sk.descTh ? sk.descTh : sk.desc
-                            const desc = resolveSkillLevel(rawDesc)
+                            const desc = filterSkillMode(resolveSkillLevel(rawDesc), skillMode)
                             return (
                             <div key={i} className="skill-card">
                               <div className="skill-card-header">
