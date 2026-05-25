@@ -578,7 +578,7 @@ export default function P5XPage() {
                       <div style={{marginBottom:10}}>
                         <div style={{fontSize:'0.7rem', color:'#aaa', marginBottom:4}}>⚔️ อาวุธ</div>
                         <select className="sim-sub-select"
-                          value={selectedWeaponIdx ?? -1}
+                          value={selectedWeaponIdx ?? 0}
                           onChange={e => setSelectedWeaponIdx(parseInt(e.target.value) >= 0 ? parseInt(e.target.value) : -1)}>
                           <option value={-1}>— ไม่ใช้อาวุธ —</option>
                           {currentChar.weapons.map((w, i) => (
