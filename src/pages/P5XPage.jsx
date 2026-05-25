@@ -730,7 +730,7 @@ export default function P5XPage() {
                                         {relevant && whyReasons.length > 0 && (
                                           <span className="rec-detail-why">{whyReasons.join(' · ')}</span>
                                         )}
-                                        <span className="rec-detail-desc">{p.desc}</span>
+                                        <span className="rec-detail-desc">{lang === 'th' && p.descTh ? p.descTh : p.desc}</span>
                                         {setData && (
                                           <div className="rec-detail-set">
                                             <div className={'rec-detail-set-line' + ((usedSetsPc[p.name] ?? 0) >= 2 ? ' rec-detail-set-active' : '')}>
@@ -1037,10 +1037,10 @@ export default function P5XPage() {
 
                 <div className="info-panel">
                   <div className="info-label">💡 Playstyle Note</div>
-                  <div className="note-box">{currentChar.note}</div>
+                  <div className="note-box">{lang === 'th' && currentChar.mechanics ? currentChar.mechanics : currentChar.note}</div>
                 </div>
 
-                {currentChar.mechanics && (
+                {lang === 'en' && currentChar.mechanics && (
                   <div className="info-panel">
                     <div className="info-label">⚙️ Core Mechanics</div>
                     <div className="note-box mech-text">{currentChar.mechanics}</div>
