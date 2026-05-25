@@ -18,6 +18,7 @@ export default function CardSimulator({
 }) {
   // subSlots[cardSlotId] = [statKey|null, statKey|null, statKey|null, statKey|null]
   const [subSlots, setSubSlots] = useState({})
+  const [expandedStats, setExpandedStats] = useState({})
 
   if (!charTgt) return null
   const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
@@ -232,20 +233,29 @@ export default function CardSimulator({
             {label: 'Sun-kissed',    val: sunKissedVal,    color: '#ffcc44', show: sunKissedVal > 0},
           ]
 
+          const isExpanded = expandedStats[k]
+          const visibleParts = parts.filter(p => p.show !== false)
           return (
             <div key={k} style={{marginBottom:6}}>
-              <div style={{display:'flex', alignItems:'center', gap:4}}>
+              <div
+                style={{display:'flex', alignItems:'center', gap:4, cursor:'pointer', userSelect:'none'}}
+                onClick={() => setExpandedStats(prev => ({...prev, [k]: !prev[k]}))}
+              >
                 <span className="alloc-stat" style={{minWidth:80}}>{statLabels[k]||k}</span>
+                <span style={{fontSize:'0.6rem', color:'#666', marginLeft:2}}>{isExpanded ? '▲' : '▼'}</span>
                 <span style={{color: reach?'#00ff88':'#ff7a8a', fontWeight:700, fontSize:'0.85rem', marginLeft:'auto'}}>{fmt(k,total)}</span>
                 <span style={{color:'#fff', fontSize:'0.68rem', minWidth:44, textAlign:'right'}}>/{fmt(k,ideal)}</span>
               </div>
-              <div style={{display:'flex', gap:6, flexWrap:'wrap', paddingLeft:2, marginTop:2}}>
-                {parts.filter(p => p.show !== false).map(p => (
-                  <span key={p.label} style={{fontSize:'0.6rem', color: p.color}}>
-                    <span style={{color:'#fff'}}>{p.label} </span>{fmt(k, p.val)}
-                  </span>
-                ))}
-              </div>
+              {isExpanded && (
+                <div style={{display:'flex', flexDirection:'column', gap:2, paddingLeft:4, marginTop:3, borderLeft:'2px solid #333'}}>
+                  {visibleParts.map(p => (
+                    <span key={p.label} style={{fontSize:'0.65rem'}}>
+                      <span style={{color:'#888'}}>{p.label}</span>
+                      <span style={{color: p.color, fontWeight:600, marginLeft:4}}>{fmt(k, p.val)}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )
         })}
