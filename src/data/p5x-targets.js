@@ -25,7 +25,7 @@ export const CHAR_STAT_TARGETS = {
   // Values = total bonus from ALL sources (computeStats set+weapon + userStats card mains+subs+hidden)
   // Calibrated to realistic endgame: ~2.5 sub rolls/card at tier 2, good main stat choices
   // ── SWEEPER / ASSASSIN ──
-  'Joker':           {atk:[120,25], crit:[40,18], cdmg:[80,22], dmgMulti:[35,12], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
+  'Joker':           {atk:[120,25], crit:[40,18], cdmg:[80,22], dmgMulti:[35,12], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0],   spr:[0,0],   ailm:[0,0]},
   'Panther':         {atk:[110,20], crit:[40,18], cdmg:[65,15], dmgMulti:[50,22], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
   'Skull':           {atk:[110,22], crit:[42,20], cdmg:[260,22], dmgMulti:[30,12], hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},
   'Violet':          {atk:[110,22], crit:[45,22], cdmg:[85,22], dmgMulti:[0,0],   hp:[0,0],   def:[0,0],   heal:[0,0],  spd:[0,0]},

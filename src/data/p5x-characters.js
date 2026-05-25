@@ -1,6 +1,6 @@
 export const CHARACTERS = [
   // ─── 5-Star ─────────────────────────────────────────────────────────────
-  {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Strife 4pc','Courage 2pc'],    weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['Attack %','Crit Rate','Crit Mult.','Damage Mult'],   note:'Best Curse DPS — AoE specialist. Strife 4pc scales ATK with enemy count.',
+  {name:'Ren Amamiya',        codename:'Joker',          role:'Sweeper',    element:'Curse',          rarity:5, cards:['Hindrance 4pc'],               weapon:'Best Curse ATK weapon (Exclusive recommended)', statPrio:['Attack %','Crit Rate','Crit Mult.','Damage Mult'],   note:'Best Curse DPS — AoE specialist. Hindrance 4pc: 2pc Curse DMG +10%, 4pc Skill DMG to debuffed +20%; Space Awareness/Departure passive stacks ATK.',
     mechanics: "Will of Rebellion สะสมจากการโจมตีศัตรูที่ HP ต่ำกว่า 60% (สูงสุด 1 stack ต่อศัตรูต่อการต่อสู้) เมื่อครบ 3 stack จะเกิด Extra Action อัตโนมัติ — SP ลดลง 80% และหักใช้ 3 stack เมื่อสิ้นสุด รักษา SP ให้เกิน 60% เพื่อเปิด passive Meditate (+50% ATK ระหว่าง extra action) Merciless Pursuit สร้างดาเมจ execute บนศัตรูที่ HP ต่ำกว่า 25% หลัง extra action",
     rotation: [
       "เทิร์นปกติ → ใช้ Trickster's Plunder (AoE) โจมตีหลายเป้าเพื่อสะสม stack เร็วขึ้น",
