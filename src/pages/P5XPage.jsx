@@ -413,6 +413,7 @@ export default function P5XPage() {
               <div className="char-tab-bar">
                 <button className={'char-tab-btn' + (charTab === 'build' ? ' active' : '')} onClick={() => setCharTab('build')}>🃏 Build</button>
                 <button className={'char-tab-btn' + (charTab === 'kit'   ? ' active' : '')} onClick={() => setCharTab('kit')}>⚔️ Kit</button>
+                <button className={'char-tab-btn' + (charTab === 'sim'   ? ' active' : '')} onClick={() => setCharTab('sim')}>🎛️ Simulation</button>
 
                 <div className="lang-toggle">
                   <button className={'lang-btn' + (lang === 'en' ? ' active' : '')} onClick={() => setLang('en')}>EN</button>
@@ -548,6 +549,23 @@ export default function P5XPage() {
                 </div>
               )}
 
+              {charTab === 'sim' && (
+                <div className="kit-section">
+                  <CardSimulator
+                    charTgt={charTgt}
+                    currentChar={currentChar}
+                    charStage={charStage}
+                    selectedWeaponIdx={selectedWeaponIdx}
+                    weaponRefine={weaponRefine}
+                    subAlloc={subAlloc}
+                    setSubAlloc={setSubAlloc}
+                    mainStatSel={mainStatSel}
+                    setMainStatSel={setMainStatSel}
+                    simCardSet={simCardSet}
+                    setSimCardSet={setSimCardSet}
+                  />
+                </div>
+              )}
 
               {charTab === 'build' && <div className="info-grid">
                 <div className="info-panel">
@@ -780,21 +798,6 @@ export default function P5XPage() {
                     </div>
                   )
                 })()}
-
-                {/* ── CARD SIMULATOR ─────────────────────────────────────── */}
-                <CardSimulator
-                  charTgt={charTgt}
-                  currentChar={currentChar}
-                  charStage={charStage}
-                  selectedWeaponIdx={selectedWeaponIdx}
-                  weaponRefine={weaponRefine}
-                  subAlloc={subAlloc}
-                  setSubAlloc={setSubAlloc}
-                  mainStatSel={mainStatSel}
-                  setMainStatSel={setMainStatSel}
-                  simCardSet={simCardSet}
-                  setSimCardSet={setSimCardSet}
-                />
 
                 <WeaponPanel
                   currentChar={currentChar}

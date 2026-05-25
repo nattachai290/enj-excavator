@@ -291,7 +291,7 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .skill-buff-icon { width:16px; height:16px; object-fit:contain; mix-blend-mode:screen; }
 .skill-type-support { background:#1a2a00; color:#aaff44; border:1px solid #557700; }
 .skill-name { font-size:0.8rem; font-weight:700; color:var(--p5x-text); margin-bottom:3px; }
-.skill-desc { font-size:0.72rem; color:var(--p5x-muted); line-height:1.5; white-space:pre-line; }
+.skill-desc { font-size:0.72rem; color:#fff; line-height:1.5; white-space:pre-line; }
 
 /* Base Stats Table */
 .stats-table-wrap { overflow-x:auto; }
