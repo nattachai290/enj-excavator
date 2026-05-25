@@ -98,7 +98,7 @@ export const PASSIVE_STAT_MAP = {
   'Control':        {def:8,   hp:5},
   'Labor':          {hp:8,    atk:5, def:5},
   'Peace':          {def:12},
-  'Futility':       {},
+  'Futility':       {ailm:15},
   'Prosperity':     {},
   'Disappointment': {atk:10, crit:8, elements:['Almighty']},
   'Transformation': {},

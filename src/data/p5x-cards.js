@@ -4,7 +4,7 @@ export const CARD_SETS = [
   {name:'Ruin',           bonus2:'ATK +12%',                                              bonus4:'ATK +25% for 3 turns; re-apply after Theurgy',
     stats2:{atk:12},        stats4:{atk:25}},
   {name:'Futility',       bonus2:'ATK +12%',                                              bonus4:'Ailment Accuracy +30% for 2 turns; reapply after Technical',
-    stats2:{atk:12},        stats4:{}},
+    stats2:{atk:12},        stats4:{ailm:30}},
   {name:'Disappointment', bonus2:'ATK +12%',                                              bonus4:'DMG +25% if attribute differs from last-used skill',
     stats2:{atk:12},        stats4:{}},
   {name:'Triumph',        bonus2:'CRIT Rate +7.5%',                                       bonus4:'Resonance ATK DMG +40%',
