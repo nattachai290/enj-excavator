@@ -104,26 +104,6 @@ export default function CardSimulator({
     <div className="info-panel">
       <div className="info-label">🎛️ จำลอง Card Stats</div>
 
-      {/* Card set selector */}
-      <div style={{marginBottom:10}}>
-        <div className="alloc-section-label">Card Set (4pc)</div>
-        <div style={{display:'flex', flexWrap:'wrap', gap:4}}>
-          {charDefaultSet && (
-            <button className={'refine-btn' + (!simCardSet ? ' active' : '')}
-              onClick={() => setSimCardSet(null)}>
-              {charDefaultSet} (default)
-            </button>
-          )}
-          {CARD_SETS.filter(cs => cs.name !== charDefaultSet).map(cs => (
-            <button key={cs.name}
-              className={'refine-btn' + (simCardSet === cs.name ? ' active' : '')}
-              onClick={() => setSimCardSet(cs.name)}>
-              {cs.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Per-card blocks */}
       <div style={{display:'flex', flexDirection:'column', gap:8}}>
         {CARD_SLOTS.map(slot => {
@@ -146,6 +126,28 @@ export default function CardSimulator({
                 <span className="sim-card-name">{slot.id}</span>
                 <span className={full ? 'sim-card-sub-count full' : 'sim-card-sub-count'}>{usedRolls}/4 rolls</span>
               </div>
+
+              {/* Card Set selector — Space only */}
+              {slot.id === 'Space' && (
+                <div style={{marginBottom:8}}>
+                  <div style={{fontSize:'0.6rem', color:'#555', marginBottom:3}}>Set (4pc)</div>
+                  <div style={{display:'flex', flexWrap:'wrap', gap:3}}>
+                    {charDefaultSet && (
+                      <button className={'refine-btn' + (!simCardSet ? ' active' : '')}
+                        onClick={() => setSimCardSet(null)}>
+                        {charDefaultSet} (default)
+                      </button>
+                    )}
+                    {CARD_SETS.filter(cs => cs.name !== charDefaultSet).map(cs => (
+                      <button key={cs.name}
+                        className={'refine-btn' + (simCardSet === cs.name ? ' active' : '')}
+                        onClick={() => setSimCardSet(cs.name)}>
+                        {cs.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Main stat */}
               <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:8}}>
