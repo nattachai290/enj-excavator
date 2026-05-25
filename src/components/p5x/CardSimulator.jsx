@@ -99,6 +99,9 @@ export default function CardSimulator({
   const hasSunKissed = currentChar?.skills?.some(s => s.name === 'Sun-kissed Blooms')
   const sunKissedCdmg = hasSunKissed ? parseFloat((84 * Math.min(totalSpr, 450) / 450).toFixed(1)) : 0
   const simSpacePassive = getSpacePassiveBonus(charForSim, {spr: totalSpr})
+  const spacePassiveName = (charForSim?.cards||[])
+    .map(c => { const m = c.match(/^(.+?)\s+4pc$/i); return m ? m[1].trim() : null })
+    .find(Boolean) || 'passive'
 
   return (
     <div className="info-panel">
@@ -215,8 +218,8 @@ export default function CardSimulator({
             {label: 'base',    val: baseVal,       color: '#fff'},
             {label: 'main',    val: mainVal,        color: '#8888ff', show: mainVal > 0},
             {label: 'sub',     val: subVal,         color: '#88ccff', show: subVal > 0},
-            {label: 'passive', val: spacePassiveVal, color: '#88ffcc', show: spacePassiveVal > 0},
-            {label: '☀️',      val: sunKissedVal,   color: '#ffcc44', show: sunKissedVal > 0},
+            {label: spacePassiveName, val: spacePassiveVal, color: '#88ffcc', show: spacePassiveVal > 0},
+            {label: 'Sun-kissed',     val: sunKissedVal,   color: '#ffcc44', show: sunKissedVal > 0},
           ]
 
           return (
