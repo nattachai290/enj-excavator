@@ -44,11 +44,17 @@ max SPR = (SP ที่ต้องการต่อ cycle / จำนวน ca
 หมายเหตุ: ถ้ามี SP recovery หลัง skill (เช่น A2 +50 SP) ให้หักออกจาก SP ที่ต้องการก่อน
 ```
 
+**วิธีตัดสินว่า cap ของ passive คือ min หรือ max:**
+- มี mechanic อื่นที่ยังได้ประโยชน์จากค่าสูงกว่า cap นั้นไหม?
+  - ใช่ → cap คือ **min** (floor ของ passive นั้น แต่ยังมี ceiling สูงกว่าจาก mechanic อื่น)
+  - ไม่ → cap คือ **true max** (ไม่มีอะไรได้จากการเพิ่มอีก)
+- ตัวอย่าง SPR wind-tempest: Sun-kissed Blooms cap 450% = min เพราะ Storm of Petals SP engine ยังได้ประโยชน์ถึง 525%
+- ตัวอย่าง true max: passive ที่บอก "เมื่อ stat ≥ X ได้ผล Y" และไม่มี mechanic อื่นใช้ stat นั้น → X คือ max จริง
+
 **กฎ:**
 - ต่ำกว่า min → mechanic ทำงานไม่เต็ม → ลงทุนก่อน
 - ระหว่าง min–max → เพิ่มได้ถ้า budget เหลือหลัง stat อื่นครบ
 - เกิน max → ไม่มีประโยชน์เพิ่ม → ย้าย budget ไป stat อื่น
-- **อย่าเรียก passive cap ว่า "max"** — มันคือ min ของ passive นั้น; max คือ mechanic ceiling ของทั้งระบบ
 
 ## วิธีเลือก Main Stat vs Sub Stat
 
