@@ -56,9 +56,9 @@ export default function P5XPage() {
   const [subAlloc, setSubAlloc] = useState({})
   const [mainStatSel, setMainStatSel] = useState({})
   const [simCardSet, setSimCardSet] = useState(null)
-  const [simLockedSubs, setSimLockedSubs] = useState({})
+
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}); setSimCardSet(null); setSimLockedSubs({}) }, [charName])
+  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}); setSimCardSet(null) }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -1013,8 +1013,6 @@ export default function P5XPage() {
                   setMainStatSel={setMainStatSel}
                   simCardSet={simCardSet}
                   setSimCardSet={setSimCardSet}
-                  simLockedSubs={simLockedSubs}
-                  setSimLockedSubs={setSimLockedSubs}
                 />
 
                 <WeaponPanel

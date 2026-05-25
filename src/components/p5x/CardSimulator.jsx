@@ -14,8 +14,6 @@ export default function CardSimulator({
   setMainStatSel,
   simCardSet,
   setSimCardSet,
-  simLockedSubs,
-  setSimLockedSubs,
 }) {
   if (!charTgt) return null
   const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
