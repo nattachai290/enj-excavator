@@ -696,7 +696,7 @@ export default function P5XPage() {
                   <div className="info-label">🎴 Revelation Card — Main Stats แนะนำ</div>
                   <div className="slot-guide">
                     {CARD_SLOTS.filter(slot => slot.mainStats.some(({key}) => key !== null)).map(slot => {
-                      let bestLabel = null, bestWeight = -1
+                      let bestLabel = null, bestWeight = 0
                       slot.mainStats.forEach(({label, key}) => {
                         if (!key || !charTgt) return
                         const w = (charTgt[key] || [0,0])[1]
