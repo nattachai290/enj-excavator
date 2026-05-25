@@ -185,18 +185,20 @@ export default function CardSimulator({
                 )
               })()}
 
-              {/* Main stat */}
-              <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:8}}>
-                <button className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
-                  onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>—</button>
-                {slot.mainStats.map(ms => (
-                  <button key={ms.label}
-                    className={'refine-btn' + (mainStatSel[slot.id]===ms.label ? ' active' : '')}
-                    onClick={() => setMainStatSel(p => ({...p, [slot.id]: ms.label}))}>
-                    {ms.label} +{ms.max}{ms.unit}
-                  </button>
-                ))}
-              </div>
+              {/* Main stat — hide for Space/Sun (key:null = fixed flat stats) */}
+              {slot.mainStats.some(ms => ms.key !== null) && (
+                <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:8}}>
+                  <button className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
+                    onClick={() => setMainStatSel(p => ({...p, [slot.id]: null}))}>—</button>
+                  {slot.mainStats.map(ms => (
+                    <button key={ms.label}
+                      className={'refine-btn' + (mainStatSel[slot.id]===ms.label ? ' active' : '')}
+                      onClick={() => setMainStatSel(p => ({...p, [slot.id]: ms.label}))}>
+                      {ms.label} +{ms.max}{ms.unit}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Sub stats — 4 dropdown rows */}
               <div style={{display:'flex', flexDirection:'column', gap:3}}>
