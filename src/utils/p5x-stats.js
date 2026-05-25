@@ -93,6 +93,8 @@ export function scoreSpaceCard(card, charTargets, charCards, charElement, charEl
     const m = cs.match(/^(.+?)\s+(2|4)pc$/i)
     return m ? m[1].trim() : null
   }).filter(Boolean)
+  // If character has a defined card set, only show Space cards with a matching passive
+  if (usedSets.length > 0 && !card.passives.some(p => usedSets.includes(p.name))) return 0
   card.passives.forEach(p => {
     const { elements, roles, ...statWeights } = PASSIVE_STAT_MAP[p.name] || {}
     if (elements && charElements.length > 0 && !elements.some(e => charElements.includes(e))) return

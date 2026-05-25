@@ -25,6 +25,7 @@
 - ดู REVELATION_CARDS.Space: Space card ไหนมี passive ชื่อเดียวกับ 4pc set ที่เลือก?
 - passive นั้นให้ stat อะไร? ตรงกับ stat target ของตัวละครไหม?
 - ถ้า Space card ที่มี passive นั้นมีหลายตัว ให้เลือกตัวที่ passive อื่นๆ เป็นประโยชน์ที่สุดด้วย
+- **Space card ที่ไม่มี passive ตรงกับ set ที่ใช้ = ไม่เกี่ยวข้อง ไม่ต้องนำมาแสดง**
 
 **Step 4 — ยืนยัน pair**
 - 4pc set name ต้องตรงกับ passive name ใน Space card → Space passive activate
