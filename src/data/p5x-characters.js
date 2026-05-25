@@ -1639,8 +1639,8 @@ export const CHARACTERS = [
       'LV13'   : {atk:[40,8], crit:[0,0], cdmg:[0,0], dmgMulti:[25,10], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[199,25]},
       'LV13+M5': {atk:[40,8], crit:[0,0], cdmg:[0,0], dmgMulti:[25,10], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[199,25]},
     },
-    statFloor: {ailm:179},
-    // ailm 179 = Requiem Cold Flames cap (54.5-13.6)×4.38; ailm 199 = Highlight DMG taken cap (34.1×5.83)
+    statFloor: {ailm:149},
+    // ailm 149 = Requiem CF cap (54.5-13.6)×3.65 = Requiem DEF cap (40.9-10.2)×4.86; ailm 199 = Highlight/Sub-Zero cap
     mindscapeBonus: {dmgMulti:16, ailm:24},
     weapons:[
       {
