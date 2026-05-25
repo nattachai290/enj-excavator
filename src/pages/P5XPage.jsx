@@ -5917,21 +5917,6 @@ export default function P5XPage() {
                       return {...prev, [k]: {...cur, [slotId]: Math.min(4, Math.max(0, (cur[slotId]||0) + delta))}}
                     })
 
-                  const toggleLock = (slotId, subLabel) => {
-                    const k = SUB_STAT_KEY[subLabel]
-                    const currentlyLocked = !!simLockedSubs[slotId]?.[subLabel]
-                    const lockedCount = Object.values(simLockedSubs[slotId] || {}).filter(Boolean).length
-                    if (!currentlyLocked && lockedCount >= 4) return
-                    setSimLockedSubs(prev => ({...prev, [slotId]: {...(prev[slotId]||{}), [subLabel]: !currentlyLocked}}))
-                    if (currentlyLocked && k) {
-                      setSubAlloc(prev => {
-                        const cur = {...(prev[k]||{})}
-                        delete cur[slotId]
-                        return {...prev, [k]: cur}
-                      })
-                    }
-                  }
-
                   // main stat contributions
                   const mainFromSel = {}
                   Object.entries(mainStatSel).forEach(([slotId, label]) => {
@@ -5989,13 +5974,10 @@ export default function P5XPage() {
                       <div style={{display:'flex', flexDirection:'column', gap:8}}>
                         {CARD_SLOTS.map(slot => {
                           const pool = slot.id==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
-                          const lockedForSlot = simLockedSubs[slot.id] || {}
-                          const lockedCount = Object.values(lockedForSlot).filter(Boolean).length
                           return (
                             <div key={slot.id} className="sim-card-block">
                               <div className="sim-card-header">
                                 <span className="sim-card-name">{slot.id}</span>
-                                <span className="sim-card-sub-count">{lockedCount}/4 sub</span>
                               </div>
                               {/* Main stat */}
                               <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:6}}>
@@ -6013,31 +5995,16 @@ export default function P5XPage() {
                               <div style={{display:'flex', flexDirection:'column', gap:2}}>
                                 {Object.entries(pool).map(([subLabel, tiers]) => {
                                   const k = SUB_STAT_KEY[subLabel]
-                                  const locked = !!lockedForSlot[subLabel]
                                   const rolls = k ? ((subAlloc[k]||{})[slot.id] || 0) : 0
-                                  const canLock = locked || lockedCount < 4
                                   const t1 = tiers[0]
                                   const unit = subUnit(subLabel)
                                   return (
-                                    <div key={subLabel} className={'sim-sub-row' + (locked ? ' locked' : '')}>
-                                      <button
-                                        className={'sim-lock-btn' + (locked ? ' active' : '')}
-                                        onClick={() => toggleLock(slot.id, subLabel)}
-                                        disabled={!canLock}
-                                        title={locked ? 'unlock' : lockedCount>=4 ? 'max 4' : 'lock'}>
-                                        {locked ? '🔒' : '○'}
-                                      </button>
+                                    <div key={subLabel} className={'sim-sub-row' + (rolls > 0 ? ' locked' : '')}>
                                       <span className="sim-sub-label">{subLabel}</span>
-                                      {locked ? (
-                                        <>
-                                          <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)}>−</button>
-                                          <span className="alloc-num">{rolls}</span>
-                                          <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)}>+</button>
-                                          <span className="alloc-hint">+{t1}{unit}/roll</span>
-                                        </>
-                                      ) : (
-                                        <span style={{color:'#555', fontSize:'0.62rem', marginLeft:'auto'}}>{t1}{unit}/roll</span>
-                                      )}
+                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, -1)}>−</button>
+                                      <span className="alloc-num">{rolls}</span>
+                                      <button className="alloc-btn" onClick={() => bump(k, slot.id, +1)}>+</button>
+                                      <span className="alloc-hint">+{t1}{unit}/roll</span>
                                     </div>
                                   )
                                 })}
