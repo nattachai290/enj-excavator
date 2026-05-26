@@ -76,6 +76,13 @@ export default function P5XPage() {
   })()
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
   const stats = computeStats(currentChar, selectedWeaponIdx, weaponRefine)
+  const spacePassiveBTop = getSpacePassiveBonus(currentChar, stats)
+  const sunKissedBTop = (() => {
+    if (!currentChar?.skills?.some(s => s.name === 'Sun-kissed Blooms')) return {}
+    const spr = stats.spr || 0
+    const v = parseFloat((84 * Math.min(spr, 450) / 450).toFixed(1))
+    return v > 0 ? { cdmg: v } : {}
+  })()
   const cardSimStats = (() => {
     const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
     const result = {}
@@ -99,9 +106,13 @@ export default function P5XPage() {
   })()
   const combatBuffStats = (() => {
     if (!inclCombatBuff || !currentChar?.combatBuffs?.length) return {}
+    const typedSources = { sunKissedB: sunKissedBTop, spacePassiveB: spacePassiveBTop }
     const result = {}
     currentChar.combatBuffs.forEach(b => {
-      Object.entries(b.stats).forEach(([k, v]) => { result[k] = (result[k]||0) + v })
+      if (b.skipStats) return
+      const src = b.type ? typedSources[b.type] : b.stats
+      if (!src) return
+      Object.entries(src).forEach(([k, v]) => { result[k] = (result[k]||0) + v })
     })
     return result
   })()
@@ -884,7 +895,8 @@ export default function P5XPage() {
                   Object.entries(sunKissedB).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                   if (inclCombatBuff && currentChar.combatBuffs?.length) {
                     currentChar.combatBuffs.forEach(b => {
-                      Object.entries(b.stats).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
+                      if (b.inBase) return  // already in base0 from spacePassiveB/sunKissedB/computeStats
+                      Object.entries(b.stats || {}).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                     })
                   }
                   // Compute recommended main stat bonus (same exclusivity logic as the recommender)
@@ -1027,8 +1039,12 @@ export default function P5XPage() {
                           })
                         }
                         if (inclCombatBuff && currentChar.combatBuffs?.length) {
+                          const typedSrcs = { sunKissedB: sunKissedB, spacePassiveB: spacePassiveB }
                           currentChar.combatBuffs.forEach(b => {
-                            const contrib = Object.fromEntries(Object.entries(b.stats).filter(([k]) => trackedKeys.has(k)))
+                            if (b.inBase) return  // already shown in sources via existing spacePassiveB/sunKissedB entries
+                            const src = b.type ? typedSrcs[b.type] : b.stats
+                            if (!src) return
+                            const contrib = Object.fromEntries(Object.entries(src).filter(([k]) => trackedKeys.has(k)))
                             if (Object.keys(contrib).length) sources.push({ label:b.name, contrib })
                           })
                         }
