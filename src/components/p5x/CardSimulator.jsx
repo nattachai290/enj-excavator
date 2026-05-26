@@ -252,12 +252,10 @@ export default function CardSimulator({
                           <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={rolls===0}>−</button>
                           <input
                             key={`${selKey}-${slot.id}-${rolls}`}
-                            type="number"
+                            type="text"
+                            inputMode="decimal"
                             className="alloc-num-input"
                             defaultValue={+(rolls * opt.t1).toFixed(1)}
-                            min={0}
-                            max={+((4 - totalRollsForSlot(subAlloc, slot.id) + rolls) * opt.t1).toFixed(1)}
-                            step={opt.t1}
                             onBlur={e => setPct(selKey, slot.id, e.target.value, opt.t1)}
                           />
                           <span className="alloc-unit">{opt.unit || ''}</span>
