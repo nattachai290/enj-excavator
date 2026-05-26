@@ -2612,7 +2612,7 @@ export const CHARACTERS = [
         ]},
     ],
   },
-  {name:'Rin (Firecracker)',  codename:'rin-firecracker',role:'Sweeper',    element:'Fire',           rarity:5, cards:['Power 4pc','Courage 2pc'],      weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Damage Mult','Crit Rate','Crit Mult.'],     note:'Fire Sweeper variant. Festive alternate version of Rin.',
+  {name:'Rin (Firecracker)',  codename:'rin-firecracker',role:'Sweeper',    element:'Fire',           rarity:5, cards:['Strife 4pc'],               weapon:'Best Fire ATK weapon',                          statPrio:['Attack %','Crit Rate','Damage Mult','Crit Mult.'],     note:'Fire Sweeper variant. Strife 4pc: 2pc Fire DMG +10%, 4pc ATK +15% (always) +15% if fire-weak; Space Acceptance/Strife passive ATK +8% per enemy (up to 40%). DoT-heavy kit — ATK primary, crit only direct hits.',
     mechanics: "Firecracker Yaoling สะสม Year-End Flames stack บนศัตรู (สูงสุด 4) ผ่านการโจมตีด้วย Fire — แต่ละ stack เพิ่ม DoT damage บนเป้านั้น Flaming Sword Dance เปิดใช้งานช่วงจำกัดเทิร์น เปลี่ยนการโจมตีระยะประชิดเป็น Yanhua Slash (Fire hit โบนัสที่เปิด Fire Technical) ATK เพิ่มขึ้นถาวรระหว่างการต่อสู้ และได้ ATK โบนัสขนาดใหญ่เมื่อเปิด Technical รุ่นนี้เน้น single-target Fire DPS พร้อม stack damage ที่เพิ่มขึ้นเรื่อยๆ ต่างจากบทบาท debuff ของ Rin",
     rotation: [
       "เทิร์น 1 → ใช้ Fire skill เพื่อเริ่มสะสม Year-End Flames stack บนเป้าหลัก",
@@ -2679,10 +2679,13 @@ export const CHARACTERS = [
     ],
     hiddenAbility: 'ATK +29%',
     statTargets: {
-      'LV10'   : {atk:[110,20], crit:[40,18], cdmg:[65,15], dmgMulti:[50,22], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
-      'LV10+M5': {atk:[110,17], crit:[40,18], cdmg:[65,12], dmgMulti:[50,22], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
-      'LV13'   : {atk:[110,22], crit:[40,19], cdmg:[65,16], dmgMulti:[50,24], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
-      'LV13+M5': {atk:[110,19], crit:[40,19], cdmg:[65,13], dmgMulti:[50,24], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
+      // ATK primary (scales DoT 100% + direct hits). Crit affects direct hits only (~50% dmg).
+      // Internal dmgMulti already high (OBB +36%, Prosperity +36% vs Burn) → ATK% better externally.
+      // cdmg base = 150; A1 temp +40% Yanhua, A4 temp +15% → target from card subs only
+      'LV10'   : {atk:[110,22], crit:[40,18], cdmg:[185,15], dmgMulti:[50,18], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
+      'LV10+M5': {atk:[110,22], crit:[40,18], cdmg:[185,15], dmgMulti:[50,18], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
+      'LV13'   : {atk:[110,22], crit:[40,18], cdmg:[185,15], dmgMulti:[50,18], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
+      'LV13+M5': {atk:[110,22], crit:[40,18], cdmg:[185,15], dmgMulti:[50,18], hp:[0,0], def:[0,0], heal:[0,0], spd:[0,0], spr:[0,0], ailm:[0,0]},
     },
     mindscapeBonus: {atk:20, cdmg:24},
     weapons:[
