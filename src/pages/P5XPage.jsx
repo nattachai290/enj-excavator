@@ -541,7 +541,10 @@ export default function P5XPage() {
                                     <tr key={key}>
                                       <td>{label}</td>
                                       <td>{currentChar.baseStats?.[key] ?? '—'}</td>
-                                      {rows.map((r, i) => <td key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>{r[key] ?? '—'}</td>)}
+                                      {rows.map((r, i) => {
+                                        const v = r[key] || (key === 'spd' ? currentChar.baseStats?.spd : null)
+                                        return <td key={i} className={i === rows.length-1 ? 'stat-lv80' : ''}>{v ?? '—'}</td>
+                                      })}
                                     </tr>
                                   ))}
                                 </tbody>
@@ -666,7 +669,7 @@ export default function P5XPage() {
                         <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
                         <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
                         <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
-                        <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{lv80.spd ?? currentChar?.baseStats?.spd ?? '—'}</span></div>
+                        <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{(lv80.spd || currentChar?.baseStats?.spd) ?? '—'}</span></div>
                       </div>
                     )}
                     <div className="summary-grid">
