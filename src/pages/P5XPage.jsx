@@ -712,11 +712,10 @@ export default function P5XPage() {
                         let bestLabel = null, bestScore = 0
                         slot.mainStats.forEach(({label, key}) => {
                           if (!key) return
-                          const [ideal, w] = charTgt[key] || [0, 0]
+                          const [, w] = charTgt[key] || [0, 0]
                           if (!w) return
-                          const need = Math.max(0, ideal - (baseForMain[key] || 0))
-                          if (need <= 0) return
                           // Exclusive stats (only 1 slot) score higher than shared ones
+                          // Always recommend best stat regardless of whether target is already met
                           const score = w / (statSlotCount[key] || 1)
                           if (score > bestScore) { bestScore = score; bestLabel = label }
                         })

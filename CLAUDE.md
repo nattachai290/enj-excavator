@@ -172,14 +172,19 @@ Stat แต่ละตัวมีจำนวน slot ที่รองรั
 | DEF% | Moon + Star + Sky | 3 |
 
 **ลำดับการกำหนด slot:**
-1. ตัด stat ที่ need = 0 ออกจากการแข่งขันทันที
+1. ตัด stat ที่ weight = 0 ออกจากการแข่งขัน (ไม่เกี่ยวกับตัวละครนี้)
 2. คำนวณ score = weight / slotCount สำหรับแต่ละ option ในแต่ละ slot
 3. ใน slot นั้น เลือก option ที่ score สูงสุด
 
+**กฎเหล็ก: ห้ามแสดง "-" ใน slot ที่มี stat weight > 0**
+- แม้ base stats จะเกิน target แล้ว (need ≤ 0) ก็ยังต้องแนะนำ main stat
+- Player ต้องใส่ main stat ในทุก slot อยู่ดี — "-" ทำให้ไม่รู้ว่าต้องใส่อะไร
+- "-" แสดงได้เฉพาะเมื่อ **ทุก stat ใน slot มี weight = 0** เท่านั้น (slot ไม่เกี่ยวกับ build นี้)
+
 **ผลลัพธ์ที่ตามมา:**
-- ถ้า DMG Mult need > 0 → Moon → DMG Mult เสมอ (score = weight/1 ชนะ ATK% ที่ weight/3)
-- ถ้า SPR need > 0 → Sky → SPR เสมอ
-- ATK% ได้ slot ก็ต่อเมื่อ exclusive stat ใน slot นั้น need = 0
+- DMG Mult ใน charTgt → Moon → DMG Mult เสมอ (score = weight/1 ชนะ ATK% ที่ weight/3)
+- SPR ใน charTgt → Sky → SPR เสมอ
+- ATK% ได้ slot เมื่อ exclusive stat ใน slot นั้น weight = 0
 
 ### กฎการเลือก Main vs Sub
 
