@@ -92,7 +92,7 @@ export default function CardSimulator({
       const pct = perSlot[slotId] || 0
       if (!pct) return s
       const t1 = getT1(k, slotId)
-      return s + (t1 > 0 ? Math.round(pct / t1) : 0)
+      return s + (t1 > 0 ? Math.floor(pct / t1) : 0)
     }, 0)
 
   const bump = (k, slotId, delta) =>
@@ -101,7 +101,7 @@ export default function CardSimulator({
       if (!t1) return prev
       const cur = prev[k] || {}
       const curPct = cur[slotId] || 0
-      const curRolls = Math.round(curPct / t1)
+      const curRolls = Math.floor(curPct / t1)
       if (delta > 0 && totalRollsForSlot(prev, slotId) >= 4) return prev
       const newRolls = Math.max(0, curRolls + delta)
       return {...prev, [k]: {...cur, [slotId]: +(newRolls * t1).toFixed(2)}}
@@ -258,7 +258,7 @@ export default function CardSimulator({
                   const opt = selKey ? poolOptions.find(o => o.key === selKey) : null
                   // subAlloc stores % directly
                   const curPct = selKey ? ((subAlloc[selKey]||{})[slot.id] || 0) : 0
-                  const rolls = opt && opt.t1 > 0 ? Math.round(curPct / opt.t1) : 0
+                  const rolls = opt && opt.t1 > 0 ? Math.floor(curPct / opt.t1) : 0
                   return (
                     <div key={i} className={'sim-sub-row' + (selKey ? ' locked' : '')}>
                       <select

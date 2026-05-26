@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 import { CHARACTERS, RAINBOW_CHARS, PORTRAITS, SKILL_TYPE_IMG, ROLE_IMG, ELEM_IMG } from '../data/p5x-characters.js'
@@ -60,9 +60,22 @@ export default function P5XPage() {
   const [simAwarenessLevel, setSimAwarenessLevel] = useState(0)
   const [inclMain, setInclMain] = useState(false)
   const [inclCombatBuff, setInclCombatBuff] = useState(false)
+  const pendingImportRef = useRef(null)
 
   useEffect(() => { if (charName) setMobileTab('detail') }, [charName])
-  useEffect(() => { setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0}); setCharStage(null); setOpenSpaceCard(null); setSubAlloc({}); setMainStatSel({}); setSimCardSet(null); setSimAwarenessLevel(0); setInclMain(false); setInclCombatBuff(false) }, [charName])
+  useEffect(() => {
+    const pending = pendingImportRef.current
+    pendingImportRef.current = null
+    setUserStats({atk:0, crit:0, cdmg:0, dmgMulti:0, hp:0, def:0, heal:0, spd:0})
+    setCharStage(pending?.charStage ?? null)
+    setOpenSpaceCard(null)
+    setSubAlloc(pending?.subAlloc ?? {})
+    setMainStatSel(pending?.mainStatSel ?? {})
+    setSimCardSet(pending?.simCardSet ?? null)
+    setSimAwarenessLevel(0)
+    setInclMain(false)
+    setInclCombatBuff(false)
+  }, [charName])
 
   const currentChar = CHARACTERS.find(c => c.name === charName) || null
   const charTgt = (() => {
@@ -236,7 +249,16 @@ export default function P5XPage() {
     scoreData = { scorePct, grade, gradeColor, gradeNote: gradeNotes[grade], breakdown }
   }
 
-  const exportJson = JSON.stringify({ version:1, character: charName||null, stats }, null, 2)
+  const exportJson = JSON.stringify({
+    version: 2,
+    character: charName || null,
+    charStage: charStage || null,
+    selectedWeaponIdx: selectedWeaponIdx ?? null,
+    weaponRefine,
+    simCardSet: simCardSet || null,
+    mainStatSel,
+    subAlloc,
+  }, null, 2)
 
   function copyExport() {
     navigator.clipboard.writeText(exportJson).catch(() => {})
@@ -247,7 +269,12 @@ export default function P5XPage() {
   function doImport() {
     try {
       const d = JSON.parse(importText)
-      if (d.character) setCharName(d.character)
+      if (d.character) {
+        pendingImportRef.current = d
+        setCharName(d.character)
+        if (d.selectedWeaponIdx != null) setSelectedWeaponIdx(d.selectedWeaponIdx)
+        if (d.weaponRefine != null) setWeaponRefine(d.weaponRefine)
+      }
       setShowImport(false)
       setImportError('')
     } catch (e) {
