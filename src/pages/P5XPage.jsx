@@ -84,17 +84,16 @@ export default function P5XPage() {
       const ms = slot?.mainStats.find(m => m.label === label)
       if (ms?.key) result[ms.key] = (result[ms.key]||0) + ms.max
     })
-    if (charTgt) {
-      Object.entries(charTgt).filter(([,[,w]]) => w > 0).forEach(([k]) => {
+      // Process ALL sub stat rolls regardless of charTgt weight
+      Object.entries(subAlloc).forEach(([k, perSlot]) => {
         SLOT_IDS.forEach(slotId => {
-          const rolls = (subAlloc[k]||{})[slotId] || 0
+          const rolls = (perSlot[slotId]) || 0
           if (!rolls) return
           const pool = slotId==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
           const t1 = Object.entries(pool).find(([l]) => SUB_STAT_KEY[l]===k)?.[1]?.[0] || 0
           result[k] = (result[k]||0) + t1 * rolls
         })
       })
-    }
     return result
   })()
   const totalStats = Object.fromEntries(
@@ -112,6 +111,7 @@ export default function P5XPage() {
   const finalAtk = lv80 ? Math.round((lv80.atk + wAtk) * (1 + totalStats.atk / 100)) : null
   const finalHp  = lv80 ? Math.round((lv80.hp  + wHp)  * (1 + totalStats.hp  / 100)) : null
   const finalDef = lv80 ? Math.round((lv80.def + wDef)  * (1 + totalStats.def / 100)) : null
+  const finalSpd = Math.round(totalStats.spd)
 
   const filtered = CHARACTERS.filter(c =>
     (filter === 'all' || c.role === filter) &&
@@ -669,7 +669,7 @@ export default function P5XPage() {
                         <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
                         <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
                         <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
-                        <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{(lv80.spd || currentChar?.baseStats?.spd) ?? '—'}</span></div>
+                        <div className="final-stat"><span className="fs-label">SPD</span><span className="fs-val">{finalSpd}</span></div>
                       </div>
                     )}
                     <div className="summary-grid">
