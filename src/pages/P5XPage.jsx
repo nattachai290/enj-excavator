@@ -92,14 +92,12 @@ export default function P5XPage() {
       const ms = slot?.mainStats.find(m => m.label === label)
       if (ms?.key) result[ms.key] = (result[ms.key]||0) + ms.max
     })
-      // Process ALL sub stat rolls regardless of charTgt weight
+      // subAlloc stores % directly — sum them
       Object.entries(subAlloc).forEach(([k, perSlot]) => {
         SLOT_IDS.forEach(slotId => {
-          const rolls = (perSlot[slotId]) || 0
-          if (!rolls) return
-          const pool = slotId==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
-          const t1 = Object.entries(pool).find(([l]) => SUB_STAT_KEY[l]===k)?.[1]?.[0] || 0
-          result[k] = (result[k]||0) + t1 * rolls
+          const pct = (perSlot[slotId]) || 0
+          if (!pct) return
+          result[k] = (result[k]||0) + pct
         })
       })
     return result

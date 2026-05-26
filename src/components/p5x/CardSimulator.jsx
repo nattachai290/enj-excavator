@@ -3,7 +3,7 @@ import { CARD_SETS, CARD_SLOTS, CARD_SUB_STATS, REVELATION_CARDS } from '../../d
 import { SUB_STAT_KEY } from '../../data/p5x-targets.js'
 import { computeStats, getSpacePassiveBonus, statLabels, parseHiddenAbility } from '../../utils/p5x-stats.js'
 
-// Self-contained input: owns its display state, syncs from curPct only when it changes externally
+// Each input owns its own display state; syncs from curPct only when committed value changes
 function SubStatInput({ curPct, onCommit }) {
   const [val, setVal] = useState(() => String(curPct))
   useEffect(() => { setVal(String(curPct)) }, [curPct])
@@ -17,6 +17,12 @@ function SubStatInput({ curPct, onCommit }) {
       onBlur={e => onCommit(e.target.value)}
     />
   )
+}
+
+const getSlotPool = (slotId) => slotId === 'Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+const getT1 = (k, slotId) => {
+  const pool = getSlotPool(slotId)
+  return Object.entries(pool).find(([l]) => SUB_STAT_KEY[l] === k)?.[1]?.[0] || 0
 }
 
 export default function CardSimulator({
@@ -52,7 +58,6 @@ export default function CardSimulator({
     const s = computeStats(charForSim, selectedWeaponIdx ?? 0, weaponRefine)
     const all = {...s}
     Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
-    // A0 combat buff: computeStats always includes it; subtract when toggle is off
     const a0 = charForSim.awareness?.[0]
     if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
       Object.entries(a0.stats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
@@ -81,25 +86,38 @@ export default function CardSimulator({
   const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
   const subUnit = (lbl) => (lbl==='HP'||lbl==='Attack'||lbl==='Defense'||lbl==='Speed') ? '' : '%'
 
+  // subAlloc[k][slotId] now stores % directly (not roll count)
   const totalRollsForSlot = (alloc, slotId) =>
-    Object.values(alloc).reduce((s, perSlot) => s + (perSlot[slotId] || 0), 0)
+    Object.entries(alloc).reduce((s, [k, perSlot]) => {
+      const pct = perSlot[slotId] || 0
+      if (!pct) return s
+      const t1 = getT1(k, slotId)
+      return s + (t1 > 0 ? Math.round(pct / t1) : 0)
+    }, 0)
 
   const bump = (k, slotId, delta) =>
     setSubAlloc(prev => {
+      const t1 = getT1(k, slotId)
+      if (!t1) return prev
       const cur = prev[k] || {}
-      const curRolls = cur[slotId] || 0
+      const curPct = cur[slotId] || 0
+      const curRolls = Math.round(curPct / t1)
       if (delta > 0 && totalRollsForSlot(prev, slotId) >= 4) return prev
-      return {...prev, [k]: {...cur, [slotId]: Math.max(0, curRolls + delta)}}
+      const newRolls = Math.max(0, curRolls + delta)
+      return {...prev, [k]: {...cur, [slotId]: +(newRolls * t1).toFixed(2)}}
     })
 
+  // Store exact typed % (capped at available roll budget × tier1)
   const setPct = (k, slotId, pctStr, tier1) =>
     setSubAlloc(prev => {
       const cur = prev[k] || {}
-      const curRolls = cur[slotId] || 0
+      const curPct = cur[slotId] || 0
+      const curRolls = tier1 > 0 ? Math.round(curPct / tier1) : 0
       const otherRolls = totalRollsForSlot(prev, slotId) - curRolls
       const maxRolls = 4 - otherRolls
-      const newRolls = Math.max(0, Math.min(maxRolls, Math.round((parseFloat(pctStr) || 0) / tier1)))
-      return {...prev, [k]: {...cur, [slotId]: newRolls}}
+      const maxPct = maxRolls * tier1
+      const newPct = Math.max(0, Math.min(maxPct, parseFloat(pctStr) || 0))
+      return {...prev, [k]: {...cur, [slotId]: newPct}}
     })
 
   const getCardSlots = (slotId) => subSlots[slotId] || [null, null, null, null]
@@ -127,14 +145,10 @@ export default function CardSimulator({
     if (ms?.key) mainFromSel[ms.key] = (mainFromSel[ms.key]||0) + ms.max
   })
 
+  // subAlloc stores % directly — just sum them
   const subFromAlloc = {}
   simEntries.forEach(([k]) => {
-    subFromAlloc[k] = SLOT_IDS.reduce((sum, slotId) => {
-      const rolls = (subAlloc[k]||{})[slotId] || 0
-      const pool = slotId==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
-      const t1 = Object.entries(pool).find(([l]) => SUB_STAT_KEY[l]===k)?.[1]?.[0] || 0
-      return sum + t1 * rolls
-    }, 0)
+    subFromAlloc[k] = SLOT_IDS.reduce((sum, slotId) => sum + ((subAlloc[k]||{})[slotId] || 0), 0)
   })
 
   const fmt = (k, v) => k === 'spd' ? Math.floor(v) : Math.floor(v) + '%'
@@ -149,7 +163,6 @@ export default function CardSimulator({
     .map(c => { const m = c.match(/^(.+?)\s+4pc$/i); return m ? m[1].trim() : null })
     .find(Boolean) || 'passive'
 
-  // Combat buff logic
   const cbTypes = new Set((currentChar?.combatBuffs||[]).map(b => b.type).filter(Boolean))
   const hasCombatBuffs = (currentChar?.combatBuffs||[]).length > 0
     || !!(currentChar?.awareness?.[0]?.combatBuff)
@@ -248,8 +261,9 @@ export default function CardSimulator({
                 {[0,1,2,3].map(i => {
                   const selKey = cardSlots[i]
                   const opt = selKey ? poolOptions.find(o => o.key === selKey) : null
-                  const rolls = selKey ? ((subAlloc[selKey]||{})[slot.id] || 0) : 0
-                  const curPct = opt ? +(rolls * opt.t1).toFixed(1) : 0
+                  // subAlloc stores % directly
+                  const curPct = selKey ? ((subAlloc[selKey]||{})[slot.id] || 0) : 0
+                  const rolls = opt && opt.t1 > 0 ? Math.round(curPct / opt.t1) : 0
                   return (
                     <div key={i} className={'sim-sub-row' + (selKey ? ' locked' : '')}>
                       <select
@@ -264,7 +278,7 @@ export default function CardSimulator({
                       </select>
                       {selKey && opt ? (
                         <>
-                          <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={rolls===0}>−</button>
+                          <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={curPct===0}>−</button>
                           <SubStatInput
                             curPct={curPct}
                             onCommit={pctStr => setPct(selKey, slot.id, pctStr, opt.t1)}
