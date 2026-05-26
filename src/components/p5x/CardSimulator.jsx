@@ -3,6 +3,22 @@ import { CARD_SETS, CARD_SLOTS, CARD_SUB_STATS, REVELATION_CARDS } from '../../d
 import { SUB_STAT_KEY } from '../../data/p5x-targets.js'
 import { computeStats, getSpacePassiveBonus, statLabels, parseHiddenAbility } from '../../utils/p5x-stats.js'
 
+// Self-contained input: owns its display state, syncs from curPct only when it changes externally
+function SubStatInput({ curPct, onCommit }) {
+  const [val, setVal] = useState(() => String(curPct))
+  useEffect(() => { setVal(String(curPct)) }, [curPct])
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      className="alloc-num-input"
+      value={val}
+      onChange={e => setVal(e.target.value)}
+      onBlur={e => onCommit(e.target.value)}
+    />
+  )
+}
+
 export default function CardSimulator({
   charTgt,
   currentChar,
@@ -17,16 +33,10 @@ export default function CardSimulator({
   setSimCardSet,
   simAwarenessLevel = 0,
 }) {
-  // subSlots[cardSlotId] = [statKey|null, statKey|null, statKey|null, statKey|null]
   const [subSlots, setSubSlots] = useState({})
   const [expandedStats, setExpandedStats] = useState({})
   const [simSpaceCard, setSimSpaceCard] = useState(null)
-  const [subEditing, setSubEditing] = useState({})
   const [inclCombatBuff, setInclCombatBuff] = useState(false)
-
-  useEffect(() => {
-    if (Object.keys(subAlloc).length === 0) setSubEditing({})
-  }, [subAlloc])
 
   if (!charTgt) return null
   const simEntries = Object.entries(charTgt).filter(([,[,w]]) => w > 0)
@@ -42,6 +52,11 @@ export default function CardSimulator({
     const s = computeStats(charForSim, selectedWeaponIdx ?? 0, weaponRefine)
     const all = {...s}
     Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
+    // A0 combat buff: computeStats always includes it; subtract when toggle is off
+    const a0 = charForSim.awareness?.[0]
+    if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
+      Object.entries(a0.stats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
+    }
     for (let i = 1; i <= (simAwarenessLevel ?? 0); i++) {
       const awStats = charForSim.awareness?.[i]?.stats || {}
       Object.entries(awStats).forEach(([k,v]) => { all[k] = (all[k]||0)+v })
@@ -52,6 +67,10 @@ export default function CardSimulator({
     const s = computeStats(charForSim, -1, 0)
     const all = {...s}
     Object.keys(msBonus).forEach(k => { all[k] = (all[k]||0) + msBonus[k] })
+    const a0 = charForSim.awareness?.[0]
+    if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
+      Object.entries(a0.stats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
+    }
     for (let i = 1; i <= (simAwarenessLevel ?? 0); i++) {
       const awStats = charForSim.awareness?.[i]?.stats || {}
       Object.entries(awStats).forEach(([k,v]) => { all[k] = (all[k]||0)+v })
@@ -88,11 +107,9 @@ export default function CardSimulator({
   const setSlotStat = (cardSlotId, slotIdx, newKey) => {
     const current = getCardSlots(cardSlotId)
     const oldKey = current[slotIdx]
-
     if (oldKey && oldKey !== newKey) {
       setSubAlloc(prev => ({...prev, [oldKey]: {...(prev[oldKey]||{}), [cardSlotId]: 0}}))
     }
-
     const newSlots = [...current]
     if (newKey) {
       const dupIdx = current.findIndex((k, i) => k === newKey && i !== slotIdx)
@@ -132,11 +149,11 @@ export default function CardSimulator({
     .map(c => { const m = c.match(/^(.+?)\s+4pc$/i); return m ? m[1].trim() : null })
     .find(Boolean) || 'passive'
 
-  // Combat buff logic for summary section
+  // Combat buff logic
   const cbTypes = new Set((currentChar?.combatBuffs||[]).map(b => b.type).filter(Boolean))
   const hasCombatBuffs = (currentChar?.combatBuffs||[]).length > 0
+    || !!(currentChar?.awareness?.[0]?.combatBuff)
 
-  // Static combat buffs (no .type, has .stats) — only applied when toggled
   const staticCombatBuffStats = {}
   if (inclCombatBuff) {
     ;(currentChar?.combatBuffs||[]).forEach(b => {
@@ -150,7 +167,6 @@ export default function CardSimulator({
     <div className="info-panel">
       <div className="info-label">🎛️ จำลอง Card Stats</div>
 
-      {/* Per-card blocks */}
       <div style={{display:'flex', flexDirection:'column', gap:8}}>
         {CARD_SLOTS.map(slot => {
           const pool = slot.id==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
@@ -172,7 +188,6 @@ export default function CardSimulator({
                 <span className={full ? 'sim-card-sub-count full' : 'sim-card-sub-count'}>{usedRolls}/4 rolls</span>
               </div>
 
-              {/* Card Set selector — Space only */}
               {slot.id === 'Space' && (() => {
                 const defaultSpaceCard = REVELATION_CARDS.Space.find(sc =>
                   sc.passives.some(p => p.name === charDefaultSet)
@@ -185,10 +200,7 @@ export default function CardSimulator({
                       <div style={{fontSize:'0.6rem', color:'#fff', marginBottom:3}}>Space Card</div>
                       <select className="sim-sub-select"
                         value={activeSpaceCardName || ''}
-                        onChange={e => {
-                          setSimSpaceCard(e.target.value || null)
-                          setSimCardSet(null)
-                        }}
+                        onChange={e => { setSimSpaceCard(e.target.value || null); setSimCardSet(null) }}
                       >
                         <option value="">— เลือก Space Card —</option>
                         {REVELATION_CARDS.Space.map(sc => (
@@ -218,7 +230,6 @@ export default function CardSimulator({
                 )
               })()}
 
-              {/* Main stat — hide for Space/Sun (key:null = fixed flat stats) */}
               {slot.mainStats.some(ms => ms.key !== null) && (
                 <div style={{display:'flex', gap:4, flexWrap:'wrap', marginBottom:8}}>
                   <button className={'refine-btn' + (!mainStatSel[slot.id] ? ' active' : '')}
@@ -233,15 +244,12 @@ export default function CardSimulator({
                 </div>
               )}
 
-              {/* Sub stats — 4 dropdown rows */}
               <div style={{display:'flex', flexDirection:'column', gap:3}}>
                 {[0,1,2,3].map(i => {
                   const selKey = cardSlots[i]
                   const opt = selKey ? poolOptions.find(o => o.key === selKey) : null
                   const rolls = selKey ? ((subAlloc[selKey]||{})[slot.id] || 0) : 0
-                  const editKey = selKey ? `${selKey}-${slot.id}` : null
                   const curPct = opt ? +(rolls * opt.t1).toFixed(1) : 0
-                  const displayVal = editKey && editKey in subEditing ? subEditing[editKey] : curPct
                   return (
                     <div key={i} className={'sim-sub-row' + (selKey ? ' locked' : '')}>
                       <select
@@ -257,16 +265,9 @@ export default function CardSimulator({
                       {selKey && opt ? (
                         <>
                           <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={rolls===0}>−</button>
-                          <input
-                            type="text"
-                            inputMode="decimal"
-                            className="alloc-num-input"
-                            value={displayVal}
-                            onChange={e => setSubEditing(prev => ({...prev, [editKey]: e.target.value}))}
-                            onBlur={e => {
-                              setPct(selKey, slot.id, e.target.value, opt.t1)
-                              setSubEditing(prev => { const n={...prev}; delete n[editKey]; return n })
-                            }}
+                          <SubStatInput
+                            curPct={curPct}
+                            onCommit={pctStr => setPct(selKey, slot.id, pctStr, opt.t1)}
                           />
                           <span className="alloc-unit">{opt.unit || ''}</span>
                           <button className="alloc-btn" onClick={() => bump(selKey, slot.id, +1)} disabled={full && rolls===0}>+</button>
@@ -300,7 +301,6 @@ export default function CardSimulator({
         {simEntries.map(([k, [ideal]]) => {
           const simSpacePassiveVal = simSpacePassive[k] || 0
           const sunKissedVal_raw = (k==='cdmg' && hasSunKissed) ? sunKissedCdmg : 0
-          // Typed combat buffs: only include when toggled
           const spacePassiveVal = cbTypes.has('spacePassiveB') ? (inclCombatBuff ? simSpacePassiveVal : 0) : simSpacePassiveVal
           const sunKissedVal    = cbTypes.has('sunKissedB')    ? (inclCombatBuff ? sunKissedVal_raw   : 0) : sunKissedVal_raw
           const staticBuffVal   = staticCombatBuffStats[k] || 0
@@ -327,8 +327,11 @@ export default function CardSimulator({
           })
           const hiddenV = parseHiddenAbility(charForSim.hiddenAbility)?.[k] || 0
           if (hiddenV) charParts.push({label:'Hidden ability', val:hiddenV, color:'#cc88ff'})
-          const a0Stats = charForSim.awareness?.[0]?.stats || {}
-          if (a0Stats[k]) charParts.push({label:`A0: ${charForSim.awareness[0].name}`, val:a0Stats[k], color:'#ffcc88'})
+          const a0 = charForSim.awareness?.[0]
+          const a0Stats = a0?.stats || {}
+          if (a0Stats[k] && (!a0?.combatBuff || inclCombatBuff)) {
+            charParts.push({label:`A0: ${a0.name}`, val:a0Stats[k], color:'#ffcc88'})
+          }
           for (let awI = 1; awI <= (simAwarenessLevel ?? 0); awI++) {
             const aw = charForSim.awareness?.[awI]
             if (aw?.stats?.[k]) charParts.push({label:`A${aw.stage??awI}: ${aw.name}`, val:aw.stats[k], color:'#ffcc88'})
@@ -342,11 +345,11 @@ export default function CardSimulator({
             : []
           const parts = [
             ...charParts.map(p => ({...p, show: true})),
-            {label: 'อาวุธ',          val: weaponVal,       color: '#ffaa66', show: weaponVal !== 0},
-            {label: 'main stat',      val: mainVal,         color: '#8888ff', show: mainVal > 0},
-            {label: 'sub stat',       val: subVal,          color: '#88ccff', show: subVal > 0},
-            {label: spacePassiveName, val: spacePassiveVal,  color: '#88ffcc', show: spacePassiveVal > 0},
-            {label: 'Sun-kissed',     val: sunKissedVal,     color: '#ffcc44', show: sunKissedVal > 0},
+            {label: 'อาวุธ',          val: weaponVal,      color: '#ffaa66', show: weaponVal !== 0},
+            {label: 'main stat',      val: mainVal,        color: '#8888ff', show: mainVal > 0},
+            {label: 'sub stat',       val: subVal,         color: '#88ccff', show: subVal > 0},
+            {label: spacePassiveName, val: spacePassiveVal, color: '#88ffcc', show: spacePassiveVal > 0},
+            {label: 'Sun-kissed',     val: sunKissedVal,   color: '#ffcc44', show: sunKissedVal > 0},
             ...staticBuffParts,
           ]
 
@@ -378,7 +381,6 @@ export default function CardSimulator({
         })}
       </div>
 
-      {/* SPR & Sun-kissed summaries */}
       {charTgt?.spr && (
         <div className="alloc-spr-summary" style={{marginTop:8}}>
           <span>SP Recovery {Math.floor(totalSpr)}%</span>

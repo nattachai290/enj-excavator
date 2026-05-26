@@ -2969,7 +2969,7 @@ export const CHARACTERS = [
         descTh:"ระหว่างการต่อสู้ เพิ่ม CRIT DMG และ HP ตาม SP Recovery ของ Riko ที่ SP Recovery สูงสุด 450%: CRIT DMG +84%, HP +1800"},
     ],
     awareness:[
-      {name:'Fragrant Gale', stats:{spr:60},
+      {name:'Fragrant Gale', stats:{spr:60}, combatBuff:true,
         desc:"Increase Riko's max SP to 200 and SP Recovery by 60%. When using a skill to restore own SP, the amount is affected by SP Recovery.",
         descTh:"เพิ่ม SP สูงสุดของ Riko เป็น 200 และ SP Recovery +60% เมื่อใช้สกิลเพื่อคืน SP ตัวเอง ปริมาณที่ได้รับจะถูกคูณด้วย SP Recovery"},
       {name:'Colors of Dawn',

@@ -892,6 +892,11 @@ export default function P5XPage() {
                   })()
                   const cbTypes = new Set((currentChar.combatBuffs||[]).map(b => b.type).filter(Boolean))
                   const base0 = {...base0raw}
+                  // A0 combat buff (e.g. Fragrant Gale spr:60): computeStats always includes it; subtract when toggle is off
+                  const _a0 = currentChar.awareness?.[0]
+                  if (_a0?.combatBuff && _a0.stats && !inclCombatBuff) {
+                    Object.entries(_a0.stats).forEach(([k,v]) => { base0[k] = (base0[k]||0) - v })
+                  }
                   if (!cbTypes.has('spacePassiveB')) Object.entries(spacePassiveB).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                   if (!cbTypes.has('sunKissedB'))   Object.entries(sunKissedB).forEach(([k,v])   => { base0[k] = (base0[k]||0)+v })
                   if (inclCombatBuff && currentChar.combatBuffs?.length) {
@@ -1024,7 +1029,7 @@ export default function P5XPage() {
                         const a0Stats = currentChar.awareness?.[0]?.stats || {}
                         const a0Contrib = Object.fromEntries(Object.entries(a0Stats).filter(([k]) => trackedKeys.has(k)))
                         const a0Name = currentChar.awareness?.[0]?.name
-                        if (a0Name && Object.keys(a0Contrib).length) sources.push({ label:`A0: ${a0Name}`, contrib:a0Contrib })
+                        if (a0Name && Object.keys(a0Contrib).length && (!_a0?.combatBuff || inclCombatBuff)) sources.push({ label:`A0: ${a0Name}`, contrib:a0Contrib })
                         if (Object.keys(msBonus).length) {
                           const mContrib = Object.fromEntries(Object.entries(msBonus).filter(([k]) => trackedKeys.has(k)))
                           if (Object.keys(mContrib).length) sources.push({ label:'Mindscape (M5)', contrib:mContrib })
