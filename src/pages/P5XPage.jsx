@@ -75,8 +75,30 @@ export default function P5XPage() {
   })()
   const currentEc = currentChar ? (ELEM_COLORS[currentChar.element] || '#888') : 'var(--persona)'
   const stats = computeStats(currentChar, selectedWeaponIdx, weaponRefine)
+  const cardSimStats = (() => {
+    const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
+    const result = {}
+    Object.entries(mainStatSel).forEach(([slotId, label]) => {
+      if (!label) return
+      const slot = CARD_SLOTS.find(s => s.id === slotId)
+      const ms = slot?.mainStats.find(m => m.label === label)
+      if (ms?.key) result[ms.key] = (result[ms.key]||0) + ms.max
+    })
+    if (charTgt) {
+      Object.entries(charTgt).filter(([,[,w]]) => w > 0).forEach(([k]) => {
+        SLOT_IDS.forEach(slotId => {
+          const rolls = (subAlloc[k]||{})[slotId] || 0
+          if (!rolls) return
+          const pool = slotId==='Space' ? CARD_SUB_STATS.Space : CARD_SUB_STATS._other
+          const t1 = Object.entries(pool).find(([l]) => SUB_STAT_KEY[l]===k)?.[1]?.[0] || 0
+          result[k] = (result[k]||0) + t1 * rolls
+        })
+      })
+    }
+    return result
+  })()
   const totalStats = Object.fromEntries(
-    Object.keys(stats).map(k => [k, (stats[k]||0) + (userStats[k]||0)])
+    Object.keys(stats).map(k => [k, (stats[k]||0) + (userStats[k]||0) + (cardSimStats[k]||0)])
   )
   const effHp = ((1 + totalStats.hp / 100) * (1 + totalStats.def / 100) * 100 - 100).toFixed(1)
 
