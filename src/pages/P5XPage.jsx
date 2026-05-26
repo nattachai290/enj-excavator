@@ -200,7 +200,7 @@ export default function P5XPage() {
       if (weight === 0) return
       if (prioKeys.includes(key)) weight = Math.round(weight * 1.4)
       totalWeight += weight
-      const val = (stats[key] || 0) + (userStats[key] || 0)
+      const val = (stats[key] || 0) + (userStats[key] || 0) + (cardSimStats[key] || 0)
       const ratio = ideal > 0 ? Math.min(val / ideal, 1.0) : 0
       earnedScore += ratio * weight
       breakdown.push({ label: statLabels[key], val: key==='spd'?Math.round(val):val.toFixed(1)+'%', ratio, ideal: key==='spd'?Math.round(ideal):ideal+'%' })
