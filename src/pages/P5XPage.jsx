@@ -115,6 +115,19 @@ export default function P5XPage() {
       })
     return result
   })()
+  const cardSetCombatBuffStats = (() => {
+    const result = {}
+    ;(currentChar?.cards || []).forEach(cardStr => {
+      const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
+      if (!m) return
+      const sn = m[1].trim(), pc = parseInt(m[2])
+      const sd = CARD_SETS.find(cs => cs.name.toLowerCase() === sn.toLowerCase())
+      if (!sd?.combatBuff) return
+      if (sd.stats2) Object.entries(sd.stats2).forEach(([k,v]) => { result[k] = (result[k]||0)+v })
+      if (pc >= 4 && sd.stats4) Object.entries(sd.stats4).forEach(([k,v]) => { result[k] = (result[k]||0)+v })
+    })
+    return result
+  })()
   const combatBuffStats = (() => {
     if (!inclCombatBuff || !currentChar?.combatBuffs?.length) return {}
     const typedSources = { sunKissedB: sunKissedBTop, spacePassiveB: spacePassiveBTop }
@@ -128,7 +141,11 @@ export default function P5XPage() {
     return result
   })()
   const totalStats = Object.fromEntries(
-    ['atk','crit','cdmg','dmgMulti','hp','def','heal','spd','ailm','spr','pierce','dmgred','dmgDown'].map(k => [k, (stats[k]||0) + (userStats[k]||0) + (cardSimStats[k]||0) + (combatBuffStats[k]||0)])
+    ['atk','crit','cdmg','dmgMulti','hp','def','heal','spd','ailm','spr','pierce','dmgred','dmgDown'].map(k => [
+      k,
+      (stats[k]||0) + (userStats[k]||0) + (cardSimStats[k]||0) + (combatBuffStats[k]||0)
+      - (!inclCombatBuff ? (cardSetCombatBuffStats[k]||0) : 0)
+    ])
   )
   const effHp = ((1 + totalStats.hp / 100) * (1 + totalStats.def / 100) * 100 - 100).toFixed(1)
 
@@ -232,6 +249,7 @@ export default function P5XPage() {
       if (prioKeys.includes(key)) weight = Math.round(weight * 1.4)
       totalWeight += weight
       const val = (stats[key] || 0) + (userStats[key] || 0) + (cardSimStats[key] || 0) + (combatBuffStats[key] || 0)
+        - (!inclCombatBuff ? (cardSetCombatBuffStats[key]||0) : 0)
       const ratio = ideal > 0 ? Math.min(val / ideal, 1.0) : 0
       earnedScore += ratio * weight
       breakdown.push({ label: statLabels[key], val: key==='spd'?Math.round(val):val.toFixed(1)+'%', ratio, ideal: key==='spd'?Math.round(ideal):ideal+'%' })
@@ -919,10 +937,14 @@ export default function P5XPage() {
                   })()
                   const cbTypes = new Set((currentChar.combatBuffs||[]).map(b => b.type).filter(Boolean))
                   const base0 = {...base0raw}
-                  // A0 combat buff (e.g. Fragrant Gale spr:60): computeStats always includes it; subtract when toggle is off
+                  // A0 combat buff: computeStats always includes it; subtract when toggle is off
                   const _a0 = currentChar.awareness?.[0]
                   if (_a0?.combatBuff && _a0.stats && !inclCombatBuff) {
                     Object.entries(_a0.stats).forEach(([k,v]) => { base0[k] = (base0[k]||0) - v })
+                  }
+                  // Card set combat buffs: computeStats always includes them; subtract when toggle is off
+                  if (!inclCombatBuff) {
+                    Object.entries(cardSetCombatBuffStats).forEach(([k,v]) => { base0[k] = (base0[k]||0) - v })
                   }
                   if (!cbTypes.has('spacePassiveB')) Object.entries(spacePassiveB).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                   if (!cbTypes.has('sunKissedB'))   Object.entries(sunKissedB).forEach(([k,v])   => { base0[k] = (base0[k]||0)+v })
@@ -948,7 +970,7 @@ export default function P5XPage() {
                         if (!key) return
                         const [ideal, w] = charTgt[key] || [0, 0]
                         if (!w) return
-                        const need = Math.max(0, ideal - (base0raw[key] || 0))
+                        const need = Math.max(0, ideal - (base0[key] || 0))
                         if (need <= 0) return
                         const score = w / (statSlotCount[key] || 1)
                         if (score > bestScore) { bestScore = score; bestKey = key; bestMax = max; bestLabel = label }
@@ -976,7 +998,7 @@ export default function P5XPage() {
                             + Main Stat
                           </button>
                         )}
-                        {currentChar.combatBuffs?.length > 0 && (
+                        {(currentChar.combatBuffs?.length > 0 || Object.keys(cardSetCombatBuffStats).length > 0) && (
                           <button className={'refine-btn'+(inclCombatBuff?' active':'')} onClick={() => setInclCombatBuff(v => !v)} style={{fontSize:'0.6rem'}}>
                             + Combat Buff
                           </button>
@@ -1041,6 +1063,7 @@ export default function P5XPage() {
                           const setName = m[1].trim(), pc = parseInt(m[2])
                           const setData = CARD_SETS.find(cs => cs.name.toLowerCase() === setName.toLowerCase())
                           if (!setData) return
+                          if (setData.combatBuff && !inclCombatBuff) return
                           const contrib = {}
                           if (setData.stats2) Object.entries(setData.stats2).forEach(([k,v]) => { if (trackedKeys.has(k)) contrib[k] = (contrib[k]||0)+v })
                           if (pc >= 4 && setData.stats4) Object.entries(setData.stats4).forEach(([k,v]) => { if (trackedKeys.has(k)) contrib[k] = (contrib[k]||0)+v })

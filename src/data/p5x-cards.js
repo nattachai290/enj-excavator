@@ -12,7 +12,7 @@ export const CARD_SETS = [
   {name:'Defeat',         bonus2:'Ailment Accuracy +15%',                                 bonus4:'Fire DMG to enemies with ailments +20%',
     stats2:{ailm:15},       stats4:{dmgMulti:20}},
   {name:'Worry',          bonus2:'SP Recovery +80%',                                      bonus4:'Enter battle with +25% Highlight charge',
-    stats2:{spr:80},        stats4:{}},
+    stats2:{spr:80},        stats4:{},      combatBuff:true},
   {name:'Reconciliation', bonus2:'SPD +6',                                                bonus4:'In combat: HP, ATK, DEF +15%',
     stats2:{spd:6},         stats4:{hp:15,atk:15,def:15}},
   {name:'Virtue',         bonus2:'Bless DMG +10%',                                        bonus4:'Bless CRIT Rate +12% when HP ≥ 50%',

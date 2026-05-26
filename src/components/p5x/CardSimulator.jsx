@@ -54,6 +54,25 @@ export default function CardSimulator({
   const charForSim = activeSet && activeSet !== charDefaultSet
     ? {...currentChar, cards: [activeSet + ' 4pc']}
     : currentChar
+
+  const cardSetCbStats = (() => {
+    const result = {}
+    ;(charForSim.cards||[]).forEach(cardStr => {
+      const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
+      if (!m) return
+      const sn = m[1].trim(), pc = parseInt(m[2])
+      const sd = CARD_SETS.find(cs => cs.name.toLowerCase() === sn.toLowerCase())
+      if (!sd?.combatBuff) return
+      if (sd.stats2) Object.entries(sd.stats2).forEach(([k,v]) => { result[k] = (result[k]||0)+v })
+      if (pc >= 4 && sd.stats4) Object.entries(sd.stats4).forEach(([k,v]) => { result[k] = (result[k]||0)+v })
+    })
+    return result
+  })()
+
+  const subtractCombatBuffCards = (all) => {
+    if (!inclCombatBuff) Object.entries(cardSetCbStats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
+  }
+
   const base0 = (() => {
     const s = computeStats(charForSim, selectedWeaponIdx ?? 0, weaponRefine)
     const all = {...s}
@@ -62,6 +81,7 @@ export default function CardSimulator({
     if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
       Object.entries(a0.stats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
     }
+    subtractCombatBuffCards(all)
     for (let i = 1; i <= (simAwarenessLevel ?? 0); i++) {
       const awStats = charForSim.awareness?.[i]?.stats || {}
       Object.entries(awStats).forEach(([k,v]) => { all[k] = (all[k]||0)+v })
@@ -76,6 +96,7 @@ export default function CardSimulator({
     if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
       Object.entries(a0.stats).forEach(([k,v]) => { all[k] = (all[k]||0) - v })
     }
+    subtractCombatBuffCards(all)
     for (let i = 1; i <= (simAwarenessLevel ?? 0); i++) {
       const awStats = charForSim.awareness?.[i]?.stats || {}
       Object.entries(awStats).forEach(([k,v]) => { all[k] = (all[k]||0)+v })
@@ -161,6 +182,7 @@ export default function CardSimulator({
   const cbTypes = new Set((currentChar?.combatBuffs||[]).map(b => b.type).filter(Boolean))
   const hasCombatBuffs = (currentChar?.combatBuffs||[]).length > 0
     || !!(currentChar?.awareness?.[0]?.combatBuff)
+    || Object.keys(cardSetCbStats).length > 0
 
   const staticCombatBuffStats = {}
   if (inclCombatBuff) {
@@ -329,6 +351,7 @@ export default function CardSimulator({
             const sn = m[1].trim(), pc = parseInt(m[2])
             const sd = CARD_SETS.find(cs => cs.name.toLowerCase() === sn.toLowerCase())
             if (!sd) return
+            if (sd.combatBuff && !inclCombatBuff) return
             let v = 0
             if (sd.stats2?.[k]) v += sd.stats2[k]
             if (pc >= 4 && sd.stats4?.[k]) v += sd.stats4[k]
