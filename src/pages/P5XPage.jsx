@@ -852,27 +852,30 @@ export default function P5XPage() {
                   Object.entries(spacePassiveB).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                   Object.entries(sunKissedB).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
                   // Compute recommended main stat bonus (same exclusivity logic as the recommender)
-                  const recMainBonus = (() => {
-                    const bonus = {}
-                    if (!charTgt) return bonus
+                  const { recMainBonus, recMainSources } = (() => {
+                    const bonus = {}, srcs = []
+                    if (!charTgt) return { recMainBonus: bonus, recMainSources: srcs }
                     const statSlotCount = {}
                     CARD_SLOTS.forEach(s => s.mainStats.forEach(({key}) => {
                       if (key) statSlotCount[key] = (statSlotCount[key] || 0) + 1
                     }))
                     CARD_SLOTS.filter(s => s.mainStats.some(({key}) => key !== null)).forEach(slot => {
-                      let bestKey = null, bestScore = 0, bestMax = 0
-                      slot.mainStats.forEach(({key, max}) => {
+                      let bestKey = null, bestScore = 0, bestMax = 0, bestLabel = null
+                      slot.mainStats.forEach(({key, label, max}) => {
                         if (!key) return
                         const [ideal, w] = charTgt[key] || [0, 0]
                         if (!w) return
                         const need = Math.max(0, ideal - (base0raw[key] || 0))
                         if (need <= 0) return
                         const score = w / (statSlotCount[key] || 1)
-                        if (score > bestScore) { bestScore = score; bestKey = key; bestMax = max }
+                        if (score > bestScore) { bestScore = score; bestKey = key; bestMax = max; bestLabel = label }
                       })
-                      if (bestKey) bonus[bestKey] = (bonus[bestKey] || 0) + bestMax
+                      if (bestKey) {
+                        bonus[bestKey] = (bonus[bestKey] || 0) + bestMax
+                        srcs.push({ slot: slot.id, key: bestKey, label: bestLabel, max: bestMax })
+                      }
                     })
-                    return bonus
+                    return { recMainBonus: bonus, recMainSources: srcs }
                   })()
                   return (
                     <div className="info-panel">
@@ -977,6 +980,11 @@ export default function P5XPage() {
                         }
                         const skContrib = Object.fromEntries(Object.entries(sunKissedB).filter(([k]) => trackedKeys.has(k)))
                         if (Object.keys(skContrib).length) sources.push({ label:'Sun-kissed Blooms', contrib:skContrib })
+                        if (inclMain) {
+                          recMainSources.forEach(({ slot, key, label, max }) => {
+                            if (trackedKeys.has(key)) sources.push({ label:`${slot} main: ${label}`, contrib:{ [key]: max } })
+                          })
+                        }
                         if (!sources.length) return null
                         // Group by stat key
                         const byKey = {}
