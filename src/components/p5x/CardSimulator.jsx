@@ -78,6 +78,16 @@ export default function CardSimulator({
       return {...prev, [k]: {...cur, [slotId]: val}}
     })
 
+  const setPct = (k, slotId, pctStr, tier1) =>
+    setSubAlloc(prev => {
+      const cur = prev[k] || {}
+      const curRolls = cur[slotId] || 0
+      const otherRolls = totalRollsForSlot(prev, slotId) - curRolls
+      const maxRolls = 4 - otherRolls
+      const newRolls = Math.max(0, Math.min(maxRolls, Math.round((parseFloat(pctStr) || 0) / tier1)))
+      return {...prev, [k]: {...cur, [slotId]: newRolls}}
+    })
+
   const getCardSlots = (slotId) => subSlots[slotId] || [null, null, null, null]
 
   const setSlotStat = (cardSlotId, slotIdx, newKey) => {
@@ -241,15 +251,18 @@ export default function CardSimulator({
                         <>
                           <button className="alloc-btn" onClick={() => bump(selKey, slot.id, -1)} disabled={rolls===0}>−</button>
                           <input
+                            key={`${selKey}-${slot.id}-${rolls}`}
                             type="number"
                             className="alloc-num-input"
-                            value={rolls}
+                            defaultValue={+(rolls * opt.t1).toFixed(1)}
                             min={0}
-                            max={4 - totalRollsForSlot(subAlloc, slot.id) + rolls}
-                            onChange={e => setRolls(selKey, slot.id, e.target.value)}
+                            max={+((4 - totalRollsForSlot(subAlloc, slot.id) + rolls) * opt.t1).toFixed(1)}
+                            step={opt.t1}
+                            onBlur={e => setPct(selKey, slot.id, e.target.value, opt.t1)}
                           />
+                          <span className="alloc-unit">{opt.unit || ''}</span>
                           <button className="alloc-btn" onClick={() => bump(selKey, slot.id, +1)} disabled={full && rolls===0}>+</button>
-                          <span className="alloc-hint">+{opt.t1}{opt.unit}/roll</span>
+                          <span className="alloc-hint">/{opt.t1}{opt.unit}</span>
                         </>
                       ) : (
                         <span className="alloc-hint" style={{marginLeft:4}}>เลือก sub stat</span>
