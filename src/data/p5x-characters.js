@@ -2944,7 +2944,7 @@ export const CHARACTERS = [
     realName:'Tempest Riko', persona:'Chiyome',
     combatBuffs:[
       {name:'Sun-kissed Blooms',  type:'sunKissedB',   inBase:true, note:'CRIT DMG สเกลตาม SPR (สูงสุด +84% ที่ SPR 450%)'},
-      {name:'Worry Space passive', type:'spacePassiveB', inBase:true, note:'SPR ≥ 200%: CRIT DMG +45% (Worry 4pc + Creation Space card)'},
+      {name:'Creation & Worry',    type:'spacePassiveB', inBase:true, note:'SPR ≥ 200%: CRIT DMG +45% (Worry 4pc + Creation Space card)'},
     ],
     weakRes:{ Fire:'normal', Ice:'normal', Electric:'normal', Wind:'res', Nuclear:'normal',
       Curse:'normal', Bless:'normal', Physical:'normal', Almighty:'normal', Psychokinesis:'wk' },

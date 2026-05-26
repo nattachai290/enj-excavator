@@ -1029,7 +1029,9 @@ export default function P5XPage() {
                         const spContrib = Object.fromEntries(Object.entries(spacePassiveB).filter(([k]) => trackedKeys.has(k)))
                         if (Object.keys(spContrib).length) {
                           const fourPcName = (currentChar.cards||[]).map(c=>{const m=c.match(/^(.+?)\s+4pc$/i);return m?m[1].trim():null}).find(Boolean)
-                          sources.push({ label:`${fourPcName} Space passive`, contrib:spContrib })
+                          const spaceCardObj = fourPcName && (REVELATION_CARDS.Space||[]).find(c => c.passives.some(p => p.name === fourPcName))
+                          const spLabel = spaceCardObj ? `${spaceCardObj.name} & ${fourPcName}` : `${fourPcName} Space passive`
+                          sources.push({ label:spLabel, contrib:spContrib })
                         }
                         const skContrib = Object.fromEntries(Object.entries(sunKissedB).filter(([k]) => trackedKeys.has(k)))
                         if (Object.keys(skContrib).length) sources.push({ label:'Sun-kissed Blooms', contrib:skContrib })
