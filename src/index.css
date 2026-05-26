@@ -517,9 +517,11 @@ body { font-family: 'Exo 2', sans-serif; background: var(--dark); color: var(--t
 .req-note { font-size:0.58rem; color:var(--p5x-muted); margin-top:6px; line-height:1.4; border-top:1px solid #1a1a1a; padding-top:5px; }
 .req-sources { margin-top:8px; border-top:1px solid #1a1a1a; padding-top:7px; display:flex; flex-direction:column; gap:3px; }
 .req-sources-title { font-size:0.65rem; color:var(--p5x-muted); font-weight:700; margin-bottom:4px; letter-spacing:0.3px; }
-.req-source-row { display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:center; padding:3px 6px; background:#111; border-radius:4px; font-size:0.68rem; }
-.req-source-label { color:#fff; white-space:nowrap; }
-.req-source-vals { color:#c8c8c8; font-weight:600; }
+.req-source-row { display:flex; flex-direction:column; gap:2px; padding:4px 6px; background:#111; border-radius:4px; font-size:0.68rem; }
+.req-source-label { color:#aaa; font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; }
+.req-source-vals { display:flex; flex-direction:column; gap:1px; }
+.req-source-entry { color:#c8c8c8; }
+.req-source-val { color:#7ecfff; font-weight:700; margin-left:4px; }
 
 .stat-target-title { font-size:0.63rem; color:var(--p5x-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:7px; }
 .stat-target-chips { display:flex; flex-wrap:wrap; gap:5px; }

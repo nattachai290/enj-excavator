@@ -1018,13 +1018,15 @@ export default function P5XPage() {
                         })
                         return (
                           <div className="req-sources">
-                            <div className="req-sources-title">แหล่งที่มาของ "มีแล้ว" (set bonus + weapon + hidden — ไม่รวม base stat)</div>
+                            <div className="req-sources-title">แหล่งที่มาของ "มีแล้ว"</div>
                             {entries.filter(([k]) => byKey[k]).map(([k]) => (
                               <div key={k} className="req-source-row">
                                 <span className="req-source-label">{STAT_LABELS[k]||k}</span>
-                                <span className="req-source-vals">
-                                  {byKey[k].map(({label, v}) => `${label} ${fmtStat(k,v)}`).join('  ·  ')}
-                                </span>
+                                <div className="req-source-vals">
+                                  {byKey[k].map(({label, v}) => (
+                                    <div key={label} className="req-source-entry">{label} <span className="req-source-val">{fmtStat(k,v)}</span></div>
+                                  ))}
+                                </div>
                               </div>
                             ))}
                           </div>
