@@ -107,17 +107,12 @@ export default function CardSimulator({
       return {...prev, [k]: {...cur, [slotId]: +(newRolls * t1).toFixed(2)}}
     })
 
-  // Store exact typed % (capped at available roll budget × tier1)
+  // Store exact typed % — cap at 4 rolls max for this stat (no cross-stat enforcement)
   const setPct = (k, slotId, pctStr, tier1) =>
     setSubAlloc(prev => {
-      const cur = prev[k] || {}
-      const curPct = cur[slotId] || 0
-      const curRolls = tier1 > 0 ? Math.round(curPct / tier1) : 0
-      const otherRolls = totalRollsForSlot(prev, slotId) - curRolls
-      const maxRolls = 4 - otherRolls
-      const maxPct = maxRolls * tier1
+      const maxPct = 4 * tier1
       const newPct = Math.max(0, Math.min(maxPct, parseFloat(pctStr) || 0))
-      return {...prev, [k]: {...cur, [slotId]: newPct}}
+      return {...prev, [k]: {...(prev[k]||{}), [slotId]: newPct}}
     })
 
   const getCardSlots = (slotId) => subSlots[slotId] || [null, null, null, null]
