@@ -1,0 +1,205 @@
+export const CARD_SETS = [
+  {name:'Prudence',       bonus2:'SPD -3, ATK +18%',                                     bonus4:'DMG Dealt +16%',
+    stats2:{atk:18},        stats4:{}},
+  {name:'Ruin',           bonus2:'ATK +12%',                                              bonus4:'ATK +25% for 3 turns; re-apply after Theurgy',
+    stats2:{atk:12},        stats4:{atk:25}},
+  {name:'Futility',       bonus2:'ATK +12%',                                              bonus4:'Ailment Accuracy +30% for 2 turns; reapply after Technical',
+    stats2:{atk:12},        stats4:{ailm:30}},
+  {name:'Disappointment', bonus2:'ATK +12%',                                              bonus4:'DMG +25% if attribute differs from last-used skill',
+    stats2:{atk:12},        stats4:{}},
+  {name:'Triumph',        bonus2:'CRIT Rate +7.5%',                                       bonus4:'Resonance ATK DMG +40%',
+    stats2:{crit:7.5},      stats4:{}},
+  {name:'Defeat',         bonus2:'Ailment Accuracy +15%',                                 bonus4:'Fire DMG to enemies with ailments +20%',
+    stats2:{ailm:15},       stats4:{dmgMulti:20}},
+  {name:'Worry',          bonus2:'SP Recovery +80%',                                      bonus4:'Enter battle with +25% Highlight charge',
+    stats2:{spr:80},        stats4:{},      combatBuff:true},
+  {name:'Reconciliation', bonus2:'SPD +6',                                                bonus4:'In combat: HP, ATK, DEF +15%',
+    stats2:{spd:6},         stats4:{hp:15,atk:15,def:15}},
+  {name:'Virtue',         bonus2:'Bless DMG +10%',                                        bonus4:'Bless CRIT Rate +12% when HP ≥ 50%',
+    stats2:{dmgMulti:10},        stats4:{crit:12}},
+  {name:'Oppression',     bonus2:'Physical DMG +10%',                                     bonus4:'Each skill hit: [Resentment] ATK +5% for 2 turns, up to 6 stacks',
+    stats2:{dmgMulti:10},        stats4:{atk:30}},
+  {name:'Pleasure',       bonus2:'Psy DMG +10%',                                          bonus4:'ATK +15% when dealing Psy DMG; +15% more with 3+ foes',
+    stats2:{dmgMulti:10},        stats4:{atk:15}},
+  {name:'Labor',          bonus2:'HP +12%',                                               bonus4:'[Navigator Thieves] All allies HP, ATK, DEF +8%',
+    stats2:{hp:12},         stats4:{hp:8,atk:8,def:8}},
+  {name:'Peace',          bonus2:'DEF +20%',                                              bonus4:'Shield effectiveness +18%',
+    stats2:{def:20},        stats4:{}},
+  {name:'Hindrance',      bonus2:'Curse DMG +10%',                                        bonus4:'Skill DMG to debuffed enemies +20%',
+    stats2:{dmgMulti:10},        stats4:{}},
+  {name:'Control',        bonus2:'HP +12%',                                               bonus4:'Skill attacks deal bonus 8% max-HP dmg to main target',
+    stats2:{hp:12},         stats4:{}},
+  {name:'Renewal',        bonus2:'Electric DMG +10%',                                     bonus4:'After ally uses Electric skill: Electric DMG +9%, up to 3 stacks',
+    stats2:{dmgMulti:10},        stats4:{dmgMulti:27}},
+  {name:'Courage',        bonus2:'Physical DMG +10%',                                     bonus4:'CRIT DMG +30% for 2 turns; re-apply on Crit',
+    stats2:{dmgMulti:10},        stats4:{cdmg:30}},
+  {name:'Strife',         bonus2:'Fire DMG +10%',                                         bonus4:'ATK +15%; +15% more if enemy weak to Fire',
+    stats2:{dmgMulti:10},        stats4:{atk:15}},
+  {name:'Love',           bonus2:'Healing Effect +9%',                                    bonus4:'Healing +23% when target HP ≤ 50%',
+    stats2:{heal:9},        stats4:{heal:23}},
+  {name:'Opulence',       bonus2:'Ice DMG +10%',                                          bonus4:'Resonance ATK DMG +40%',
+    stats2:{dmgMulti:10},        stats4:{}},
+  {name:'Power',          bonus2:'ATK +12%',                                              bonus4:'ATK +10% every 6 turns, up to 3 stacks',
+    stats2:{atk:12},        stats4:{atk:30}},
+  {name:'Victory',        bonus2:'Wind DMG +10%',                                         bonus4:'25% chance per hit to deal 20% ATK bonus damage',
+    stats2:{dmgMulti:10},        stats4:{}},
+  {name:'Truth',          bonus2:'Nuke DMG +10%',                                         bonus4:'Deal 30% ATK to main target when target has Elemental Ailment',
+    stats2:{dmgMulti:10},        stats4:{}},
+  {name:'Prosperity',     bonus2:'DMG Taken -8%',                                         bonus4:'Enter battle with +25% Highlight charge',
+    stats2:{},              stats4:{}},
+]
+
+// ── REVELATION CARD SLOTS ──────────────────────────────────────────────────
+// mainStats: { label, key (internal stat key or null), min (LV1), max (LV25) }
+export const CARD_SLOTS = [
+  { id:'Space', mainStats:[
+    {label:'Attack',         key:null,   min:54,   max:359,  unit:''},
+    {label:'Defense',        key:null,   min:54,   max:359,  unit:''},
+  ]},
+  { id:'Sun', mainStats:[
+    {label:'HP',             key:null,   min:162,  max:1080, unit:''},
+  ]},
+  { id:'Moon', mainStats:[
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Damage Mult',      key:'dmgMulti',  min:3.7,  max:25.1, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Healing Effect', key:'heal', min:3.4,  max:22.6, unit:'%'},
+  ]},
+  { id:'Star', mainStats:[
+    {label:'Crit Rate',     key:'crit', min:2.8,  max:18.8, unit:'%'},
+    {label:'Crit Mult.',      key:'cdmg', min:5.7,  max:37.6, unit:'%'},
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'Ailment Accuracy',   key:'ailm', min:5.7,  max:37.6, unit:'%'},
+  ]},
+  { id:'Sky', mainStats:[
+    {label:'Attack %',        key:'atk',  min:4.6,  max:31.4, unit:'%'},
+    {label:'Defense %',       key:'def',  min:7.1,  max:47.1, unit:'%'},
+    {label:'HP %',            key:'hp',   min:4.7,  max:31.5, unit:'%'},
+    {label:'Speed',          key:'spd',  min:3.1,  max:20.3, unit:''},
+    {label:'SP Recovery',    key:'spr',  min:13.6, max:90.4, unit:'%'},
+  ]},
+]
+
+// Sub stats per slot — tiers [1st(best) … 5th(worst)] per upgrade roll
+export const CARD_SUB_STATS = {
+  Space: {
+    'Crit Rate':   [2.6, 2.3, 2.1, 1.8, 1.6],
+    'Crit Mult.':    [5.2, 4.7, 4.2, 3.6, 3.1],
+    'Pierce Rate': [2.7, 2.5, 2.2, 1.8, 1.6],
+    'Damage Mult':    [3.5, 3.1, 2.7, 2.5, 2.1],
+    'Attack %':      [4.3, 3.9, 3.5, 3.1, 2.6],
+    'HP %':           [4.4, 4.0, 3.5, 3.2, 2.7],
+    'HP':           [175, 157, 140, 123, 105],
+    'Defense %':     [6.4, 5.8, 5.2, 4.5, 3.8],
+    'Ailment Accuracy': [5.2, 4.7, 4.2, 3.6, 3.1],
+    'SP Recovery': [12.5, 11.2, 10.0, 8.7, 7.5],
+    'Speed':        [2.8, 2.5, 2.2, 1.9, 1.6],
+  },
+  // Sun / Moon / Star / Sky share the same sub stat pool
+  get Sun()  { return this._other },
+  get Moon() { return this._other },
+  get Star() { return this._other },
+  get Sky()  { return this._other },
+  _other: {
+    'Crit Rate':   [2.0, 1.8, 1.7, 1.4, 1.3],
+    'Crit Mult.':    [4.1, 3.7, 3.4, 2.8, 2.5],
+    'Pierce Rate': [2.1, 1.9, 1.7, 1.4, 1.3],
+    'Damage Mult':    [2.8, 2.5, 2.1, 1.9, 1.7],
+    'Attack %':      [3.5, 3.2, 2.8, 2.5, 2.0],
+    'Attack':         [46,  41,  37,  32,  27],
+    'HP %':           [3.6, 3.3, 2.9, 2.6, 2.1],
+    'HP':           [140, 126, 112, 98,  84],
+    'Defense %':     [5.2, 4.6, 4.1, 3.5, 3.0],
+    'Defense':        [46,  41,  37,  32,  27],
+    'Ailment Accuracy': [4.1, 3.7, 3.4, 2.8, 2.5],
+    'SP Recovery': [10.0, 9.0, 7.9, 7.0, 5.9],
+    'Speed':        [2.2, 2.0, 1.8, 1.5, 1.3],
+  },
+}
+
+// ── REVELATION CARDS (individual cards per slot) ───────────────────────────
+// Each card: { name, passives:[{name, desc}] }  — all Space cards have 주 quality
+export const REVELATION_CARDS = {
+  Space: [
+    {name:'Nativity',   passives:[
+      {name:'Power',          desc:'When equipped by Justine & Caroline: Increase Desire Level by 5.0%.', descTh:'เมื่อ Justine & Caroline สวมใส่: เพิ่ม Desire Level 5.0%'},
+    ]},
+    {name:'Hope',       passives:[
+      {name:'Labor',          desc:'When equipped by an Elucidator Phantom Thief: When granting buffs to allies with a skill, increase the main target\'s pierce rate by 5% for 1 turn.', descTh:'เมื่อ Elucidator Phantom Thief สวมใส่: เมื่อให้ buff กับพันธมิตรด้วยสกิล เพิ่ม pierce rate ของเป้าหมายหลัก 5% เป็นเวลา 1 เทิร์น'},
+      {name:'Ruin',           desc:'Each time damage is dealt with a skill, increase the user\'s Fire damage by 3%. This effect lasts 3 turns and stacks up to 8 times. When at 8 stacks, also increase user\'s critical rate by 6%.', descTh:'ทุกครั้งที่ดีลดาเมจด้วยสกิล เพิ่ม Fire DMG ของผู้ใช้ 3% เป็นเวลา 3 เทิร์น สะสมสูงสุด 8 ครั้ง เมื่อครบ 8 stack ยังเพิ่ม Crit Rate 6%'},
+      {name:'Transformation', desc:'Increase the DMG Dealt to enemies with Down status by 12%, doesn\'t stack.', descTh:'เพิ่มดาเมจต่อศัตรูที่มีสถานะ Down 12% ไม่สะสม'},
+    ]},
+    {name:'Creation',   passives:[
+      {name:'Reconciliation', desc:'At the start of battle, increases the DMG Dealt of the ally with the lowest SPD by 12%, doesn\'t stack.', descTh:'เมื่อเริ่มการต่อสู้ เพิ่ม DMG Dealt ของพันธมิตรที่มี SPD ต่ำสุด 12% ไม่สะสม'},
+      {name:'Worry',          desc:'Increases CRIT DMG by 15%/30%/45% when you have 100%/150%/200% SP Recovery.', descTh:'เพิ่ม CRIT DMG 15%/30%/45% เมื่อ SP Recovery ≥ 100%/150%/200%'},
+      {name:'Tenacity',       desc:'When using Theurgy, ATK increases by 30% and DMG Dealt increases by 25%.', descTh:'เมื่อใช้ Theurgy ATK เพิ่ม 30% และ DMG Dealt เพิ่ม 25%'},
+    ]},
+    {name:'Integrity',  passives:[
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Increase all allies\' HP, ATK and DEF by an additional 2% with each ally with the same element.', descTh:'เมื่อ Navigator Thieves สวมใส่: เพิ่ม HP, ATK และ DEF ของพันธมิตรทุกคน 2% เพิ่มเติมต่อพันธมิตรที่มีธาตุเดียวกัน'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 80% of your Healing Bonus.', descTh:'เพิ่ม DMG Bonus สูงสุด 30% คิดจาก Healing Bonus 80%'},
+      {name:'Ruin',           desc:'After using a Theurgy, increase party\'s damage by 10% for 3 turns.', descTh:'หลังใช้ Theurgy เพิ่มดาเมจของปาร์ตี้ 10% เป็นเวลา 3 เทิร์น'},
+    ]},
+    {name:'Resolve',    passives:[
+      {name:'Virtue',         desc:'Increase DMG Bonus by 10%/20%/30% when you reached 6000/9000/12000 HP.', descTh:'เพิ่ม DMG Bonus 10%/20%/30% เมื่อ HP ≥ 6000/9000/12000'},
+      {name:'Labor',          desc:'When equipped by Navigator Thieves: Decrease the main target\'s DEF by 10% for 2 turns when inflicting debuffs.', descTh:'เมื่อ Navigator Thieves สวมใส่: ลด DEF เป้าหมายหลัก 10% เป็นเวลา 2 เทิร์น เมื่อสร้าง debuff'},
+      {name:'Prudence',       desc:'At the start of battle, if your SPD is at the 3rd/4th slot, then additionally increase own ATK by 24%/30%.', descTh:'เมื่อเริ่มการต่อสู้ ถ้า SPD อยู่ในลำดับที่ 3/4 เพิ่ม ATK ตัวเอง 24%/30% เพิ่มเติม'},
+    ]},
+    {name:'Awareness',  passives:[
+      {name:'Control',        desc:'Increase all allies\' Fire DMG by 6% for 2 turns when you inflict Burn.', descTh:'เพิ่ม Fire DMG ของพันธมิตรทุกคน 6% เป็นเวลา 2 เทิร์น เมื่อทำให้ติด Burn'},
+      {name:'Hindrance',      desc:'Increase ATK by 9% after every hit of damage to enemy with debuffs for 1 turn, up to 3 stacks.', descTh:'เพิ่ม ATK 9% ทุกครั้งที่โจมตีศัตรูที่มี debuff เป็นเวลา 1 เทิร์น สะสมสูงสุด 3 ครั้ง'},
+      {name:'Truth',          desc:'Increase DMG Dealt by 12% when attacking enemies inflicted with Elemental Ailments, up to 2 stacks.', descTh:'เพิ่ม DMG Dealt 12% เมื่อโจมตีศัตรูที่ติด Elemental Ailments สะสมสูงสุด 2 ครั้ง'},
+    ]},
+    {name:'Departure',  passives:[
+      {name:'Control',        desc:'Decrease main target\'s DEF by 23% for 2 turns after attacking them with a skill.', descTh:'ลด DEF เป้าหมายหลัก 23% เป็นเวลา 2 เทิร์น หลังโจมตีด้วยสกิล'},
+      {name:'Prosperity',     desc:'Increase all allies\' DMG Dealt by 8% for 1 turn when attacking enemies.', descTh:'เพิ่ม DMG Dealt ของพันธมิตรทุกคน 8% เป็นเวลา 1 เทิร์น เมื่อโจมตีศัตรู'},
+      {name:'Hindrance',      desc:'Increase ATK by 30% for 3 turns after defeating an enemy.', descTh:'เพิ่ม ATK 30% เป็นเวลา 3 เทิร์น หลังจากกำจัดศัตรู'},
+    ]},
+    {name:'Growth',     passives:[
+      {name:'Opulence',       desc:'Increase Ice DMG Bonus by 10% for 2 turns when triggering Follow Up, up to 3 stacks.', descTh:'เพิ่ม Ice DMG Bonus 10% เป็นเวลา 2 เทิร์น เมื่อ Follow Up ทำงาน สะสมสูงสุด 3 ครั้ง'},
+      {name:'Renewal',        desc:'Increase Follow Up CRIT DMG by 50%.', descTh:'เพิ่ม Follow Up CRIT DMG 50%'},
+      {name:'Power',          desc:'Increase the cap of the ATK buff up to 5 stacks.', descTh:'เพิ่ม cap ของ ATK buff เป็น 5 stack'},
+    ]},
+    {name:'Wisdom',     passives:[
+      {name:'Oppression',     desc:'Increase Physical DMG and Ailment Accuracy Rate by 20% when [Resentment] is not less than 5 stacks.', descTh:'เพิ่ม Physical DMG และ Ailment Accuracy 20% เมื่อ Resentment ≥ 5 stack'},
+      {name:'Virtue',         desc:'When using HIGHLIGHT, increases ATK by 30% and DMG Dealt by 25%.', descTh:'เมื่อใช้ HIGHLIGHT เพิ่ม ATK 30% และ DMG Dealt 25%'},
+      {name:'Pleasure',       desc:'Increase DMG Bonus up to 30% based on 50% of your Ailment Accuracy Rate.', descTh:'เพิ่ม DMG Bonus สูงสุด 30% คิดจาก Ailment Accuracy Rate 50%'},
+    ]},
+    {name:'Meditation', passives:[
+      {name:'Opulence',       desc:'Increase Follow Up CRIT DMG by 50%.', descTh:'เพิ่ม Follow Up CRIT DMG 50%'},
+      {name:'Courage',        desc:'Increase Physical and Electric DMG by 12%. Increase the effect to 24% when there\'s only 1 enemy.', descTh:'เพิ่ม Physical และ Electric DMG 12% เพิ่มเป็น 24% เมื่อมีศัตรูเพียง 1 ตัว'},
+      {name:'Love',           desc:'Increase Healing Effect by 28% for 2 turns after landing a Crit.', descTh:'เพิ่ม Healing Effect 28% เป็นเวลา 2 เทิร์น หลัง Crit โดน'},
+    ]},
+    {name:'Faith',      passives:[
+      {name:'Love',           desc:'Increase Healing Effect by 1% for every 800 HP you have, up to 20%.', descTh:'เพิ่ม Healing Effect 1% ต่อ HP ทุก 800 สะสมสูงสุด 20%'},
+      {name:'Peace',          desc:'After granting Shield, increase the target\'s DEF by 7% for 2 turns up to 3 stacks.', descTh:'หลังให้ Shield เพิ่ม DEF เป้าหมาย 7% เป็นเวลา 2 เทิร์น สะสมสูงสุด 3 ครั้ง'},
+      {name:'Futility',       desc:'Increase damage dealt by allies to foes inflicted with technical ailments by 10%. This effect won\'t activate if stacked.', descTh:'เพิ่มดาเมจของพันธมิตรต่อศัตรูที่ติด technical ailments 10% ไม่สะสม'},
+    ]},
+    {name:'Trust',      passives:[
+      {name:'Prosperity',     desc:'When using skills on allies, the damage of all party members will be increased by 8% for 2 rounds.', descTh:'เมื่อใช้สกิลบนพันธมิตร เพิ่มดาเมจของปาร์ตี้ทุกคน 8% เป็นเวลา 2 เทิร์น'},
+      {name:'Power',          desc:'When the battle starts, increase the attack of other party members by 10% and cannot be triggered repeatedly.', descTh:'เมื่อเริ่มการต่อสู้ เพิ่ม ATK ของพันธมิตรอื่น 10% ทำงานครั้งเดียว'},
+      {name:'Renewal',        desc:'Increase all allies\' Electric DMG by 12% when the Electric DMG buff effect reached 3 stacks, can\'t be triggered again.', descTh:'เพิ่ม Electric DMG ของพันธมิตรทุกคน 12% เมื่อ Electric DMG buff ครบ 3 stack ทำงานครั้งเดียว'},
+    ]},
+    {name:'Harmony',    passives:[
+      {name:'Truth',          desc:'Increase all allies\' Nuke DMG by 5% for 2 turns when inflicting Elemental Ailments, each stack is counted independently.', descTh:'เพิ่ม Nuke DMG ของพันธมิตรทุกคน 5% เป็นเวลา 2 เทิร์น เมื่อสร้าง Elemental Ailments แต่ละ stack นับแยกกัน'},
+      {name:'Power',          desc:'Increase DMG Bonus by 10% for all allies with the same element, can\'t be triggered again.', descTh:'เพิ่ม DMG Bonus 10% ให้พันธมิตรที่มีธาตุเดียวกันทุกคน ทำงานครั้งเดียว'},
+      {name:'Victory',        desc:'Increase the target\'s DMG Taken by 12% for 2 turns when triggering the effect of the Revelation\'s buff.', descTh:'เพิ่ม DMG Taken ของเป้าหมาย 12% เป็นเวลา 2 เทิร์น เมื่อ Revelation buff ทำงาน'},
+    ]},
+    {name:'Acceptance', passives:[
+      {name:'Peace',          desc:'Increase DEF by 40% for 2 turns when attacked.', descTh:'เพิ่ม DEF 40% เป็นเวลา 2 เทิร์น เมื่อถูกโจมตี'},
+      {name:'Strife',         desc:'Each enemy on field increases your attack by 8%, up to 40%.', descTh:'เพิ่ม ATK 8% ต่อศัตรูในสนาม สะสมสูงสุด 40%'},
+      {name:'Love',           desc:'Increase ATK by 25% when using Healing skills.', descTh:'เพิ่ม ATK 25% เมื่อใช้สกิลรักษา'},
+    ]},
+    {name:'Freedom',    passives:[
+      {name:'Defeat',         desc:'Increases all allies\' DMG Dealt to enemies with debuffs by 8%, doesn\'t stack.', descTh:'เพิ่ม DMG Dealt ของพันธมิตรทุกคนต่อศัตรูที่มี debuff 8% ไม่สะสม'},
+      {name:'Triumph',        desc:'When using a Persona skill, gain 1 [Glory] stack. If the skill is Ice or Wind, gain 1 additional stack, up to 2 stacks. Glory: For 2 turns, increases Critical Effect by 10%. If the wearer is Ice or Wind, increases it by an additional 10%.', descTh:'เมื่อใช้สกิล Persona ได้รับ Glory 1 stack ถ้าสกิลเป็น Ice หรือ Wind ได้รับ 2 stack (สูงสุด 2) Glory: เพิ่ม Critical Effect 10% เป็นเวลา 2 เทิร์น ถ้าผู้ใส่เป็น Ice/Wind เพิ่ม 10% เพิ่มเติม'},
+      {name:'Disappointment', desc:'When dealing Almighty damage, increase Attack by 35% and critical rate by 12%.', descTh:'เมื่อดีลดาเมจ Almighty เพิ่ม ATK 35% และ Crit Rate 12%'},
+    ]},
+  ],
+  Sun:  [],
+  Moon: [],
+  Star: [],
+  Sky:  [],
+}
