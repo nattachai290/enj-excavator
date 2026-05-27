@@ -149,6 +149,76 @@ export default function P5XPage() {
   )
   const effHp = ((1 + totalStats.hp / 100) * (1 + totalStats.def / 100) * 100 - 100).toFixed(1)
 
+  // simStats mirrors CardSimulator's exact computation so "สถิติรวม" matches the simulator summary
+  const simStats = (() => {
+    if (!currentChar) return totalStats
+    const SLOT_IDS = ['Space','Sun','Moon','Star','Sky']
+    const charDefaultSet = (currentChar.cards||[]).find(c => c.includes('4pc'))?.replace(' 4pc','') || null
+    const charForSim = (simCardSet && simCardSet !== charDefaultSet)
+      ? {...currentChar, cards: [simCardSet + ' 4pc']}
+      : currentChar
+    const msBonus = (charStage?.includes('M5') && currentChar.mindscapeBonus) ? currentChar.mindscapeBonus : {}
+
+    const localCsCbStats = {}
+    ;(charForSim.cards||[]).forEach(cardStr => {
+      const m = cardStr.match(/^(.+?)\s+(2|4)pc$/i)
+      if (!m) return
+      const sn = m[1].trim(), pc = parseInt(m[2])
+      const sd = CARD_SETS.find(cs => cs.name.toLowerCase() === sn.toLowerCase())
+      if (!sd?.combatBuff) return
+      if (sd.stats2) Object.entries(sd.stats2).forEach(([k,v]) => { localCsCbStats[k] = (localCsCbStats[k]||0)+v })
+      if (pc >= 4 && sd.stats4) Object.entries(sd.stats4).forEach(([k,v]) => { localCsCbStats[k] = (localCsCbStats[k]||0)+v })
+    })
+
+    const base0 = {...computeStats(charForSim, selectedWeaponIdx ?? 0, weaponRefine)}
+    Object.keys(msBonus).forEach(k => { base0[k] = (base0[k]||0) + msBonus[k] })
+    const a0 = charForSim.awareness?.[0]
+    if (a0?.combatBuff && a0.stats && !inclCombatBuff) {
+      Object.entries(a0.stats).forEach(([k,v]) => { base0[k] = (base0[k]||0) - v })
+    }
+    if (!inclCombatBuff) {
+      Object.entries(localCsCbStats).forEach(([k,v]) => { base0[k] = (base0[k]||0) - v })
+    }
+    for (let i = 1; i <= (simAwarenessLevel ?? 0); i++) {
+      const awStats = charForSim.awareness?.[i]?.stats || {}
+      Object.entries(awStats).forEach(([k,v]) => { base0[k] = (base0[k]||0)+v })
+    }
+
+    const mainFromSel = {}
+    Object.entries(mainStatSel).forEach(([slotId, label]) => {
+      if (!label) return
+      const slot = CARD_SLOTS.find(s => s.id === slotId)
+      const ms = slot?.mainStats.find(m => m.label === label)
+      if (ms?.key) mainFromSel[ms.key] = (mainFromSel[ms.key]||0) + ms.max
+    })
+    const subFromAlloc = {}
+    Object.entries(subAlloc).forEach(([k, perSlot]) => {
+      SLOT_IDS.forEach(slotId => { subFromAlloc[k] = (subFromAlloc[k]||0) + (perSlot[slotId]||0) })
+    })
+
+    const totalSpr = (base0.spr||0) + (mainFromSel.spr||0) + (subFromAlloc.spr||0)
+    const cbTypes = new Set((charForSim.combatBuffs||[]).map(b => b.type).filter(Boolean))
+    const spacePassive = getSpacePassiveBonus(charForSim, {spr: totalSpr})
+    const hasSunKissed = charForSim.skills?.some(s => s.name === 'Sun-kissed Blooms')
+    const sunKissedRaw = hasSunKissed ? parseFloat((84 * Math.min(totalSpr, 450) / 450).toFixed(1)) : 0
+    const spacePassiveGated = cbTypes.has('spacePassiveB') ? (inclCombatBuff ? spacePassive : {}) : spacePassive
+    const sunKissedCdmg = cbTypes.has('sunKissedB') ? (inclCombatBuff ? sunKissedRaw : 0) : sunKissedRaw
+    const staticCb = {}
+    if (inclCombatBuff) {
+      ;(charForSim.combatBuffs||[]).forEach(b => {
+        if (!b.type && b.stats) Object.entries(b.stats).forEach(([k,v]) => { staticCb[k] = (staticCb[k]||0)+v })
+      })
+    }
+
+    const ALL = ['atk','crit','cdmg','dmgMulti','hp','def','heal','spd','ailm','spr','pierce','dmgred','dmgDown']
+    const result = {}
+    ALL.forEach(k => {
+      result[k] = (base0[k]||0) + (mainFromSel[k]||0) + (subFromAlloc[k]||0)
+        + (spacePassiveGated[k]||0) + (k==='cdmg' ? sunKissedCdmg : 0) + (staticCb[k]||0)
+    })
+    return result
+  })()
+
   const lv80arr = currentChar?.baseStatsLv80
   const lv80all = lv80arr ? (Array.isArray(lv80arr) ? lv80arr : [lv80arr]) : null
   const lv80 = lv80all ? lv80all[Math.min(ascension, lv80all.length - 1)] : null
@@ -729,21 +799,21 @@ export default function P5XPage() {
                     <div className="section-title" style={{ marginBottom: 8 }}>📊 สถิติรวม</div>
                     {lv80 && (
                       <div className="final-stats-row">
-                        <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{finalAtk?.toLocaleString()}</span></div>
-                        <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{finalHp?.toLocaleString()}</span></div>
-                        <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{finalDef?.toLocaleString()}</span></div>
-                        <div className="final-stat"><span className="fs-label">Speed</span><span className="fs-val">{finalSpd}</span></div>
+                        <div className="final-stat"><span className="fs-label">ATK</span><span className="fs-val">{lv80 ? Math.round((lv80.atk + wAtk) * (1 + simStats.atk / 100)).toLocaleString() : '—'}</span></div>
+                        <div className="final-stat"><span className="fs-label">HP</span><span className="fs-val">{lv80 ? Math.round((lv80.hp + wHp) * (1 + simStats.hp / 100)).toLocaleString() : '—'}</span></div>
+                        <div className="final-stat"><span className="fs-label">DEF</span><span className="fs-val">{lv80 ? Math.round((lv80.def + wDef) * (1 + simStats.def / 100)).toLocaleString() : '—'}</span></div>
+                        <div className="final-stat"><span className="fs-label">Speed</span><span className="fs-val">{simStats.spd.toFixed(1)}</span></div>
                       </div>
                     )}
                     <div className="summary-grid">
-                      <div className="sum-box"><div className="sum-val">{Math.min(totalStats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
-                      <div className="sum-box"><div className="sum-val">{totalStats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
-                      <div className="sum-box"><div className="sum-val">{totalStats.dmgMulti.toFixed(1)}%</div><div className="sum-lbl">Damage Mult</div></div>
-                      <div className="sum-box"><div className="sum-val">+{effHp}%</div><div className="sum-lbl">Eff.HP %</div></div>
-                      <div className="sum-box"><div className="sum-val">{totalStats.spr.toFixed(1)}%</div><div className="sum-lbl">SP Recovery</div></div>
-                      <div className="sum-box"><div className="sum-val">{(16 * (1 + totalStats.spr / 100) * 2).toFixed(1)}</div><div className="sum-lbl">SP/2 round</div></div>
-                      <div className="sum-box"><div className="sum-val">{totalStats.ailm.toFixed(1)}%</div><div className="sum-lbl">Ailment Acc</div></div>
-                      <div className="sum-box"><div className="sum-val">{totalStats.pierce.toFixed(1)}%</div><div className="sum-lbl">Pierce Rate</div></div>
+                      <div className="sum-box"><div className="sum-val">{Math.min(simStats.crit, 100).toFixed(1)}%</div><div className="sum-lbl">CRIT Rate</div></div>
+                      <div className="sum-box"><div className="sum-val">{simStats.cdmg.toFixed(1)}%</div><div className="sum-lbl">CRIT DMG</div></div>
+                      <div className="sum-box"><div className="sum-val">{simStats.dmgMulti.toFixed(1)}%</div><div className="sum-lbl">Damage Mult</div></div>
+                      <div className="sum-box"><div className="sum-val">+{((1 + simStats.hp / 100) * (1 + simStats.def / 100) * 100 - 100).toFixed(1)}%</div><div className="sum-lbl">Eff.HP %</div></div>
+                      <div className="sum-box"><div className="sum-val">{simStats.spr.toFixed(1)}%</div><div className="sum-lbl">SP Recovery</div></div>
+                      <div className="sum-box"><div className="sum-val">{(16 * (1 + simStats.spr / 100) * 2).toFixed(1)}</div><div className="sum-lbl">SP/2 round</div></div>
+                      <div className="sum-box"><div className="sum-val">{simStats.ailm.toFixed(1)}%</div><div className="sum-lbl">Ailment Acc</div></div>
+                      <div className="sum-box"><div className="sum-val">{simStats.pierce.toFixed(1)}%</div><div className="sum-lbl">Pierce Rate</div></div>
                     </div>
                     {scoreData && (
                       <div className="stat-target-card">
